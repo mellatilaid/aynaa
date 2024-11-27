@@ -1,5 +1,8 @@
-import 'package:atm_app/const.dart';
+import 'package:atm_app/core/widgets/custom_action_button.dart';
+import 'package:atm_app/features/admin/materials/presentation/manager/creata_new_aynaa_version_cubit/create_new_aynaa_version_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../../core/widgets/dual_text_field.dart';
 
@@ -54,23 +57,51 @@ class _AddAynaaVersionAlertDialogBodyState
                       },
                       icon: const Icon(Icons.close),
                     ),
-                    ElevatedButton(
-                      onPressed: isButtonEnabled
-                          ? () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                              } else {
-                                setState(() {
-                                  autovalidateMode = AutovalidateMode.always;
-                                });
-                              }
+                    BlocBuilder<CreateNewAynaaVersionCubit,
+                        CreateNewAynaaVersionState>(
+                      builder: (context, state) {
+                        return CustomActionButton(
+                          isLoading: state is CreateNewAynaaVersionLoading
+                              ? true
+                              : false,
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              BlocProvider.of<CreateNewAynaaVersionCubit>(
+                                      context)
+                                  .createNewAynaaVersion(
+                                      versionName:
+                                          _aynaaVersionNameController.text);
+                            } else {
+                              setState(() {
+                                autovalidateMode = AutovalidateMode.always;
+                              });
                             }
-                          : null,
+                          },
+                          icon: const FaIcon(FontAwesomeIcons.floppyDisk),
+                          label: 'حفظ',
+                        );
+                      },
+                    ),
+                    /* ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          BlocProvider.of<CreateNewAynaaVersionCubit>(context)
+                              .createNewAynaaVersion(
+                                  versionName:
+                                      _aynaaVersionNameController.text);
+                        } else {
+                          setState(() {
+                            autovalidateMode = AutovalidateMode.always;
+                          });
+                        }
+                      },
                       child: const Text(
                         'Save',
                         style: TextStyle(color: kPrimaryColor),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
                 const SizedBox(
@@ -87,6 +118,4 @@ class _AddAynaaVersionAlertDialogBodyState
       ),
     );
   }
-
-  //takes seperate parameters for reminder model
 }

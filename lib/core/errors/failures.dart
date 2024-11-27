@@ -13,7 +13,7 @@ class ServerFailure extends Failures {
     switch (e.message) {
       case 'The resource already exists':
         return ServerFailure(
-            errMessage: 'The resource already exists, change name');
+            errMessage: 'هذا الاسم مستخدم من قبل, يرجى اختيار اسم اخر');
 
       default:
         return ServerFailure(

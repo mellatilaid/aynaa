@@ -49,7 +49,10 @@ class _DualActionTextFieldState extends State<DualActionTextField> {
       //if the text field is user in adding new folder
       //call the validator function otherwise not
       validator: (value) {
-        return validateFolderTitle(value);
+        if (value == null || value.isEmpty) {
+          return 'Please enter a folder title';
+        }
+        return null;
       },
       decoration: InputDecoration(
         hintText: widget.hintText,
