@@ -1,4 +1,5 @@
 import 'package:atm_app/core/widgets/bottom_nav_bar.dart';
+import 'package:atm_app/features/admin/posts/presentation/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -26,7 +27,7 @@ class _AdminBottomNavViewState extends State<AdminBottomNavView> {
   }
 
   final _pages = [
-    const Homeview(),
+    const HomeView(),
     const SettingView(),
   ];
 
@@ -64,15 +65,6 @@ class _AdminBottomNavViewState extends State<AdminBottomNavView> {
         icon: icon,
         title: title,
       );
-}
-
-class Homeview extends StatelessWidget {
-  const Homeview({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Home View'));
-  }
 }
 
 class SettingView extends StatelessWidget {

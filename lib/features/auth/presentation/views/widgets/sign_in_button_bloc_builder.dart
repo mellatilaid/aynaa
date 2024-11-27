@@ -1,3 +1,4 @@
+import 'package:atm_app/core/utils/app_route.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +20,9 @@ class SignInButtonBlocBuilder extends StatelessWidget {
         // TODO: implement listener
         if (state is SignInSuccuss) {
           if (state.userEntity.role == 'admin') {
-            GoRouter.of(context).go('/admin');
+            context.go(AppRouter.adminNavBarView);
           } else if (state.userEntity.role == 'student') {
-            GoRouter.of(context).go('/student');
+            context.go(AppRouter.adminHomeView);
           }
         }
       },

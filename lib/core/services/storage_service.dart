@@ -1,6 +1,31 @@
-abstract class StorageService {
-  Future<String> uploadFile({required String path, required String fileName});
-  Future<void> deleteFile({required String path, required String fileName});
-  Future<void> downloadFile({required String path, required String fileName});
-  Future<void> updateFile({required String path, required String fileName});
+import 'dart:typed_data';
+
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+abstract class StorageService<T> {
+  Future<String> uploadFile(
+      {required String bucketName,
+      required String filePath,
+      required String fileName});
+  Future<List<FileObject>> deleteFile(
+      {required String bucketName, required String fileName});
+  Future<Uint8List> downloadFile(
+      {required String bucketName,
+      required String filePath,
+      required String fileName});
+  Future<String> updateFile(
+      {required String bucketName,
+      required String filePath,
+      required String fileName});
+
+  Future<List<FileObject>> getAllFilesInABucket({
+    required String bucketName,
+  });
+  Future<String> createBucket(String bucketName);
+
+  Future<String> updateBucket(String bucketName);
+
+  Future<List<T>> getAllBuckets(String bucketName);
+
+  Future<T> getBucket(String bucketName);
 }
