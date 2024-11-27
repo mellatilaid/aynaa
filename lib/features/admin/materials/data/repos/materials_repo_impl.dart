@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:dartz/dartz.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/repos/materials_repo.dart';
 
@@ -20,7 +23,10 @@ class MaterialsRepoImpl extends MaterialsRepo {
     try {
       final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);
+    } on StorageException catch (e) {
+      return Left(ServerFailure.fromStorage(e: e));
     } catch (e) {
+      log(e.toString());
       return Left(ServerFailure(errMessage: e.toString()));
     }
   }

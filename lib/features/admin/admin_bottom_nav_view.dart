@@ -1,5 +1,5 @@
 import 'package:atm_app/core/widgets/bottom_nav_bar.dart';
-import 'package:atm_app/features/admin/posts/presentation/views/home_view.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/aynaa_versions_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -27,7 +27,7 @@ class _AdminBottomNavViewState extends State<AdminBottomNavView> {
   }
 
   final _pages = [
-    const HomeView(),
+    const AynaaVersionsView(),
     const SettingView(),
   ];
 

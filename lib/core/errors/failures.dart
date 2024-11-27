@@ -1,3 +1,5 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 abstract class Failures {
   final String errMessage;
 
@@ -6,6 +8,18 @@ abstract class Failures {
 
 class ServerFailure extends Failures {
   ServerFailure({required super.errMessage});
+
+  factory ServerFailure.fromStorage({required StorageException e}) {
+    switch (e.message) {
+      case 'The resource already exists':
+        return ServerFailure(
+            errMessage: 'The resource already exists, change name');
+
+      default:
+        return ServerFailure(
+            errMessage: 'Something went wrong, please try later');
+    }
+  }
 
   /*factory ServerFailure.fromAuthException({required FirebaseAuthException e}) {
     if (e.code == 'account-exists-with-different-credential') {

@@ -28,7 +28,7 @@ class SignInButtonBlocBuilder extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is SignInLoading) {
-          return const CustomLoadingWidget();
+          return const LoadingWidget();
         } else if (state is SignInFailure) {
           return ErrorWidget(state.errMessage);
         }

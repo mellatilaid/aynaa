@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+const Color kPrimaryColor = Color(0xffBC6D6D);
+
 const String kUserEmail = 'email';
 const String kUserName = 'Name';
 const String kUserRole = 'Role';
