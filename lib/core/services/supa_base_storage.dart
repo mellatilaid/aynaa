@@ -76,7 +76,7 @@ class SupaBaseStorage extends StorageService<Bucket> {
   }
 
   @override
-  Future<List<Bucket>> getAllBuckets(String bucketName) async {
+  Future<List<Bucket>> getAllBuckets() async {
     final List<Bucket> buckets = await _supabase.storage.listBuckets();
 
     return buckets;
@@ -88,6 +88,12 @@ class SupaBaseStorage extends StorageService<Bucket> {
     final List<FileObject> objects =
         await _supabase.storage.from('avatars').list();
     return objects;
+  }
+
+  @override
+  Future<Bucket> retreiveBucket(String bucketID) async {
+    final Bucket bucket = await _supabase.storage.getBucket(bucketID);
+    return bucket;
   }
 }
 

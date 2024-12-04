@@ -22,10 +22,11 @@ abstract class StorageService<T> {
     required String bucketName,
   });
   Future<String> createBucket(String bucketName);
+  Future<T> retreiveBucket(String bucketID);
 
   Future<String> updateBucket(String bucketName);
 
-  Future<List<T>> getAllBuckets(String bucketName);
+  Future<List<T>> getAllBuckets();
 
   Future<T> getBucket(String bucketName);
 }
