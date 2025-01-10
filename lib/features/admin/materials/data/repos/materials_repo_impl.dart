@@ -15,8 +15,8 @@ class MaterialsRepoImpl extends MaterialsRepo {
 
   MaterialsRepoImpl(this.remoteDataSource, {required this.storageService});
   @override
-  Future<Either<Failures, List<AynaaVersionsEntity>>> fetchAynaaVersions(
-      {required String versionID}) async {
+  Future<Either<Failures, List<AynaaVersionsEntity>>>
+      fetchAynaaVersions() async {
     try {
       final List<AynaaVersionsEntity> aynaaVersions =
           await remoteDataSource.fetchAynaaVersions();
