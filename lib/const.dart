@@ -14,3 +14,4 @@ const String KPostTitle = 'title';
 const String kPostContent = 'content';
 const String kPostTimeStamp = 'timeStamp';
 const String KPostImage = 'image';
+const String kVersionName = 'name';

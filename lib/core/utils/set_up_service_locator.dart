@@ -1,3 +1,4 @@
+import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supa_base_storage.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
@@ -14,10 +15,11 @@ final getit = GetIt.instance;
 setUpServiceLocator() {
   getit.registerSingleton<AuthRepo>(AuthRepoImpl(
       authServices: SupabaseAuthService(), dataBase: SupabaseDb()));
+  getit.registerSingleton<DataBase>(SupabaseDb());
   getit.registerSingleton<StorageService>(SupaBaseStorage());
   getit.registerSingleton<MaterialsRepo>(
     MaterialsRepoImpl(
-      storageService: getit.get<StorageService>(),
+      dataBase: getit.get<DataBase>(),
       AynaaVersionsRemoteDataSourceImpl(
         storageService: getit.get<StorageService>(),
       ),

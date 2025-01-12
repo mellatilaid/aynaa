@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:atm_app/const.dart';
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/aynaa_versions_remote_data_sourse.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:dartz/dartz.dart';
@@ -10,10 +12,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/repos/materials_repo.dart';
 
 class MaterialsRepoImpl extends MaterialsRepo {
-  final StorageService storageService;
+  final DataBase dataBase;
   final AynaaVersionsRemoteDataSource remoteDataSource;
 
-  MaterialsRepoImpl(this.remoteDataSource, {required this.storageService});
+  MaterialsRepoImpl(this.remoteDataSource, {required this.dataBase});
   @override
   Future<Either<Failures, List<AynaaVersionsEntity>>>
       fetchAynaaVersions() async {
@@ -30,8 +32,11 @@ class MaterialsRepoImpl extends MaterialsRepo {
   Future<Either<Failures, String>> setAynaaVersion(
       {required String versionName}) async {
     try {
-      final String bucketId = await storageService.createBucket(versionName);
-      return Right(bucketId);
+      await dataBase.setDate(
+          path: DbEnpoints.aynaaVersions, data: {kVersionName: versionName});
+      return const Right('');
+      /*final String bucketId = await storageService.createBucket(versionName);
+      return Right(bucketId);*/
     } on StorageException catch (e) {
       return Left(ServerFailure.fromStorage(e: e));
     } catch (e) {

@@ -20,9 +20,9 @@ class SignInButtonBlocBuilder extends StatelessWidget {
         // TODO: implement listener
         if (state is SignInSuccuss) {
           if (state.userEntity.role == 'admin') {
-            context.go(AppRouter.adminNavBarView);
+            context.go(AdminAppRouter.adminNavBarView);
           } else if (state.userEntity.role == 'student') {
-            context.go(AppRouter.adminHomeView);
+            context.go(AdminAppRouter.adminHomeView);
           }
         }
       },
