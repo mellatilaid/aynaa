@@ -8,7 +8,7 @@ class SupabaseDb extends DataBase {
   Future<bool> checkIfUserExistInDB(
       {required String path, required String uID}) async {
     final data =
-        await _supabase.from(path).select().eq(kUserID, uID).maybeSingle();
+        await _supabase.from(path).select().eq(kUuid, uID).maybeSingle();
 
     if (data == null) {
       return false;
@@ -18,7 +18,7 @@ class SupabaseDb extends DataBase {
 
   @override
   Future<void> deleteData({required String path, required String uid}) async {
-    await _supabase.from(path).delete().eq(kUserID, uid);
+    await _supabase.from(path).delete().eq(kUuid, uid);
   }
 
   @override
@@ -30,7 +30,7 @@ class SupabaseDb extends DataBase {
       return data;
     }
     final Map<String, dynamic> data =
-        await _supabase.from(path).select().eq(kUserID, uID).single();
+        await _supabase.from(path).select().eq(kUuid, uID).single();
     return data;
   }
 
@@ -47,6 +47,6 @@ class SupabaseDb extends DataBase {
       {required String path,
       required String uid,
       required Map<String, dynamic> data}) async {
-    await _supabase.from(path).update(data).eq(kUserID, uid);
+    await _supabase.from(path).update(data).eq(kUuid, uid);
   }
 }

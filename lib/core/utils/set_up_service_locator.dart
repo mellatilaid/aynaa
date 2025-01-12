@@ -21,7 +21,7 @@ setUpServiceLocator() {
     MaterialsRepoImpl(
       dataBase: getit.get<DataBase>(),
       AynaaVersionsRemoteDataSourceImpl(
-        storageService: getit.get<StorageService>(),
+        dataBase: getit.get<DataBase>(),
       ),
     ),
   );

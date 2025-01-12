@@ -21,7 +21,13 @@ class AynaaVersionCard extends StatelessWidget {
         ),
         height: 200,
         child: Center(
-          child: Text(aynaaVersionsEntity.versionName.toString()),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(aynaaVersionsEntity.versionName.toString()),
+              Text(aynaaVersionsEntity.id),
+            ],
+          ),
         ),
       ),
     );
