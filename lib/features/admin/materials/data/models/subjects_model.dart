@@ -13,4 +13,13 @@ class SubjectsModel extends SubjectsEntity {
   factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
     return SubjectsModel(id: data[KID].toString(), subjectName: data[kName]);
   }
+
+  factory SubjectsModel.fromSubjectEntity(SubjectsEntity subject) {
+    return SubjectsModel(
+        id: subject.id ?? '0', subjectName: subject.subjectName);
+  }
+
+  toMap() {
+    return {KID: id, kName: subjectName};
+  }
 }
