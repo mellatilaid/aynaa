@@ -12,6 +12,6 @@ class AynaaVersionsModel extends AynaaVersionsEntity {
 
   factory AynaaVersionsModel.fromSupabase(Map<String, dynamic> data) {
     return AynaaVersionsModel(data[kUuid].toString(),
-        aynaaVersion: data[kVersionName]);
+        aynaaVersion: data[kName]);
   }
 }

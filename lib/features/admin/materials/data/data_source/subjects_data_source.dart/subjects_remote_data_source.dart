@@ -1,11 +1,33 @@
-import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
-import 'package:dartz/dartz.dart';
+
+import '../../../../../../core/utils/db_enpoints.dart';
 
 abstract class SubjectsRemoteDataSource {
-  Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects();
-  Future<Either<Failures, void>> addSubject();
-  Future<Either<Failures, void>> deleteSubject({required String subjectID});
-  Future<Either<Failures, void>> updateSubject(
-      {required String subjectID, required Map<String, dynamic> data});
+  Future<List<SubjectsEntity>> fetchSubjects();
+}
+
+class subjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
+  final DataBase dataBase;
+
+  subjectsRemoteDataSourceImpl({required this.dataBase});
+
+  @override
+  Future<List<SubjectsEntity>> fetchSubjects() async {
+    final List<Map<String, dynamic>> aynaaSubjects =
+        await dataBase.getDate(path: DbEnpoints.subjects);
+
+    List<SubjectsEntity> subjects = _convertToAynaaVersionEntity(aynaaSubjects);
+
+    return subjects;
+  }
+
+  List<SubjectsEntity> _convertToAynaaVersionEntity(
+      List<Map<String, dynamic>> versions) {
+    final List<SubjectsEntity> aynaaVersions = versions.map((item) {
+      return SubjectsModel.fromSupabase(item);
+    }).toList();
+    return aynaaVersions;
+  }
 }

@@ -32,8 +32,8 @@ class MaterialsRepoImpl extends MaterialsRepo {
   Future<Either<Failures, String>> setAynaaVersion(
       {required String versionName}) async {
     try {
-      await dataBase.setDate(
-          path: DbEnpoints.aynaaVersions, data: {kVersionName: versionName});
+      await dataBase
+          .setDate(path: DbEnpoints.aynaaVersions, data: {kName: versionName});
       return const Right('');
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
