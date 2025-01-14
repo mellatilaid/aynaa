@@ -11,9 +11,11 @@ import '../../manager/add_new_subject_cubit/add_new_subject_cubit.dart';
 
 class AddNewSubjectButtonBlocBuilder extends StatelessWidget {
   final TextEditingController subjectTitleController;
+  final GlobalKey<FormState> formKey;
   const AddNewSubjectButtonBlocBuilder({
     super.key,
     required this.subjectTitleController,
+    required this.formKey,
   });
 
   @override
@@ -24,11 +26,13 @@ class AddNewSubjectButtonBlocBuilder extends StatelessWidget {
           isLoading: state is AddNewSubjectLoading ? true : false,
           title: 'create subject',
           onPressed: () {
-            final SubjectsEntity subject = SubjectsModel(
-                id: '0', subjectName: subjectTitleController.text.trim());
-            log(subjectTitleController.text.trim());
-            BlocProvider.of<AddNewSubjectCubit>(context)
-                .addNewSubject(subject: subject);
+            if (formKey.currentState!.validate()) {
+              final SubjectsEntity subject = SubjectsModel(
+                  id: '0', subjectName: subjectTitleController.text.trim());
+              log(subjectTitleController.text.trim());
+              BlocProvider.of<AddNewSubjectCubit>(context)
+                  .addNewSubject(subject: subject);
+            }
           },
           backGroundColor: kPrimaryColor,
         );

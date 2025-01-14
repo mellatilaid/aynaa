@@ -7,10 +7,11 @@ class DualActionTextField extends StatefulWidget {
     super.key,
     required TextEditingController controller,
     required this.hintText,
+    this.errMessage = 'يرجى إدخال الحقل',
   }) : _controller = controller;
 
   final TextEditingController _controller;
-
+  final String errMessage;
   final String hintText;
 
   @override
@@ -50,7 +51,7 @@ class _DualActionTextFieldState extends State<DualActionTextField> {
       //call the validator function otherwise not
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter a folder title';
+          return widget.errMessage;
         }
         return null;
       },

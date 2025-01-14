@@ -14,6 +14,7 @@ class InvisibleTextField extends StatefulWidget {
   TextEditingController controller;
   final TextStyle? textStyle;
   final bool readOnly;
+  final String errMessage;
 
   InvisibleTextField({
     super.key,
@@ -26,6 +27,7 @@ class InvisibleTextField extends StatefulWidget {
     this.textStyle,
     this.readOnly = false,
     this.focusNode,
+    this.errMessage = 'يرجى إدخال الحقل',
   });
 
   @override
@@ -59,6 +61,12 @@ class _InvisibleTextFieldState extends State<InvisibleTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return widget.errMessage;
+        }
+        return null;
+      },
       textDirection: _textDirection,
       focusNode: widget.focusNode,
       readOnly: widget.readOnly,
