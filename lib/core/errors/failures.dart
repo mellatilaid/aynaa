@@ -9,6 +9,40 @@ abstract class Failures {
 class ServerFailure extends Failures {
   ServerFailure({required super.errMessage});
 
+  factory ServerFailure.fromSupaDataBase({required dynamic e}) {
+    if (e is PostgrestException) {
+      switch (e.code) {
+        case '23502': // NOT NULL violation
+          return ServerFailure(
+              errMessage:
+                  'خطأ: قيمة غير مسموح بها لفارغ في أحد الحقول المطلوبة.');
+        case '23505': // UNIQUE violation
+          return ServerFailure(
+              errMessage:
+                  'خطأ: البيانات المدخلة موجودة مسبقاً ولا يمكن تكرارها.');
+        case '42501': // Insufficient privilege
+          return ServerFailure(
+              errMessage: 'خطأ: ليست لديك الصلاحية لتنفيذ هذه العملية.');
+        case '42P01': // Undefined table
+          return ServerFailure(errMessage: 'خطأ: الجدول المطلوب غير موجود.');
+        case '42703': // Undefined column
+          return ServerFailure(errMessage: 'خطأ: العمود المطلوب غير موجود.');
+        case '42601': // Syntax error
+          return ServerFailure(errMessage: 'خطأ: هناك مشكلة في بناء الجملة.');
+        case '22P02': // Invalid text representation
+          return ServerFailure(errMessage: 'خطأ: تنسيق البيانات غير صحيح.');
+        case '23503': // Foreign key violation
+          return ServerFailure(
+              errMessage:
+                  'خطأ: البيانات المدخلة مرتبطة بجدول آخر ولا يمكن حذفها.');
+        default:
+          return ServerFailure(errMessage: 'خطأ غير معروف: ${e.message}');
+      }
+    } else {
+      return ServerFailure(errMessage: 'خطأ غير معروف: ${e.toString()}');
+    }
+  }
+
   factory ServerFailure.fromStorage({required StorageException e}) {
     switch (e.message) {
       case 'The resource already exists':
@@ -20,8 +54,9 @@ class ServerFailure extends Failures {
             errMessage: 'Something went wrong, please try later');
     }
   }
+}
 
-  /*factory ServerFailure.fromAuthException({required FirebaseAuthException e}) {
+/*factory ServerFailure.fromAuthException({required FirebaseAuthException e}) {
     if (e.code == 'account-exists-with-different-credential') {
       return ServerFailure(
           errMessage: 'Account exists with different credential');
@@ -63,4 +98,3 @@ class ServerFailure extends Failures {
             errMessage: 'An error occurred. Please try again.');
     }
   }*/
-}

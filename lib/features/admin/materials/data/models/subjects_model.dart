@@ -20,6 +20,10 @@ class SubjectsModel extends SubjectsEntity {
   }
 
   toMap() {
-    return {KID: id, kName: subjectName};
+    return {kName: subjectName};
+  }
+
+  toSubjectModel({required String subjectName}) {
+    return SubjectsModel(id: id, subjectName: subjectName);
   }
 }

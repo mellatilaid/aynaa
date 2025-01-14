@@ -17,7 +17,7 @@ class AynaaVersionsView extends StatelessWidget {
       child: Scaffold(
         body: const AynaaVersionsViewBody(),
         floatingActionButton: Builder(builder: (fabContext) {
-          return FloatingActionButton.small(
+          return FloatingActionButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),

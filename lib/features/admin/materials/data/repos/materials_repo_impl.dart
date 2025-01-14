@@ -37,8 +37,8 @@ class MaterialsRepoImpl extends MaterialsRepo {
       return const Right('');
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
-    } on StorageException catch (e) {
-      return Left(ServerFailure.fromStorage(e: e));
+    } on PostgrestException catch (e) {
+      return Left(ServerFailure.fromSupaDataBase(e: e));
     } catch (e) {
       log(e.toString());
       return Left(ServerFailure(errMessage: e.toString()));

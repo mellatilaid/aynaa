@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AynaaVersionSubjectsViewBody extends StatelessWidget {
-  const AynaaVersionSubjectsViewBody({super.key});
+class SubjectsViewBody extends StatelessWidget {
+  const SubjectsViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {

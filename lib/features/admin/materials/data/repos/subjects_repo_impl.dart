@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
@@ -26,8 +28,9 @@ class SubjectsRepoImpl extends SubjectsRepo {
       return const Right(null);
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
-    } on StorageException catch (e) {
-      return Left(ServerFailure.fromStorage(e: e));
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
     } catch (e) {
       return Left(ServerFailure(errMessage: e.toString()));
     }

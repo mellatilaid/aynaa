@@ -1,6 +1,6 @@
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/features/admin/materials/presentation/views/aynaa_version_subjects_view.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/subjects_view.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,7 +21,7 @@ abstract class AdminAppRouter {
         path: versionSubjectsView,
         builder: (context, state) {
           final data = state.extra as AynaaVersionsEntity;
-          return AynaaVersionSubjectsView(
+          return SubjectsView(
             aynaaVersionsEntity: data,
           );
         },
