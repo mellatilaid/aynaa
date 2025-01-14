@@ -40,9 +40,14 @@ class SubjectsRepoImpl extends SubjectsRepo {
   }
 
   @override
-  Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects() {
-    // TODO: implement fetchSubjects
-    throw UnimplementedError();
+  Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects() async {
+    try {
+      final List<SubjectsEntity> subjects =
+          await subjectsRemoteDataSource.fetchSubjects();
+      return right(subjects);
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override
