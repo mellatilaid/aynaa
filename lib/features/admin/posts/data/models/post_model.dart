@@ -20,7 +20,7 @@ class PostModel extends PostEntity {
   toMap() {
     return {
       kPostID: postID,
-      KPostTitle: title,
+      kPostTitle: title,
       kPostContent: content,
       kPostTimeStamp: timeStamp
     };

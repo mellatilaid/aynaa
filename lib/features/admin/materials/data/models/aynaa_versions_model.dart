@@ -1,7 +1,8 @@
 import '../../../../../const.dart';
+import '../../../../../core/mixins/mappable.dart';
 import '../../domain/entities/aynaa_versions_entity.dart';
 
-class AynaaVersionsModel extends AynaaVersionsEntity {
+class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
   final String aynaaVersion;
 
   @override
@@ -13,5 +14,11 @@ class AynaaVersionsModel extends AynaaVersionsEntity {
   factory AynaaVersionsModel.fromSupabase(Map<String, dynamic> data) {
     return AynaaVersionsModel(data[kUuid].toString(),
         aynaaVersion: data[kName]);
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    // TODO: implement toMap
+    throw UnimplementedError();
   }
 }

@@ -26,7 +26,7 @@ class subjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   List<SubjectsEntity> _convertToAynaaVersionEntity(
       List<Map<String, dynamic>> versions) {
     final List<SubjectsEntity> aynaaVersions = versions.map((item) {
-      return SubjectsModel.fromSupabase(item);
+      return SubjectsModel.fromMap(item);
     }).toList();
     return aynaaVersions;
   }
