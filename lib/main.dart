@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: 'var.env');
-
+  int laid = 10;
   await Supabase.initialize(
     url: dotenv.get('Project_URL'),
     anonKey: dotenv.get('ANON_KEY'),
