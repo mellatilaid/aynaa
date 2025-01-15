@@ -1,11 +1,11 @@
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/entities/entitiy.dart';
 import 'package:flutter/material.dart';
 
-class AynaaVersionCard extends StatelessWidget {
-  final AynaaVersionsEntity aynaaVersionsEntity;
-  const AynaaVersionCard({
+class CustomCard extends StatelessWidget {
+  final Entity entity;
+  const CustomCard({
     super.key,
-    required this.aynaaVersionsEntity,
+    required this.entity,
   });
 
   @override
@@ -24,8 +24,8 @@ class AynaaVersionCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(aynaaVersionsEntity.versionName.toString()),
-              Text(aynaaVersionsEntity.id),
+              Text(entity.name.toString()),
+              Text(entity.id ?? 'id is null'),
             ],
           ),
         ),
