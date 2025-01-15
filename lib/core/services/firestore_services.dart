@@ -1,4 +1,4 @@
-import 'package:atm_app/const.dart';
+/*import 'package:atm_app/const.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -31,4 +31,4 @@ class FirestoreServices {
         await _firestore.collection(kUsersCol).doc(uid).get();
     return userDoc.exists;
   }
-}
+}*/
