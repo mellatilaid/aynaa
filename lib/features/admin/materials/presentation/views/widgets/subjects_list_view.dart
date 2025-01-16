@@ -1,6 +1,8 @@
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/custom_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../../../core/utils/app_route.dart';
 import '../../../domain/entities/subjects_entity.dart';
 
 class SubjectsListView extends StatelessWidget {
@@ -13,6 +15,9 @@ class SubjectsListView extends StatelessWidget {
       itemCount: subjects.length,
       itemBuilder: (context, index) {
         return GestureDetector(
+          onTap: () => context.push(
+            AdminAppRouter.lessonsView,
+          ),
           child: CustomCard(entity: subjects[index]),
         );
       },

@@ -4,12 +4,14 @@ import 'package:atm_app/features/admin/materials/presentation/views/subjects_vie
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/admin/materials/presentation/views/lessons_view.dart';
 import '../../features/student/student_view.dart';
 
 abstract class AdminAppRouter {
   static const String adminHomeView = '/home';
   static const String adminNavBarView = '/adminNavBar';
   static const String versionSubjectsView = '/versionSubjects';
+  static const String lessonsView = '/lessons';
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
@@ -24,6 +26,13 @@ abstract class AdminAppRouter {
           return SubjectsView(
             aynaaVersionsEntity: data,
           );
+        },
+      ),
+      GoRoute(
+        path: lessonsView,
+        builder: (context, state) {
+          //final data = state.extra as AynaaVersionsEntity;
+          return const LessonsView();
         },
       ),
     ],
