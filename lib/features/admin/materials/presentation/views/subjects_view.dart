@@ -11,7 +11,7 @@ import 'widgets/subject_view_body.dart';
 class SubjectsView extends StatelessWidget {
   final AynaaVersionsEntity aynaaVersionsEntity;
   const SubjectsView({super.key, required this.aynaaVersionsEntity});
-
+//FetchSubjectCubit(getit.get<SubjectsRepo>()),
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

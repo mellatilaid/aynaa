@@ -4,16 +4,28 @@ import '../../../../../const.dart';
 import '../../../../../core/mixins/mappable.dart';
 
 class LessonModel extends LessonEntity with Mappable {
-  LessonModel(super.id, super.name, super.url, super.description,
-      super.aynaaVersionId, super.subjectId);
+  LessonModel(
+    String? id,
+    String? name,
+    String? url,
+    String? description,
+    String aynaaVersionId,
+    String subjectId,
+  ) : super(
+          id: id,
+          name: name,
+          url: url,
+          description: description,
+          aynaaVersionId: aynaaVersionId,
+          subjectId: subjectId,
+        );
 
   @override
   toMap() {
     return {
-      kUuid: id,
       kName: name,
       kUrl: url,
-      kDesc: description,
+      kContent: description,
       kVersionID: aynaaVersionId,
       kSubjectID: subjectId,
     };
@@ -24,7 +36,7 @@ class LessonModel extends LessonEntity with Mappable {
       map[kUuid],
       map[kName],
       map[kUrl],
-      map[kDesc],
+      map[kContent],
       map[kVersionID],
       map[kSubjectID],
     );

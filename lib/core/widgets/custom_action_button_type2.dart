@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomActionButtonType2 extends StatelessWidget {
   final VoidCallback onPressed;
@@ -6,6 +7,7 @@ class CustomActionButtonType2 extends StatelessWidget {
   final Color backGroundColor;
   final bool isLoading;
   final EdgeInsetsGeometry padding;
+  final FaIcon icon;
   const CustomActionButtonType2({
     super.key,
     required this.title,
@@ -13,6 +15,7 @@ class CustomActionButtonType2 extends StatelessWidget {
     required this.backGroundColor,
     this.isLoading = false,
     this.padding = EdgeInsets.zero,
+    this.icon = const FaIcon(FontAwesomeIcons.upload),
   });
 
   @override
@@ -33,12 +36,21 @@ class CustomActionButtonType2 extends StatelessWidget {
                   color: Colors.white,
                 ),
               )
-            : Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  icon,
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
       ),
     );

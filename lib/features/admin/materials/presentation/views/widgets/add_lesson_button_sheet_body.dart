@@ -44,11 +44,13 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
           ),
         ),
         // Fixed button at the bottom
-        const Positioned(
+        Positioned(
           bottom: 0,
           left: 0,
           right: 0,
-          child: UplaodLessonMediaButtonSection(),
+          child: UplaodLessonMediaButtonSection(
+            lessonContent: _lessonTitleController,
+          ),
         ),
       ],
     );
