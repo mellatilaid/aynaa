@@ -29,4 +29,15 @@ class LessonModel extends LessonEntity with Mappable {
       map[kSubjectID],
     );
   }
+
+  factory LessonModel.fromLessonEntity(LessonEntity lesson) {
+    return LessonModel(
+      lesson.id,
+      lesson.name,
+      lesson.url,
+      lesson.description,
+      lesson.aynaaVersionId,
+      lesson.subjectId,
+    );
+  }
 }

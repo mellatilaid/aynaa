@@ -20,3 +20,5 @@ const String kUrl = 'url';
 const String kDesc = 'desc';
 const String kVersionID = 'versionID';
 const String kSubjectID = 'subjectID';
+const String kColumn = 'column';
+const String kValue = 'value';

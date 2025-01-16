@@ -29,6 +29,11 @@ class SupabaseDb extends DataBase {
           await _supabase.from(path).select();
       return data;
     }
+    if (query != null) {
+      final List<Map<String, dynamic>> data =
+          await _supabase.from(path).select().eq(query[kColumn], query[kValue]);
+      return data;
+    }
 
     final Map<String, dynamic> data =
         await _supabase.from(path).select().eq(kUuid, uID).single();

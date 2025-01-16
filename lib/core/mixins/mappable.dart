@@ -6,4 +6,8 @@ mixin Mappable {
   static Mappable fromMap(Map<String, dynamic> map) {
     throw UnimplementedError('fromMap must be implemented in the subclass');
   }
+
+  static Mappable toModal(dynamic data) {
+    throw UnimplementedError('fromMap must be implemented in the subclass');
+  }
 }
