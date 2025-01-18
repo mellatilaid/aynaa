@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/lesson_entity.dart';
+import '../../manager/add_lesson_cubit/add_lesson_cubit.dart';
 
 class LessonsViewBody extends StatefulWidget {
   final SubjectsEntity subjectsEntity;
@@ -20,8 +21,14 @@ class _LessonsViewBodyState extends State<LessonsViewBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<FetchLessonsCubit>(context)
-        .fetchLessons(subjectID: widget.subjectsEntity.id!, versionID: '');
+    final versionID = _getVersionID();
+    BlocProvider.of<FetchLessonsCubit>(context).fetchLessons(
+        subjectID: widget.subjectsEntity.id!, versionID: versionID);
+  }
+
+  _getVersionID() {
+    final versionID = context.read<AddLessonCubit>().versionID;
+    return versionID!;
   }
 
   @override

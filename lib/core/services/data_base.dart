@@ -1,5 +1,5 @@
 abstract class DataBase {
-  Future<dynamic> getDate({
+  Future<dynamic> getData({
     required String path,
     String? uID,
     Map<String, dynamic>? query,

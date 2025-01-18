@@ -29,7 +29,7 @@ class NewSubjectBottomSheet extends StatelessWidget {
                 .fetchSubjects(versionID: versionID!);
           } else if (state is AddNewSubjectFailure) {
             showScaffoldMessage(context, state.errMessage);
-            context.pop();
+            Future.microtask(() => context.pop());
           }
           return const AddImageNoteBottomSheetBody();
         },

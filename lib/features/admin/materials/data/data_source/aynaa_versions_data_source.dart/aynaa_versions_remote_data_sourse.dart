@@ -16,7 +16,7 @@ class AynaaVersionsRemoteDataSourceImpl
   @override
   Future<List<AynaaVersionsEntity>> fetchAynaaVersions() async {
     final List<Map<String, dynamic>> aynaaVersions =
-        await dataBase.getDate(path: DbEnpoints.aynaaVersions);
+        await dataBase.getData(path: DbEnpoints.aynaaVersions);
 
     List<AynaaVersionsEntity> versions =
         convertToAynaaVersionEntity(aynaaVersions);

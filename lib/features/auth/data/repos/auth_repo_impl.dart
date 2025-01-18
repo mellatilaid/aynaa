@@ -41,7 +41,7 @@ class AuthRepoImpl extends AuthRepo {
       bool doesUserExists = await dataBase.checkIfUserExistInDB(
           path: DbEnpoints.users, uID: user.id);
       if (doesUserExists) {
-        final Map<String, dynamic> userData = await dataBase.getDate(
+        final Map<String, dynamic> userData = await dataBase.getData(
           path: DbEnpoints.users,
           uID: user.id,
         );

@@ -20,7 +20,7 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
       {required String subjectID, required String versionID}) async {
     log(subjectID);
     final List<Map<String, dynamic>> data =
-        await dataBase.getDate(path: DbEnpoints.lessons, query: {
+        await dataBase.getData(path: DbEnpoints.lessons, query: {
       kSubjectID: subjectID,
       kVersionID: versionID,
     });

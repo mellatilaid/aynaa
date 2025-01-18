@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/set_up_service_locator.dart';
 import '../../domain/repos/lessons_repo.dart';
+import '../manager/add_lesson_cubit/add_lesson_cubit.dart';
 import 'widgets/lessons_view_body.dart';
 
 class LessonsView extends StatelessWidget {
@@ -24,23 +25,25 @@ class LessonsView extends StatelessWidget {
         body: LessonsViewBody(
           subjectsEntity: subjectsEntity,
         ),
-        floatingActionButton: Builder(builder: (fabcontext) {
-          // addLessonCubit = fabcontext.read<AddLessonCubit>();
+        floatingActionButton: Builder(builder: (fabContext) {
           return FloatingActionButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
             child: const Icon(Icons.add),
             onPressed: () {
+              fabContext.read<AddLessonCubit>().resetState();
               showModalBottomSheet(
-                context: context,
+                context: fabContext,
                 isScrollControlled:
                     true, // Allows it to take up the full height
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 builder: (context) {
-                  return const AddLessonBottomSheet();
+                  return BlocProvider.value(
+                      value: fabContext.read<FetchLessonsCubit>(),
+                      child: const AddLessonBottomSheet());
                 },
               );
             },

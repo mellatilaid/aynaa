@@ -37,4 +37,8 @@ class AddLessonCubit extends Cubit<AddLessonState> {
       emit(AddLessonSuccuss());
     });
   }
+
+  void resetState() {
+    emit(AddLessonInitial());
+  }
 }

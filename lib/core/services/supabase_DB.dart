@@ -22,7 +22,7 @@ class SupabaseDb extends DataBase {
   }
 
   @override
-  Future getDate(
+  Future getData(
       {required String path, String? uID, Map<String, dynamic>? query}) async {
     if (uID == null && query == null) {
       final List<Map<String, dynamic>> data =
@@ -30,7 +30,7 @@ class SupabaseDb extends DataBase {
       return data;
     }
     if (query != null) {
-      if (query.length > 1) {
+      if (query.keys.length > 1) {
         var queryBuilder = _supabase.from(path).select();
 
         // Apply filters for each key-value pair in the query map

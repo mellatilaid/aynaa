@@ -18,7 +18,7 @@ class subjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   Future<List<SubjectsEntity>> fetchSubjects(
       {required String versionID}) async {
     final List<Map<String, dynamic>> aynaaSubjects = await dataBase
-        .getDate(path: DbEnpoints.subjects, query: {kVersionID: versionID});
+        .getData(path: DbEnpoints.subjects, query: {kVersionID: versionID});
 
     List<SubjectsEntity> subjects = _convertToAynaaVersionEntity(aynaaSubjects);
 
