@@ -22,6 +22,7 @@ class SubjectsListView extends StatelessWidget {
           onTap: () {
             context.push(
               AdminAppRouter.lessonsView,
+              extra: subjects[index],
             );
             log(subjects[index].id!);
             BlocProvider.of<AddLessonCubit>(context)

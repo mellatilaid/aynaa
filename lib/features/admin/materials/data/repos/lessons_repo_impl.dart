@@ -43,10 +43,10 @@ class LessonsRepoImpl extends LessonsRepo {
 
   @override
   Future<Either<Failures, List<LessonEntity>>> fetchLessons(
-      {required String subjectID}) async {
+      {required String subjectID, required String versionID}) async {
     try {
-      final List<LessonEntity> lesson =
-          await lessonsRemoteDataSource.fetchLessons(subjectID: subjectID);
+      final List<LessonEntity> lesson = await lessonsRemoteDataSource
+          .fetchLessons(subjectID: subjectID, versionID: versionID);
       return right(lesson);
     } on PostgrestException catch (e) {
       log(e.toString());

@@ -24,19 +24,32 @@ class SupabaseDb extends DataBase {
   @override
   Future getDate(
       {required String path, String? uID, Map<String, dynamic>? query}) async {
-    if (uID == null) {
+    if (uID == null && query == null) {
       final List<Map<String, dynamic>> data =
           await _supabase.from(path).select();
       return data;
     }
     if (query != null) {
-      final List<Map<String, dynamic>> data =
-          await _supabase.from(path).select().eq(query[kColumn], query[kValue]);
+      if (query.length > 1) {
+        var queryBuilder = _supabase.from(path).select();
+
+        // Apply filters for each key-value pair in the query map
+        query.forEach((key, value) {
+          queryBuilder = queryBuilder.eq(key, value);
+        });
+        // Fetch and return the filtered data
+        final List<Map<String, dynamic>> data = await queryBuilder;
+        return data;
+      }
+      final List<Map<String, dynamic>> data = await _supabase
+          .from(path)
+          .select()
+          .eq(query.keys.first, query.values.first);
       return data;
     }
 
     final Map<String, dynamic> data =
-        await _supabase.from(path).select().eq(kUuid, uID).single();
+        await _supabase.from(path).select().eq(kUuid, uID!).single();
     return data;
   }
 
