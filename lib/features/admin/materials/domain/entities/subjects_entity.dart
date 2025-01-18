@@ -4,10 +4,8 @@ class SubjectsEntity implements Entity {
   @override
   final String? id;
   final String subjectName;
-  SubjectsEntity({
-    this.id,
-    required this.subjectName,
-  });
+  final String versionID;
+  SubjectsEntity({this.id, required this.subjectName, required this.versionID});
 
   @override
   // TODO: implement name

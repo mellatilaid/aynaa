@@ -6,7 +6,8 @@ abstract class SubjectsRepo {
   Future<Either<Failures, String>> saveSubject(
       {required SubjectsEntity subject});
 
-  Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects();
+  Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects(
+      {required String versionID});
   Future<Either<Failures, void>> addSubject({required SubjectsEntity subject});
   Future<Either<Failures, void>> deleteSubject({required String subjectID});
   Future<Either<Failures, void>> updateSubject(

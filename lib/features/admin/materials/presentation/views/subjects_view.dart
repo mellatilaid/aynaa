@@ -21,7 +21,9 @@ class SubjectsView extends StatelessWidget {
           centerTitle: true,
           title: Text(aynaaVersionsEntity.versionName.toString()),
         ),
-        body: const SubjectsViewBody(),
+        body: SubjectsViewBody(
+          versionsEntity: aynaaVersionsEntity,
+        ),
         floatingActionButton: Builder(builder: (fabContext) {
           return FloatingActionButton(
             shape: RoundedRectangleBorder(

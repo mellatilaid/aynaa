@@ -7,9 +7,12 @@ class SubjectsModel extends SubjectsEntity with Mappable {
   final String id;
   @override
   final String subjectName;
+  @override
+  final String versionID;
 
-  SubjectsModel({required this.id, required this.subjectName})
-      : super(id: id, subjectName: subjectName);
+  SubjectsModel(
+      {required this.id, required this.subjectName, required this.versionID})
+      : super(id: id, subjectName: subjectName, versionID: versionID);
 
   /*factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
     return SubjectsModel(id: data[kID].toString(), subjectName: data[kName]);
@@ -17,15 +20,23 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   factory SubjectsModel.fromSubjectEntity(SubjectsEntity subject) {
     return SubjectsModel(
-        id: subject.id ?? '0', subjectName: subject.subjectName);
+        id: subject.id ?? '0',
+        subjectName: subject.subjectName,
+        versionID: subject.versionID);
   }
 
   @override
   toMap() {
-    return {kName: subjectName};
+    return {
+      kName: subjectName,
+      kVersionID: versionID,
+    };
   }
 
   static SubjectsModel fromMap(Map<String, dynamic> data) {
-    return SubjectsModel(id: data[kID].toString(), subjectName: data[kName]);
+    return SubjectsModel(
+        id: data[kID].toString(),
+        subjectName: data[kName],
+        versionID: data[kVersionID]);
   }
 }

@@ -2,10 +2,11 @@ import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 
+import '../../../../../../const.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
 abstract class SubjectsRemoteDataSource {
-  Future<List<SubjectsEntity>> fetchSubjects();
+  Future<List<SubjectsEntity>> fetchSubjects({required String versionID});
 }
 
 class subjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
@@ -14,9 +15,10 @@ class subjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   subjectsRemoteDataSourceImpl({required this.dataBase});
 
   @override
-  Future<List<SubjectsEntity>> fetchSubjects() async {
-    final List<Map<String, dynamic>> aynaaSubjects =
-        await dataBase.getDate(path: DbEnpoints.subjects);
+  Future<List<SubjectsEntity>> fetchSubjects(
+      {required String versionID}) async {
+    final List<Map<String, dynamic>> aynaaSubjects = await dataBase
+        .getDate(path: DbEnpoints.subjects, query: {kVersionID: versionID});
 
     List<SubjectsEntity> subjects = _convertToAynaaVersionEntity(aynaaSubjects);
 

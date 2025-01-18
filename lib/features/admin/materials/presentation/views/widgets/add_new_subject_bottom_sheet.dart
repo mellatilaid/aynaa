@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../domain/repos/subjects_repo.dart';
+import '../../manager/add_lesson_cubit/add_lesson_cubit.dart';
 
 class NewSubjectBottomSheet extends StatelessWidget {
   const NewSubjectBottomSheet({
@@ -23,7 +24,9 @@ class NewSubjectBottomSheet extends StatelessWidget {
         builder: (context, state) {
           if (state is AddNewSubjectSuccuss) {
             context.pop();
-            BlocProvider.of<FetchSubjectCubit>(context).fetchSubjects();
+            final versionID = context.read<AddLessonCubit>().versionID;
+            BlocProvider.of<FetchSubjectCubit>(context)
+                .fetchSubjects(versionID: versionID!);
           } else if (state is AddNewSubjectFailure) {
             showScaffoldMessage(context, state.errMessage);
             context.pop();

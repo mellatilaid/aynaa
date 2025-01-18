@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:atm_app/features/admin/materials/presentation/manager/add_lesson_cubit/add_lesson_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,7 +8,7 @@ import '../../../data/models/subjects_model.dart';
 import '../../../domain/entities/subjects_entity.dart';
 import '../../manager/add_new_subject_cubit/add_new_subject_cubit.dart';
 
-class AddNewSubjectButtonBlocBuilder extends StatelessWidget {
+class AddNewSubjectButtonBlocBuilder extends StatefulWidget {
   final TextEditingController subjectTitleController;
   final GlobalKey<FormState> formKey;
   const AddNewSubjectButtonBlocBuilder({
@@ -19,6 +18,13 @@ class AddNewSubjectButtonBlocBuilder extends StatelessWidget {
   });
 
   @override
+  State<AddNewSubjectButtonBlocBuilder> createState() =>
+      _AddNewSubjectButtonBlocBuilderState();
+}
+
+class _AddNewSubjectButtonBlocBuilderState
+    extends State<AddNewSubjectButtonBlocBuilder> {
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddNewSubjectCubit, AddNewSubjectState>(
       builder: (context, state) {
@@ -26,10 +32,9 @@ class AddNewSubjectButtonBlocBuilder extends StatelessWidget {
           isLoading: state is AddNewSubjectLoading ? true : false,
           title: 'create subject',
           onPressed: () {
-            if (formKey.currentState!.validate()) {
-              final SubjectsEntity subject = SubjectsModel(
-                  id: '0', subjectName: subjectTitleController.text.trim());
-              log(subjectTitleController.text.trim());
+            if (widget.formKey.currentState!.validate()) {
+              final SubjectsEntity subject = _getSubjectModel();
+
               BlocProvider.of<AddNewSubjectCubit>(context)
                   .addNewSubject(subject: subject);
             }
@@ -38,5 +43,21 @@ class AddNewSubjectButtonBlocBuilder extends StatelessWidget {
         );
       },
     );
+  }
+
+  _getSubjectModel() {
+    final versionID = _getVersionID();
+
+    final SubjectsEntity subject = SubjectsModel(
+      id: '0',
+      subjectName: widget.subjectTitleController.text.trim(),
+      versionID: versionID,
+    );
+    return subject;
+  }
+
+  String _getVersionID() {
+    final versionID = context.read<AddLessonCubit>().versionID;
+    return versionID!;
   }
 }

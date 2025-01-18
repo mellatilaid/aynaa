@@ -10,9 +10,9 @@ class FetchSubjectCubit extends Cubit<FetchSubjectState> {
   final SubjectsRepo subjectsRepo;
   FetchSubjectCubit(this.subjectsRepo) : super(FetchSubjectInitial());
 
-  Future<void> fetchSubjects() async {
+  Future<void> fetchSubjects({required String versionID}) async {
     emit(FetchSubjectLoading());
-    final result = await subjectsRepo.fetchSubjects();
+    final result = await subjectsRepo.fetchSubjects(versionID: versionID);
     result.fold(
       (failure) => emit(FetchSubjectFailure(errMessage: failure.errMessage)),
       (subjects) => emit(FetchSubjectSucuss(subjects: subjects)),

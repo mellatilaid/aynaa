@@ -43,10 +43,11 @@ class SubjectsRepoImpl extends SubjectsRepo {
   }
 
   @override
-  Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects() async {
+  Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects(
+      {required String versionID}) async {
     try {
       final List<SubjectsEntity> subjects =
-          await subjectsRemoteDataSource.fetchSubjects();
+          await subjectsRemoteDataSource.fetchSubjects(versionID: versionID);
       return right(subjects);
     } catch (e) {
       return left(ServerFailure(errMessage: e.toString()));
