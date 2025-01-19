@@ -53,6 +53,7 @@ dependencies:
   flutter_neumorphic_plus: ^3.4.0
   device_preview: ^1.2.0
   typewritertext: ^3.0.9
+  file_picker: ^8.1.7
 
 dev_dependencies:
   flutter_test:
