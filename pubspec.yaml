@@ -55,6 +55,7 @@ dependencies:
   typewritertext: ^3.0.9
   file_picker: ^8.1.7
   video_thumbnail: ^0.5.3
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:

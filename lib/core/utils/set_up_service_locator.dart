@@ -1,3 +1,4 @@
+import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supa_base_storage.dart';
@@ -47,4 +48,5 @@ setUpServiceLocator() {
       ),
     ),
   );
+  getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
 }

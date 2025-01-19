@@ -1,30 +1,33 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:atm_app/core/widgets/loading_widget.dart';
+import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../../../core/classes/pick_file.dart';
 import '../../../../../../core/widgets/custom_rounded_button_with_title.dart';
 import 'uplaod_lesson_button_bloc_builder.dart';
 
-class UplaodLessonMediaButtonSection extends StatefulWidget {
+class UplaodLessonMediaButtonBlocBuilder extends StatefulWidget {
   final TextEditingController lessonContent;
   final Function({required String filePath}) onFileUploaded;
-  const UplaodLessonMediaButtonSection({
+  const UplaodLessonMediaButtonBlocBuilder({
     super.key,
     required this.lessonContent,
     required this.onFileUploaded,
   });
 
   @override
-  State<UplaodLessonMediaButtonSection> createState() =>
-      _UplaodLessonMediaButtonSectionState();
+  State<UplaodLessonMediaButtonBlocBuilder> createState() =>
+      _UplaodLessonMediaButtonBlocBuilderState();
 }
 
-class _UplaodLessonMediaButtonSectionState
-    extends State<UplaodLessonMediaButtonSection> {
+class _UplaodLessonMediaButtonBlocBuilderState
+    extends State<UplaodLessonMediaButtonBlocBuilder> {
   final filePickerHelper = FilePickerHelper();
   bool isMediaUpladed = false;
   File? _file;
@@ -32,59 +35,55 @@ class _UplaodLessonMediaButtonSectionState
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: isMediaUpladed
-          ? UploadLessonButtonBuilder(
+      child: BlocBuilder<PickFileCubit, PickFileState>(
+        builder: (context, state) {
+          if (state is PickFileLoaded) {
+            return UploadLessonButtonBuilder(
               lessonContent: widget.lessonContent,
               file: _file,
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RoundedButtonWithTitle(
-                  iconData: Icons.file_copy,
-                  iconName: 'ملف',
-                  onTap: () async {
-                    _file = await filePickerHelper
-                        .pickFile(allowedExtensions: ['pdf']);
-                    if (_file != null) {
-                      setState(() {
-                        isMediaUpladed = true;
-                      });
-                      print("Picked file: ${_file!.path}");
-                    }
-                  },
-                ),
-                RoundedButtonWithTitle(
-                  iconData: Icons.image,
-                  iconName: 'صورة',
-                  onTap: () async {
-                    //pickFileWithPreview(context);
-                    _file = await filePickerHelper.pickImage();
-                    if (_file != null) {
-                      setState(() {
-                        isMediaUpladed = true;
-                        widget.onFileUploaded(filePath: _file!.path);
-                      });
+            );
+          } else if (state is PickFileFailure) {
+            return ErrorWidget(state.errMessage);
+          } else if (state is PickFileLoading) {
+            return const LoadingWidget();
+          } else if (state is PickFileCanceled) {
+            return const UploadMediaSection();
+          }
+          return const UploadMediaSection();
+        },
+      ),
+    );
+  }
+}
 
-                      print("Picked file: ${_file!.path}");
-                    }
-                  },
-                ),
-                RoundedButtonWithTitle(
-                  iconData: Icons.video_call,
-                  iconName: 'فيديو',
-                  onTap: () async {
-                    _file = await filePickerHelper.pickVideo();
-                    if (_file != null) {
-                      setState(() {
-                        isMediaUpladed = true;
-                      });
-                      print("Picked file: ${_file!.path}");
-                    }
-                  },
-                ),
-              ],
-            ),
+class UploadMediaSection extends StatelessWidget {
+  const UploadMediaSection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        RoundedButtonWithTitle(
+          iconData: Icons.file_copy,
+          iconName: 'ملف',
+          onTap: () async {
+            BlocProvider.of<PickFileCubit>(context).pickFile();
+          },
+        ),
+        RoundedButtonWithTitle(
+          iconData: Icons.image,
+          iconName: 'صورة',
+          onTap: () async {},
+        ),
+        RoundedButtonWithTitle(
+          iconData: Icons.video_call,
+          iconName: 'فيديو',
+          onTap: () async {},
+        ),
+      ],
     );
   }
 }

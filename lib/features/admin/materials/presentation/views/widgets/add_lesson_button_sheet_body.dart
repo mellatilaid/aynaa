@@ -1,4 +1,4 @@
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_media_content.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_media_content_builder.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_lesson_media_button_section.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +31,7 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  LessonMediaContent(
+                  LessonMediaContentBuilder(
                     filePath: selectedFile,
                   ),
                   const SizedBox(height: 16),
@@ -51,7 +51,7 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
           bottom: 0,
           left: 0,
           right: 0,
-          child: UplaodLessonMediaButtonSection(
+          child: UplaodLessonMediaButtonBlocBuilder(
             lessonContent: _lessonTitleController,
             onFileUploaded: onFileUploaded,
           ),
