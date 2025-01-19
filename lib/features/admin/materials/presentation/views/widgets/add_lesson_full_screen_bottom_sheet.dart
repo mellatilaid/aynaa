@@ -53,18 +53,3 @@ class _AddLessonBottomSheetState extends State<AddLessonBottomSheet> {
     return subjectID!;
   }
 }
-
-class LessonMediaContent extends StatelessWidget {
-  const LessonMediaContent({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      color: Colors.grey[300],
-      child: const Center(child: Text('Other Content Goes Here')),
-    );
-  }
-}

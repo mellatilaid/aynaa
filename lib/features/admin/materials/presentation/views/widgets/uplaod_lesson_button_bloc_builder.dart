@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:atm_app/const.dart';
 import 'package:atm_app/core/widgets/custom_action_button_type2.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +12,16 @@ import '../../manager/add_lesson_cubit/add_lesson_cubit.dart';
 
 class UploadLessonButtonBuilder extends StatelessWidget {
   final TextEditingController lessonContent;
-  const UploadLessonButtonBuilder({super.key, required this.lessonContent});
+  final File? file;
+  const UploadLessonButtonBuilder({
+    super.key,
+    required this.lessonContent,
+    this.file,
+  });
 
   @override
   Widget build(BuildContext context) {
+    log('the file path is ${file?.path}');
     return BlocBuilder<AddLessonCubit, AddLessonState>(
       builder: (context, state) {
         return CustomActionButtonType2(

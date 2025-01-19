@@ -1,4 +1,4 @@
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_lesson_full_screen_bottom_sheet.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_media_content.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_lesson_media_button_section.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +16,7 @@ class AddLessonBottomSheetBody extends StatefulWidget {
 
 class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
   final _lessonTitleController = TextEditingController();
+  String? selectedFile;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -30,7 +31,9 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const LessonMediaContent(),
+                  LessonMediaContent(
+                    filePath: selectedFile,
+                  ),
                   const SizedBox(height: 16),
                   InvisibleTextField(
                     controller: _lessonTitleController,
@@ -50,9 +53,16 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
           right: 0,
           child: UplaodLessonMediaButtonSection(
             lessonContent: _lessonTitleController,
+            onFileUploaded: onFileUploaded,
           ),
         ),
       ],
     );
+  }
+
+  onFileUploaded({required String filePath}) {
+    setState(() {
+      selectedFile = filePath;
+    });
   }
 }
