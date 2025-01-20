@@ -8,14 +8,15 @@ import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/repos/lessons_repo_impl.dart';
-import 'package:atm_app/features/admin/materials/data/repos/materials_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/repos/subjects_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
-import 'package:atm_app/features/admin/materials/domain/repos/materials_repo.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
+import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:get_it/get_it.dart';
+
+import '../../features/admin/materials/data/repos/versions_repo_impl.dart';
 
 final getit = GetIt.instance;
 
@@ -24,9 +25,10 @@ setUpServiceLocator() {
       authServices: SupabaseAuthService(), dataBase: SupabaseDb()));
   getit.registerSingleton<DataBase>(SupabaseDb());
   getit.registerSingleton<StorageService>(SupaBaseStorage());
-  getit.registerSingleton<MaterialsRepo>(
-    MaterialsRepoImpl(
+  getit.registerSingleton<VersionsRepo>(
+    VersionsRepoImpl(
       dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
       AynaaVersionsRemoteDataSourceImpl(
         dataBase: getit.get<DataBase>(),
       ),
@@ -43,6 +45,7 @@ setUpServiceLocator() {
   getit.registerSingleton<LessonsRepo>(
     LessonsRepoImpl(
       dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
       lessonsRemoteDataSource: LessonsRemoteDataSourceImpl(
         dataBase: getit.get<DataBase>(),
       ),

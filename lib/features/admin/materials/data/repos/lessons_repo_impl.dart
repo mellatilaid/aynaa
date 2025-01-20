@@ -37,7 +37,7 @@ class LessonsRepoImpl extends LessonsRepo {
         final String fullPath = await storageService.uploadFile(
           bucketName: lesson.versionName,
           filePath: filePath,
-          fileName: fileName,
+          fileName: '${lesson.subjectName}/$fileName',
         );
         data[kUrl] = fullPath;
       }
@@ -48,7 +48,10 @@ class LessonsRepoImpl extends LessonsRepo {
     } on PostgrestException catch (e) {
       log(e.toString());
       return Left(ServerFailure.fromSupaDataBase(e: e));
+    } on StorageException catch (e) {
+      return Left(ServerFailure.fromStorage(e: e));
     } catch (e) {
+      log(e.toString());
       return Left(ServerFailure(errMessage: e.toString()));
     }
   }

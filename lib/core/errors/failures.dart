@@ -47,7 +47,7 @@ class ServerFailure extends Failures {
     switch (e.message) {
       case 'The resource already exists':
         return ServerFailure(
-            errMessage: 'هذا الاسم مستخدم من قبل, يرجى اختيار اسم اخر');
+            errMessage: 'هذا الملف موجود بالفعل , يرجى اختيار ملف اخر');
 
       default:
         return ServerFailure(

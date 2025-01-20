@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_media_section.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,7 @@ class _UplaodLessonMediaButtonBlocBuilderState
       child: BlocBuilder<PickFileCubit, PickFileState>(
         builder: (context, state) {
           if (state is PickFileLoaded) {
+            log(state.filePath);
             return UploadLessonButtonBuilder(
               lessonContent: widget.lessonContent,
               filePath: state.filePath,

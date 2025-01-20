@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -94,6 +95,13 @@ class SupaBaseStorage extends StorageService<Bucket> {
   Future<Bucket> retreiveBucket(String bucketID) async {
     final Bucket bucket = await _supabase.storage.getBucket(bucketID);
     return bucket;
+  }
+
+  @override
+  Future<String> deleteBucket(String bucketName) async {
+    final String res = await _supabase.storage.deleteBucket('avatars');
+    log(res);
+    return res;
   }
 }
 

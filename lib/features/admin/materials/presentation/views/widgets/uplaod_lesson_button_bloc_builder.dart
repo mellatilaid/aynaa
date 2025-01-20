@@ -28,7 +28,7 @@ class UploadLessonButtonBuilder extends StatelessWidget {
               final addLessonBloc = context.read<AddLessonCubit>();
               final lesson = _toLessonEnitiy(addLessonCubit: addLessonBloc);
               BlocProvider.of<AddLessonCubit>(context)
-                  .addLesson(lesson: lesson);
+                  .addLesson(lesson: lesson, filePath: filePath);
             },
             backGroundColor: kPrimaryColor,
             icon: const FaIcon(

@@ -32,6 +32,8 @@ class LessonModel extends LessonEntity with Mappable {
       kContent: description,
       kVersionID: aynaaVersionId,
       kSubjectID: subjectId,
+      kVersionName: versionName,
+      kSubjectName: subjectName,
     };
   }
 

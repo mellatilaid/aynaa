@@ -23,10 +23,10 @@ class NewSubjectBottomSheet extends StatelessWidget {
       child: BlocBuilder<AddNewSubjectCubit, AddNewSubjectState>(
         builder: (context, state) {
           if (state is AddNewSubjectSuccuss) {
-            context.pop();
             final versionID = context.read<AddLessonCubit>().versionID;
             BlocProvider.of<FetchSubjectCubit>(context)
                 .fetchSubjects(versionID: versionID!);
+            context.pop();
           } else if (state is AddNewSubjectFailure) {
             showScaffoldMessage(context, state.errMessage);
             Future.microtask(() => context.pop());

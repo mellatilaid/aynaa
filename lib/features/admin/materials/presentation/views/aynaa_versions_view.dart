@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/set_up_service_locator.dart';
-import '../../domain/repos/materials_repo.dart';
+import '../../domain/repos/versions_repo.dart';
 import 'widgets/aynaa_versions_view_body.dart';
 
 class AynaaVersionsView extends StatelessWidget {
@@ -14,7 +14,7 @@ class AynaaVersionsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FetchAynaaVersionsCubit(getit.get<MaterialsRepo>()),
+      create: (context) => FetchAynaaVersionsCubit(getit.get<VersionsRepo>()),
       child: Scaffold(
         body: const AynaaVersionsViewBody(),
         floatingActionButton: Builder(builder: (fabContext) {

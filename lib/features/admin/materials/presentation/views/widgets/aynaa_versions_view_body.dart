@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_aynaa_versions_cubit/fetch_aynaa_versions_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/aynaa_versions_list_view.dart';
@@ -30,7 +28,11 @@ class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
         } else if (state is FetchAynaaVersionsFailure) {
           return ErrorWidget(state.errMessage);
         } else if (state is FetchAynaaVersionsSucuss) {
-          log(state.aynaaVersions.last.versionName.toString());
+          if (state.aynaaVersions.isEmpty) {
+            return const Center(
+              child: Text('No Aynaa Versions'),
+            );
+          }
           return AynaaVersionListView(
             aynaaVersions: state.aynaaVersions,
           );

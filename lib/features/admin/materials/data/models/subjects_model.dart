@@ -28,7 +28,7 @@ class SubjectsModel extends SubjectsEntity with Mappable {
   @override
   toMap() {
     return {
-      kName: subjectName,
+      kSubjectName: subjectName,
       kVersionID: versionID,
     };
   }
@@ -36,7 +36,7 @@ class SubjectsModel extends SubjectsEntity with Mappable {
   static SubjectsModel fromMap(Map<String, dynamic> data) {
     return SubjectsModel(
         id: data[kID].toString(),
-        subjectName: data[kName],
+        subjectName: data[kSubjectName],
         versionID: data[kVersionID]);
   }
 }
