@@ -1,15 +1,9 @@
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_media_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../../../core/classes/pick_file.dart';
-import '../../../../../../core/widgets/custom_rounded_button_with_title.dart';
 import 'uplaod_lesson_button_bloc_builder.dart';
 
 class UplaodLessonMediaButtonBlocBuilder extends StatefulWidget {
@@ -30,7 +24,7 @@ class _UplaodLessonMediaButtonBlocBuilderState
     extends State<UplaodLessonMediaButtonBlocBuilder> {
   final filePickerHelper = FilePickerHelper();
   bool isMediaUpladed = false;
-  File? _file;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,12 +34,10 @@ class _UplaodLessonMediaButtonBlocBuilderState
           if (state is PickFileLoaded) {
             return UploadLessonButtonBuilder(
               lessonContent: widget.lessonContent,
-              file: _file,
+              filePath: state.filePath,
             );
           } else if (state is PickFileFailure) {
             return ErrorWidget(state.errMessage);
-          } else if (state is PickFileLoading) {
-            return const LoadingWidget();
           } else if (state is PickFileCanceled) {
             return const UploadMediaSection();
           }
@@ -56,39 +48,7 @@ class _UplaodLessonMediaButtonBlocBuilderState
   }
 }
 
-class UploadMediaSection extends StatelessWidget {
-  const UploadMediaSection({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        RoundedButtonWithTitle(
-          iconData: Icons.file_copy,
-          iconName: 'ملف',
-          onTap: () async {
-            BlocProvider.of<PickFileCubit>(context).pickFile();
-          },
-        ),
-        RoundedButtonWithTitle(
-          iconData: Icons.image,
-          iconName: 'صورة',
-          onTap: () async {},
-        ),
-        RoundedButtonWithTitle(
-          iconData: Icons.video_call,
-          iconName: 'فيديو',
-          onTap: () async {},
-        ),
-      ],
-    );
-  }
-}
-
-Future<void> pickFileWithPreview(BuildContext context) async {
+/*Future<void> pickFileWithPreview(BuildContext context) async {
   final result = await FilePicker.platform.pickFiles();
 
   if (result != null && result.files.single.path != null) {
@@ -166,4 +126,4 @@ Future<Widget> generateVideoThumbnail(String filePath) async {
     log(e.toString());
     return Text(filePath);
   }
-}
+}*/

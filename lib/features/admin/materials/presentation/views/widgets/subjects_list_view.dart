@@ -25,8 +25,10 @@ class SubjectsListView extends StatelessWidget {
               extra: subjects[index],
             );
             log(subjects[index].id!);
-            BlocProvider.of<AddLessonCubit>(context)
-                .setSubjectID(subjects[index].id!);
+            BlocProvider.of<AddLessonCubit>(context).setSubjectIDAndName(
+              subjects[index].id!,
+              subjects[index].name,
+            );
           },
           child: CustomCard(entity: subjects[index]),
         );

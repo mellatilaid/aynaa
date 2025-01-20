@@ -11,6 +11,8 @@ class LessonModel extends LessonEntity with Mappable {
     String? description,
     String aynaaVersionId,
     String subjectId,
+    String versionName,
+    String subjectName,
   ) : super(
           id: id,
           name: name,
@@ -18,6 +20,8 @@ class LessonModel extends LessonEntity with Mappable {
           description: description,
           aynaaVersionId: aynaaVersionId,
           subjectId: subjectId,
+          versionName: versionName,
+          subjectName: subjectName,
         );
 
   @override
@@ -39,6 +43,8 @@ class LessonModel extends LessonEntity with Mappable {
       map[kContent],
       map[kVersionID],
       map[kSubjectID],
+      map[kVersionName],
+      map[kSubjectName],
     );
   }
 
@@ -50,6 +56,8 @@ class LessonModel extends LessonEntity with Mappable {
       lesson.description,
       lesson.aynaaVersionId,
       lesson.subjectId,
+      lesson.versionName,
+      lesson.subjectName,
     );
   }
 }

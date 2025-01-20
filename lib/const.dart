@@ -22,3 +22,5 @@ const String kVersionID = 'version_id';
 const String kSubjectID = 'subject_id';
 const String kColumn = 'column';
 const String kValue = 'value';
+const String kVersionName = 'version-name';
+const String kSubjectName = 'subject-name';

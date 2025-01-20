@@ -7,7 +7,10 @@ abstract class LessonsRepo {
 
   Future<Either<Failures, List<LessonEntity>>> fetchLessons(
       {required String subjectID, required String versionID});
-  Future<Either<Failures, void>> addLesson({required LessonEntity lesson});
+  Future<Either<Failures, void>> addLesson({
+    required LessonEntity lesson,
+    String? filePath,
+  });
 
   Future<Either<Failures, void>> deleteLesson({required String lessonID});
 

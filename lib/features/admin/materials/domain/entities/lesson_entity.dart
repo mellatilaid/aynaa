@@ -9,12 +9,16 @@ class LessonEntity implements Entity {
   final String? description;
   final String aynaaVersionId;
   final String subjectId;
-
-  const LessonEntity(
-      {this.id,
-      this.name,
-      this.url,
-      this.description,
-      required this.aynaaVersionId,
-      required this.subjectId});
+  final String versionName;
+  final String subjectName;
+  const LessonEntity({
+    this.id,
+    this.name,
+    this.url,
+    this.description,
+    required this.aynaaVersionId,
+    required this.subjectId,
+    required this.versionName,
+    required this.subjectName,
+  });
 }

@@ -21,7 +21,7 @@ class SupaBaseStorage extends StorageService<Bucket> {
       required String filePath,
       required String fileName}) async {
     final Uint8List file =
-        await _supabase.storage.from('avatars').download('avatar1.png');
+        await _supabase.storage.from(bucketName).download(fileName);
     return file;
   }
 
@@ -83,7 +83,7 @@ class SupaBaseStorage extends StorageService<Bucket> {
   }
 
   @override
-  Future<List<FileObject>> getAllFilesInABucket(
+  Future<List<FileObject>> getAllFilesInBucket(
       {required String bucketName}) async {
     final List<FileObject> objects =
         await _supabase.storage.from('avatars').list();

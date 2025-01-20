@@ -18,7 +18,7 @@ abstract class StorageService<T> {
       required String filePath,
       required String fileName});
 
-  Future<List<FileObject>> getAllFilesInABucket({
+  Future<List<FileObject>> getAllFilesInBucket({
     required String bucketName,
   });
   Future<String> createBucket(String bucketName);

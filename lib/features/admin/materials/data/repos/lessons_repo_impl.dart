@@ -1,10 +1,13 @@
 import 'dart:developer';
 
+import 'package:atm_app/const.dart';
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/services/data_base.dart';
@@ -13,16 +16,31 @@ import '../../domain/repos/lessons_repo.dart';
 
 class LessonsRepoImpl extends LessonsRepo {
   final DataBase dataBase;
+  final StorageService storageService;
   final LessonsRemoteDataSource lessonsRemoteDataSource;
-  LessonsRepoImpl(
-      {required this.dataBase, required this.lessonsRemoteDataSource});
+  LessonsRepoImpl({
+    required this.dataBase,
+    required this.lessonsRemoteDataSource,
+    required this.storageService,
+  });
   @override
-  Future<Either<Failures, void>> addLesson(
-      {required LessonEntity lesson}) async {
+  Future<Either<Failures, void>> addLesson({
+    required LessonEntity lesson,
+    String? filePath,
+  }) async {
     try {
       final LessonModel lessonModel = LessonModel.fromLessonEntity(lesson);
 
       final data = lessonModel.toMap();
+      if (filePath != null) {
+        final fileName = path.basename(filePath);
+        final String fullPath = await storageService.uploadFile(
+          bucketName: lesson.versionName,
+          filePath: filePath,
+          fileName: fileName,
+        );
+        data[kUrl] = fullPath;
+      }
       await dataBase.setDate(path: DbEnpoints.lessons, data: data);
       return const Right(null);
       /*final String bucketId = await storageService.createBucket(versionName);

@@ -52,7 +52,11 @@ class LessonMediaPreview extends StatelessWidget {
         );
       } else {
         // Show file name for unsupported types
-        return Text("File: ${filePath!}");
+        return Align(
+            alignment: Alignment.center,
+            child: Text(
+              "File: ${filePath!}",
+            ));
       }
     }
   }

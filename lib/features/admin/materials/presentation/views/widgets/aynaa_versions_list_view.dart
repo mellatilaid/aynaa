@@ -23,8 +23,8 @@ class AynaaVersionListView extends StatelessWidget {
             onTap: () {
               context.push(AdminAppRouter.versionSubjectsView,
                   extra: aynaaVersions[index]);
-              BlocProvider.of<AddLessonCubit>(context)
-                  .setVersionID(aynaaVersions[index].id);
+              BlocProvider.of<AddLessonCubit>(context).setVersionIDAndName(
+                  aynaaVersions[index].id, aynaaVersions[index].name);
             },
             child: CustomCard(
               entity: aynaaVersions[index],
