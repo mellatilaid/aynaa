@@ -38,6 +38,7 @@ class _CustomLessonPreviewCardState extends State<CustomLessonPreviewCard> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               (baseName != null)
                   ? ListTile(
@@ -48,8 +49,10 @@ class _CustomLessonPreviewCardState extends State<CustomLessonPreviewCard> {
               const SizedBox(
                 height: 16,
               ),
-              const Text(
-                  'في هذا الدرس الجديد، سنتعرف على أساسيات البرمجة باستخدام لغة'),
+              Text(
+                widget.lesson.description ?? '',
+                textAlign: TextAlign.start,
+              ),
             ],
           ),
         ),

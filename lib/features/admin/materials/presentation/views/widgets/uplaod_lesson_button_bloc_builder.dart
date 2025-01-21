@@ -9,11 +9,13 @@ import '../../manager/add_lesson_cubit/add_lesson_cubit.dart';
 
 class UploadLessonButtonBuilder extends StatelessWidget {
   final TextEditingController lessonContent;
-  final String filePath;
+  final String? filePath;
+  final bool isButtonEnabled;
   const UploadLessonButtonBuilder({
     super.key,
     required this.lessonContent,
-    required this.filePath,
+    this.filePath,
+    required this.isButtonEnabled,
   });
 
   @override
@@ -24,12 +26,15 @@ class UploadLessonButtonBuilder extends StatelessWidget {
         return CustomActionButtonType2(
             isLoading: state is AddLessonLoading ? true : false,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            onPressed: () {
-              final addLessonBloc = context.read<AddLessonCubit>();
-              final lesson = _toLessonEnitiy(addLessonCubit: addLessonBloc);
-              BlocProvider.of<AddLessonCubit>(context)
-                  .addLesson(lesson: lesson, filePath: filePath);
-            },
+            onPressed: isButtonEnabled
+                ? () {
+                    final addLessonBloc = context.read<AddLessonCubit>();
+                    final lesson =
+                        _toLessonEnitiy(addLessonCubit: addLessonBloc);
+                    BlocProvider.of<AddLessonCubit>(context)
+                        .addLesson(lesson: lesson, filePath: filePath);
+                  }
+                : null,
             backGroundColor: kPrimaryColor,
             icon: const FaIcon(
               FontAwesomeIcons.upload,

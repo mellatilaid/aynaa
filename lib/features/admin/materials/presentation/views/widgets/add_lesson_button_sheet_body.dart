@@ -1,12 +1,15 @@
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_media_content_builder.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/uplaod_lesson_button_bloc_builder.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_lesson_media_button_section.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/widgets/invisibla_text_field.dart';
 
 class AddLessonBottomSheetBody extends StatefulWidget {
+  final bool isTextOnly;
   const AddLessonBottomSheetBody({
     super.key,
+    required this.isTextOnly,
   });
 
   @override
@@ -17,6 +20,25 @@ class AddLessonBottomSheetBody extends StatefulWidget {
 class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
   final _lessonTitleController = TextEditingController();
   String? selectedFile;
+  final _formKey = GlobalKey<FormState>();
+  final ValueNotifier<bool> _isButtonEnabled = ValueNotifier<bool>(false);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _lessonTitleController.addListener(() {
+      final hasText = _lessonTitleController.text.trim().isNotEmpty;
+      _isButtonEnabled.value = hasText; // Enable or disable the button
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _lessonTitleController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -28,20 +50,25 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  LessonMediaContentBuilder(
-                    filePath: selectedFile,
-                  ),
-                  const SizedBox(height: 16),
-                  InvisibleTextField(
-                    controller: _lessonTitleController,
-                    hintText: 'محتوى الدرس',
-                    maxLines: 6,
-                  ),
-                  const SizedBox(height: 16),
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    !widget.isTextOnly
+                        ? LessonMediaContentBuilder(
+                            filePath: selectedFile,
+                          )
+                        : const SizedBox.shrink(),
+                    const SizedBox(height: 16),
+                    InvisibleTextField(
+                      controller: _lessonTitleController,
+                      hintText: 'محتوى الدرس',
+                      maxLines: 6,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
             ),
           ),
@@ -51,18 +78,29 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
           bottom: 0,
           left: 0,
           right: 0,
-          child: UplaodLessonMediaButtonBlocBuilder(
-            lessonContent: _lessonTitleController,
-            onFileUploaded: onFileUploaded,
-          ),
+          child: widget.isTextOnly
+              ? Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: ValueListenableBuilder(
+                    valueListenable: _isButtonEnabled,
+                    builder: (context, value, child) {
+                      return UploadLessonButtonBuilder(
+                        isButtonEnabled: value,
+                        lessonContent: _lessonTitleController,
+                      );
+                    },
+                    /*child: UploadLessonButtonBuilder(
+                        lessonContent: _lessonTitleController),*/
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: UplaodLessonMediaButtonBlocBuilder(
+                    lessonContent: _lessonTitleController,
+                  ),
+                ),
         ),
       ],
     );
-  }
-
-  onFileUploaded({required String filePath}) {
-    setState(() {
-      selectedFile = filePath;
-    });
   }
 }

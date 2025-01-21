@@ -31,11 +31,11 @@ class LessonMediaPreview extends StatelessWidget {
       if (['.jpg', '.jpeg', '.png', '.gif']
           .contains(fileExtension.toLowerCase())) {
         // Preview image
-        return Image.file(
-          File(filePath!),
-          fit: BoxFit.cover,
-          height: 250,
-          width: double.infinity,
+        return Center(
+          child: Image.file(
+            File(filePath!),
+            fit: BoxFit.cover,
+          ),
         );
       } else if (['.mp4', '.mov', '.avi']
           .contains(fileExtension.toLowerCase())) {

@@ -11,8 +11,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../core/widgets/scaffold_message.dart';
 
 class AddLessonBottomSheet extends StatefulWidget {
+  final bool isTextOnly;
   const AddLessonBottomSheet({
     super.key,
+    required this.isTextOnly,
   });
 
   @override
@@ -42,7 +44,9 @@ class _AddLessonBottomSheetState extends State<AddLessonBottomSheet> {
                     versionID: _getVersionID(),
                   );
             }
-            return const AddLessonBottomSheetBody();
+            return AddLessonBottomSheetBody(
+              isTextOnly: widget.isTextOnly,
+            );
           },
         ),
       ),

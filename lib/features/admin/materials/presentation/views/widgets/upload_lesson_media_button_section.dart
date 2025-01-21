@@ -10,11 +10,10 @@ import 'uplaod_lesson_button_bloc_builder.dart';
 
 class UplaodLessonMediaButtonBlocBuilder extends StatefulWidget {
   final TextEditingController lessonContent;
-  final Function({required String filePath}) onFileUploaded;
+
   const UplaodLessonMediaButtonBlocBuilder({
     super.key,
     required this.lessonContent,
-    required this.onFileUploaded,
   });
 
   @override
@@ -29,24 +28,22 @@ class _UplaodLessonMediaButtonBlocBuilderState
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: BlocBuilder<PickFileCubit, PickFileState>(
-        builder: (context, state) {
-          if (state is PickFileLoaded) {
-            log(state.filePath);
-            return UploadLessonButtonBuilder(
-              lessonContent: widget.lessonContent,
-              filePath: state.filePath,
-            );
-          } else if (state is PickFileFailure) {
-            return ErrorWidget(state.errMessage);
-          } else if (state is PickFileCanceled) {
-            return const UploadMediaSection();
-          }
+    return BlocBuilder<PickFileCubit, PickFileState>(
+      builder: (context, state) {
+        if (state is PickFileLoaded) {
+          log(state.filePath);
+          return UploadLessonButtonBuilder(
+            lessonContent: widget.lessonContent,
+            filePath: state.filePath,
+            isButtonEnabled: true,
+          );
+        } else if (state is PickFileFailure) {
+          return ErrorWidget(state.errMessage);
+        } else if (state is PickFileCanceled) {
           return const UploadMediaSection();
-        },
-      ),
+        }
+        return const UploadMediaSection();
+      },
     );
   }
 }
