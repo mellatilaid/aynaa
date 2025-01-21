@@ -9,10 +9,13 @@ class LessonsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: lessons.length,
-        itemBuilder: (context, index) {
-          return const CustomLessonPreviewCard();
-          //return CustomCard(entity: lessons[index]);
-        });
+      itemCount: lessons.length,
+      itemBuilder: (context, index) {
+        return CustomLessonPreviewCard(
+          lesson: lessons[index],
+        );
+        //return CustomCard(entity: lessons[index]);
+      },
+    );
   }
 }
