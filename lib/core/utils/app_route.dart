@@ -18,12 +18,17 @@ abstract class AdminAppRouter {
     routes: [
       GoRoute(
         path: '/',
+        builder: (context, state) => const SignInView(),
+      ),
+      GoRoute(
+        path: adminNavBarView,
         builder: (context, state) => const AdminBottomNavView(),
       ),
       GoRoute(
         path: versionSubjectsView,
         builder: (context, state) {
           final data = state.extra as AynaaVersionsEntity;
+
           return SubjectsView(
             aynaaVersionsEntity: data,
           );
@@ -33,6 +38,7 @@ abstract class AdminAppRouter {
         path: lessonsView,
         builder: (context, state) {
           final data = state.extra as SubjectsEntity;
+          //return const UploadPage();
           return LessonsView(
             subjectsEntity: data,
           );

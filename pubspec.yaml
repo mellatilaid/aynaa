@@ -54,12 +54,18 @@ dependencies:
   device_preview: ^1.2.0
   typewritertext: ^3.0.9
   file_picker: ^8.1.7
-  video_thumbnail: ^0.5.3
+  #video_thumbnail: ^0.5.3
   path: ^1.9.0
   video_player: ^2.9.2
-  pdf_viewer_flutter: ^1.0.2
   flutter_pdfview: ^1.4.0
   flutter_speed_dial: ^7.0.0
+  tus_client_dart: ^2.5.0
+  cross_file: ^0.3.4
+  http: ">=1.0.0 <2.0.0"
+  device_info_plus: ^11.2.1
+  url_launcher: ^6.3.1
+  permission_handler: ^11.3.1
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

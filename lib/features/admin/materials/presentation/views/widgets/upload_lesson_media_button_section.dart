@@ -32,6 +32,7 @@ class _UplaodLessonMediaButtonBlocBuilderState
       builder: (context, state) {
         if (state is PickFileLoaded) {
           log(state.filePath);
+
           return UploadLessonButtonBuilder(
             lessonContent: widget.lessonContent,
             filePath: state.filePath,

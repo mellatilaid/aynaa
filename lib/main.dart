@@ -14,7 +14,7 @@ void main() async {
   );
   setUpServiceLocator();
   //await Firebase.initializeApp();
-  if (0 == 0) {
+  if (0 == 01) {
     runApp(DevicePreview(
       enabled: true, // Set to `true` to enable DevicePreview
       builder: (context) => const MyApp(), // Your app entry point
