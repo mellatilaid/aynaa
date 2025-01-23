@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../domain/entities/lesson_entity.dart';
-import '../../manager/add_lesson_cubit/add_lesson_cubit.dart';
+import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 
 class UploadLessonButtonBuilder extends StatelessWidget {
   final TextEditingController lessonContent;

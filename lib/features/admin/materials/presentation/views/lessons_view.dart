@@ -10,7 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../../core/utils/set_up_service_locator.dart';
 import '../../../../../core/widgets/custom_speed_dial_child.dart';
 import '../../domain/repos/lessons_repo.dart';
-import '../manager/add_lesson_cubit/add_lesson_cubit.dart';
+import '../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 import 'widgets/lessons_view_body.dart';
 
 class LessonsView extends StatelessWidget {
@@ -69,9 +69,7 @@ class LessonsView extends StatelessWidget {
                     builder: (context) {
                       return BlocProvider.value(
                         value: fabContext.read<FetchLessonsCubit>(),
-                        child: const AddFileLessonBottomSheet(
-                          isTextOnly: false,
-                        ),
+                        child: const AddFileLessonBottomSheet(),
                       );
                     },
                   );

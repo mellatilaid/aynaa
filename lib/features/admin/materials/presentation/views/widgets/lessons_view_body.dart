@@ -5,7 +5,7 @@ import 'package:atm_app/features/admin/materials/presentation/views/widgets/less
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../manager/add_lesson_cubit/add_lesson_cubit.dart';
+import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 
 class LessonsViewBody extends StatefulWidget {
   final SubjectsEntity subjectsEntity;

@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/utils/app_route.dart';
 import '../../../domain/entities/subjects_entity.dart';
-import '../../manager/add_lesson_cubit/add_lesson_cubit.dart';
+import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 
 class SubjectsListView extends StatelessWidget {
   final List<SubjectsEntity> subjects;
