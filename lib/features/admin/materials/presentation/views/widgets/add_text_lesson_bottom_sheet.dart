@@ -10,18 +10,19 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/widgets/scaffold_message.dart';
 
-class AddLessonBottomSheet extends StatefulWidget {
+class AddTextLessonBottomSheet extends StatefulWidget {
   final bool isTextOnly;
-  const AddLessonBottomSheet({
+  const AddTextLessonBottomSheet({
     super.key,
     required this.isTextOnly,
   });
 
   @override
-  State<AddLessonBottomSheet> createState() => _AddLessonBottomSheetState();
+  State<AddTextLessonBottomSheet> createState() =>
+      _AddTextLessonBottomSheetState();
 }
 
-class _AddLessonBottomSheetState extends State<AddLessonBottomSheet> {
+class _AddTextLessonBottomSheetState extends State<AddTextLessonBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

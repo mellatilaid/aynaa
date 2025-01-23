@@ -5,7 +5,6 @@ import 'package:cross_file/cross_file.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,7 +24,7 @@ class _UploadPageState extends State<UploadPage> {
   XFile? _file;
   TusClient? _client;
   Uri? _fileUrl;
-
+  String uid = Supabase.instance.client.auth.currentUser!.id;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +95,10 @@ class _UploadPageState extends State<UploadPage> {
                               _client = TusClient(
                                 _file!,
                                 store: TusFileStore(tempDirectory),
-                                maxChunkSize: 512 * 1024 * 10,
+                                maxChunkSize: 1024 * 1024 * 6,
+                                retries: 10, // change as wanted
+                                retryInterval: 2, // interval in seconds
+                                retryScale: RetryScale.exponential,
                               );
 
                               print("Starting upload");
@@ -122,11 +124,18 @@ class _UploadPageState extends State<UploadPage> {
                                 metadata: {
                                   'bucketName': '2022',
                                   'objectName':
-                                      'math', // name to be saved in supabase
+                                      '$uid/${_file!.name}', // name to be saved in supabase
                                   'contentType':
                                       'application/octet-stream', //content type, e.g. application/octet-stream
                                   'cacheControl': '3600',
                                 },
+                                headers: {
+                                  'Authorization':
+                                      'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
+                                  // Set to true to enable overwrite
+                                  'x-upsert': 'true'
+                                },
+
                                 /*headers: {
                                   'testHeaders': 'testHeaders',
                                   'testHeaders2': 'testHeaders2',
@@ -285,10 +294,28 @@ Future<void> pickFilesAndUploadToSupabaseWithTUS() async {
     XFile? file = await pickFile(['pdf']);
 
     String uid = Supabase.instance.client.auth.currentUser!.id;
-
+    final tempDir = await getTemporaryDirectory();
+    final tempDirectory = Directory('${tempDir.path}/${file.name}_uploads');
+    if (!tempDirectory.existsSync()) {
+      tempDirectory.createSync(recursive: true);
+    }
+    final tusClient = TusClient(
+      file,
+      store: TusFileStore(tempDirectory),
+      maxChunkSize: 6 * 1024 * 1024, //do not change
+      retries: 10, // change as wanted
+      retryInterval: 2, // interval in seconds
+      retryScale: RetryScale.exponential,
+    );
     // Create a new TusClient instance
-    final tusClient = TusClient(file, store: TusMemoryStore());
-
+    /*final tusClient = TusClient(
+      file,
+      store: TusMemoryStore(tempDirectory),
+      retries: 5,
+      maxChunkSize: 1024 * 1024,
+    );*/
+    log(Supabase.instance.client.auth.currentSession?.accessToken.toString() ??
+        'tokes is null');
     // function to print progress
     void printOnProgress(double progress, Duration duration) {
       print('Progress: $progress% and $duration time');
@@ -298,7 +325,7 @@ Future<void> pickFilesAndUploadToSupabaseWithTUS() async {
     await tusClient.upload(
       uri: Uri.parse(
           // This resolves to our Supabase Storage URL
-          '${dotenv.env['SUPABASE_URL']!}/storage/v1/upload/resumable'),
+          projectUrl),
       headers: {
         'Authorization':
             'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
@@ -306,9 +333,9 @@ Future<void> pickFilesAndUploadToSupabaseWithTUS() async {
         'x-upsert': 'true'
       },
       metadata: {
-        'bucketName': 'bucketname',
-        'objectName': '$uid/${file.path.split('/').last}',
-        'contentType': 'application/zip',
+        'bucketName': '2022',
+        'objectName': '$uid/${file.name}',
+        'contentType': 'application/pdf',
       },
       onStart: (TusClient client, Duration? estimate) {
         // If estimate is not null, it will provide the estimate time for completion

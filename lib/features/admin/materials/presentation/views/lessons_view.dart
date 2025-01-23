@@ -1,7 +1,8 @@
 import 'package:atm_app/core/widgets/floating_optional_speed_dial.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_lessons_cubit/fetch_lessons_cubit.dart';
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_lesson_full_screen_bottom_sheet.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_file_lesson_bottom_sheet.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_text_lesson_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,27 +34,28 @@ class LessonsView extends StatelessWidget {
           return FloatingAddOptionsSpeedDial(
             speedDials: [
               customSpeedDialChild(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: fabContext,
-                      isScrollControlled:
-                          true, // Allows it to take up the full height
-                      shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(16)),
-                      ),
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: fabContext.read<FetchLessonsCubit>(),
-                          child: const AddLessonBottomSheet(
-                            isTextOnly: true,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.text_fields),
-                  label: 'نص فقط'),
+                onTap: () {
+                  showModalBottomSheet(
+                    context: fabContext,
+                    isScrollControlled:
+                        true, // Allows it to take up the full height
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(16)),
+                    ),
+                    builder: (context) {
+                      return BlocProvider.value(
+                        value: fabContext.read<FetchLessonsCubit>(),
+                        child: const AddTextLessonBottomSheet(
+                          isTextOnly: true,
+                        ),
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.text_fields),
+                label: 'نص فقط',
+              ),
               customSpeedDialChild(
                 onTap: () {
                   showModalBottomSheet(
@@ -67,7 +69,7 @@ class LessonsView extends StatelessWidget {
                     builder: (context) {
                       return BlocProvider.value(
                         value: fabContext.read<FetchLessonsCubit>(),
-                        child: const AddLessonBottomSheet(
+                        child: const AddFileLessonBottomSheet(
                           isTextOnly: false,
                         ),
                       );
