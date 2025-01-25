@@ -32,6 +32,7 @@ class _CustomLessonPreviewCardState extends State<CustomLessonPreviewCard> {
 
   @override
   Widget build(BuildContext context) {
+    log(widget.lesson.url ?? 'null');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       child: Card(

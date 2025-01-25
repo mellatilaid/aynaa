@@ -1,3 +1,4 @@
+import 'package:atm_app/core/services/initiliaze_cache.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/admin_material_app.dart';
 import 'package:device_preview/device_preview.dart';
@@ -13,6 +14,7 @@ void main() async {
     anonKey: dotenv.get('ANON_KEY'),
   );
   setUpServiceLocator();
+  await initializeCache();
   //await Firebase.initializeApp();
   if (0 == 0) {
     runApp(DevicePreview(
