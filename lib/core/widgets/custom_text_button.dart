@@ -1,6 +1,5 @@
+import 'package:atm_app/core/const/app_const.dart';
 import 'package:flutter/material.dart';
-
-import '../../const.dart';
 
 class CustomTextButton extends StatelessWidget {
   final String title;

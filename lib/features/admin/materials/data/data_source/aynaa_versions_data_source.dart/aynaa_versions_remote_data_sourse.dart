@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/hive_service.dart';
 import 'package:atm_app/features/admin/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:hive/hive.dart';
 
 import '../../../../../../core/utils/db_enpoints.dart';
 
@@ -11,8 +15,11 @@ abstract class AynaaVersionsRemoteDataSource {
 class AynaaVersionsRemoteDataSourceImpl
     implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
-
-  AynaaVersionsRemoteDataSourceImpl({required this.dataBase});
+  final HiveCache hiveCache;
+  AynaaVersionsRemoteDataSourceImpl({
+    required this.dataBase,
+    required this.hiveCache,
+  });
   @override
   Future<List<AynaaVersionsEntity>> fetchAynaaVersions() async {
     final List<Map<String, dynamic>> aynaaVersions =
@@ -20,7 +27,7 @@ class AynaaVersionsRemoteDataSourceImpl
 
     List<AynaaVersionsEntity> versions =
         convertToAynaaVersionEntity(aynaaVersions);
-
+    hiveCache.add(boxName: 'versions', items: versions);
     return versions;
   }
 
@@ -31,4 +38,10 @@ class AynaaVersionsRemoteDataSourceImpl
     }).toList();
     return aynaaVersions;
   }
+}
+
+_add(List<AynaaVersionsEntity> items) async {
+  var box = Hive.box<AynaaVersionsEntity>('versions');
+  await box.addAll(items);
+  log('added items to box');
 }

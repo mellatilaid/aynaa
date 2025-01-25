@@ -1,8 +1,8 @@
-import 'package:atm_app/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../../../core/const/app_const.dart';
 import '../../../../../../core/widgets/custom_rounded_button_with_title.dart';
 import '../../manager/pick_file_cubit/pick_file_cubit.dart';
 

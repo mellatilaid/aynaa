@@ -1,8 +1,9 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:atm_app/const.dart';
 import 'package:atm_app/core/functions/check_text_dir.dart';
 import 'package:flutter/material.dart';
+
+import '../const/app_const.dart';
 
 class InvisibleTextField extends StatefulWidget {
   final String? hintText;

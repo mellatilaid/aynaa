@@ -1,8 +1,8 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
-  final Entity entity;
+  final AynaaVersionsEntity entity;
   const CustomCard({
     super.key,
     required this.entity,

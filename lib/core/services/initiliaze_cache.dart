@@ -6,4 +6,5 @@ Future<void> initializeCache() async {
 
   // Register all adapters
   Hive.registerAdapter(AynaaVersionsEntityAdapter());
+  await Hive.openBox<AynaaVersionsEntity>('versions');
 }

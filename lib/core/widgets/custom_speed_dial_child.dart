@@ -1,4 +1,4 @@
-import 'package:atm_app/const.dart';
+import 'package:atm_app/core/const/app_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 

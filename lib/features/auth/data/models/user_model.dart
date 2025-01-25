@@ -1,6 +1,7 @@
-import 'package:atm_app/const.dart';
 import 'package:atm_app/features/auth/domain/entities/user_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../../core/const/remote_db_const.dart';
 
 class UserModel extends UserEntity {
   UserModel(

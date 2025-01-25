@@ -1,6 +1,7 @@
-import 'package:atm_app/const.dart';
 import 'package:atm_app/core/mixins/mappable.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
+
+import '../../../../../core/const/remote_db_const.dart';
 
 class SubjectsModel extends SubjectsEntity with Mappable {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../const.dart';
+import '../const/app_const.dart';
 
 class FloatingAddOptionsSpeedDial extends StatelessWidget {
   final List<SpeedDialChild> speedDials;

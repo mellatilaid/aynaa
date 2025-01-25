@@ -1,5 +1,6 @@
-import 'package:atm_app/const.dart';
 import 'package:atm_app/features/admin/posts/domain/entities/post_entity.dart';
+
+import '../../../../../core/const/remote_db_const.dart';
 
 class PostModel extends PostEntity {
   PostModel(

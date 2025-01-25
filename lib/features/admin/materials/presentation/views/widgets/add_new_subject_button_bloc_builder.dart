@@ -2,7 +2,7 @@ import 'package:atm_app/features/admin/materials/presentation/manager/add_text_l
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../const.dart';
+import '../../../../../../core/const/app_const.dart';
 import '../../../../../../core/widgets/custom_action_button_type2.dart';
 import '../../../data/models/subjects_model.dart';
 import '../../../domain/entities/subjects_entity.dart';

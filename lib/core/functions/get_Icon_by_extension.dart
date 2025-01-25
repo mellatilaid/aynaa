@@ -1,6 +1,7 @@
-import 'package:atm_app/const.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../const/app_const.dart';
 
 getLessonIcon({required String fileExtension}) {
   if (['.jpg', '.jpeg', '.png', '.gif'].contains(fileExtension.toLowerCase())) {

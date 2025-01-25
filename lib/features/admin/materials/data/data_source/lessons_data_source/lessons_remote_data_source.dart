@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 
-import '../../../../../../const.dart';
+import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/services/data_base.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../domain/entities/lesson_entity.dart';

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/auth_services.dart';
 import 'package:atm_app/core/services/data_base.dart';
@@ -9,8 +10,6 @@ import 'package:atm_app/features/auth/domain/entities/user_entity.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../../../const.dart';
 
 class AuthRepoImpl extends AuthRepo {
   final AuthServices authServices;

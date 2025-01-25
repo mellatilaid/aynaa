@@ -1,6 +1,7 @@
-import 'package:atm_app/const.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../const/remote_db_const.dart';
 
 class SupabaseDb extends DataBase {
   final _supabase = Supabase.instance.client;

@@ -1,4 +1,4 @@
-import '../../../../../const.dart';
+import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/mixins/mappable.dart';
 import '../../domain/entities/aynaa_versions_entity.dart';
 

@@ -2,7 +2,7 @@ import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 
-import '../../../../../../const.dart';
+import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
 abstract class SubjectsRemoteDataSource {

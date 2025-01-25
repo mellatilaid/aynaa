@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/custom_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +29,7 @@ class SubjectsListView extends StatelessWidget {
               subjects[index].name,
             );
           },
-          child: CustomCard(entity: subjects[index]),
+          child: const Text('subject'),
         );
       },
     );

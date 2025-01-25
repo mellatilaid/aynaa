@@ -1,27 +1,39 @@
+import 'dart:developer';
+
 import 'package:atm_app/core/services/hive_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-abstract class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
+class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   late Box<T> _box;
 
   @override
-  Future<void> init() async {
-    _box = await Hive.openBox<T>(boxName);
+  Future<void> init({required String boxName}) async {
+    if (!Hive.isBoxOpen(boxName)) {
+      await Hive.openBox<T>(boxName);
+      log('box is  opened');
+    }
   }
 
   @override
-  Future<List<T>> getAll() async {
-    return _box.values.toList();
+  Future<List<T>> getAll({required String boxName}) async {
+    await init(boxName: boxName);
+    var box = Hive.box<T>(boxName);
+    log(box.values.length.toString());
+    return box.values.toList();
   }
 
   @override
-  Future<T?> get(String id) async {
-    return _box.get(id);
+  Future<T?> get(String boxName, String id) async {
+    await init(boxName: boxName);
+    var box = Hive.box<T>(boxName);
+    return box.get(id);
   }
 
   @override
-  Future<void> add(List<T> items) async {
-    await _box.addAll(items);
+  Future<void> add({required String boxName, required List<T> items}) async {
+    await init(boxName: boxName);
+    var box = Hive.box<T>(boxName);
+    await box.addAll(items);
   }
 
   @override
@@ -58,4 +70,8 @@ abstract class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   Future<bool> exists(String id) async {
     return _box.containsKey(id);
   }
+
+  @override
+  // TODO: implement boxName
+  String get boxName => throw UnimplementedError();
 }
