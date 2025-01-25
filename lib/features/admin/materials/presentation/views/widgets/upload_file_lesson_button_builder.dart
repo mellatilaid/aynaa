@@ -59,6 +59,3 @@ class UploadFileLessonButtonBuilder extends StatelessWidget {
     );
   }
 }
-
-const projectUrl =
-    'https://oowclgphdoiksgmztyat.supabase.co/storage/v1/upload/resumable';

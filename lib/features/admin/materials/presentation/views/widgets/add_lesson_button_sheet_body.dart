@@ -1,6 +1,5 @@
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_media_content_builder.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/uplaod_lesson_button_bloc_builder.dart';
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_lesson_media_button_section.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/widgets/invisibla_text_field.dart';
@@ -55,16 +54,13 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    !widget.isTextOnly
-                        ? LessonMediaContentBuilder(
-                            filePath: selectedFile,
-                          )
-                        : const SizedBox.shrink(),
+                    LessonMediaContentBuilder(
+                      filePath: selectedFile,
+                    ),
                     const SizedBox(height: 16),
                     InvisibleTextField(
                       controller: _lessonTitleController,
-                      hintText: 'محتوى الدرس',
-                      maxLines: 6,
+                      hintText: 'محتوى الدرس ',
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -75,31 +71,23 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
         ),
         // Fixed button at the bottom
         Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: widget.isTextOnly
-              ? Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: ValueListenableBuilder(
-                    valueListenable: _isButtonEnabled,
-                    builder: (context, value, child) {
-                      return UploadLessonButtonBuilder(
-                        isButtonEnabled: value,
-                        lessonContent: _lessonTitleController,
-                      );
-                    },
-                    /*child: UploadLessonButtonBuilder(
-                        lessonContent: _lessonTitleController),*/
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: UplaodLessonMediaButtonBlocBuilder(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ValueListenableBuilder(
+                valueListenable: _isButtonEnabled,
+                builder: (context, value, child) {
+                  return UploadLessonButtonBuilder(
+                    isButtonEnabled: value,
                     lessonContent: _lessonTitleController,
-                  ),
-                ),
-        ),
+                  );
+                },
+                /*child: UploadLessonButtonBuilder(
+                        lessonContent: _lessonTitleController),*/
+              ),
+            )),
       ],
     );
   }

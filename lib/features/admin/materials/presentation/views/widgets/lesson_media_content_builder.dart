@@ -21,7 +21,7 @@ class LessonMediaContentBuilder extends StatelessWidget {
             filePath: state.filePath,
           );
         }
-        return Container();
+        return const LessonMediaPreview();
       },
     );
   }

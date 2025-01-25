@@ -1,6 +1,5 @@
 import 'package:atm_app/const.dart';
 import 'package:atm_app/core/widgets/custom_action_button_type2.dart';
-import 'package:atm_app/features/admin/materials/presentation/views/upload_file_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,12 +28,11 @@ class UploadLessonButtonBuilder extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onPressed: isButtonEnabled
                 ? () async {
-                    await pickFilesAndUploadToSupabaseWithTUS();
-                    /* final addLessonBloc = context.read<AddLessonCubit>();
+                    final addLessonBloc = context.read<AddLessonCubit>();
                     final lesson =
                         _toLessonEnitiy(addLessonCubit: addLessonBloc);
                     BlocProvider.of<AddLessonCubit>(context)
-                        .addLesson(lesson: lesson, filePath: filePath);*/
+                        .addLesson(lesson: lesson, filePath: filePath);
                   }
                 : null,
             backGroundColor: kPrimaryColor,

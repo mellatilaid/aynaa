@@ -19,11 +19,11 @@ abstract class AdminAppRouter {
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/',
+        path: '/signin',
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(
-        path: adminNavBarView,
+        path: '/',
         builder: (context, state) => const AdminBottomNavView(),
       ),
       GoRoute(

@@ -121,7 +121,7 @@ class _UploadPageState extends State<UploadPage> {
                                     _estimate = estimate;
                                   });
                                 },
-                                uri: Uri.parse(projectUrl),
+                                uri: Uri.parse(''),
                                 metadata: {
                                   'bucketName': '2022',
                                   'objectName':
@@ -326,7 +326,7 @@ Future<void> pickFilesAndUploadToSupabaseWithTUS() async {
     await tusClient.upload(
       uri: Uri.parse(
           // This resolves to our Supabase Storage URL
-          projectUrl),
+          ''),
       headers: {
         'Authorization':
             'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
@@ -410,6 +410,3 @@ Future<void> pickFilesAndUploadToSupabaseWithTUS() async {
     log(e.toString());
   }
 }*/
-
-const projectUrl =
-    'https://oowclgphdoiksgmztyat.supabase.co/storage/v1/upload/resumable';

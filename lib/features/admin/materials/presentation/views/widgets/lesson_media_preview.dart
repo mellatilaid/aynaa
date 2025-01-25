@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
 import 'package:cross_file/cross_file.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as path;
 
 import '../../../../../../core/functions/generate_video_thumbnail.dart';
@@ -15,14 +18,25 @@ class LessonMediaPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: _buildPreview(),
-    );
+    return Builder(builder: (context) {
+      return InkWell(
+        onTap: () => BlocProvider.of<PickFileCubit>(context).pickFile(
+          fileType: FileType.image,
+        ),
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: (filePath == null)
+              ? const Center(
+                  child: Icon(Icons.add),
+                )
+              : _buildPreview(),
+        ),
+      );
+    });
   }
 
   _buildPreview() {
