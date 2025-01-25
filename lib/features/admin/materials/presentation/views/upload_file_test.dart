@@ -29,6 +29,7 @@ class _UploadPageState extends State<UploadPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const BackButton(),
         title: const Text('TUS Client Upload Demo'),
       ),
       body: SingleChildScrollView(
@@ -95,7 +96,7 @@ class _UploadPageState extends State<UploadPage> {
                               _client = TusClient(
                                 _file!,
                                 store: TusFileStore(tempDirectory),
-                                maxChunkSize: 1024 * 1024 * 6,
+                                maxChunkSize: 1024 * 1024 * 2,
                                 retries: 10, // change as wanted
                                 retryInterval: 2, // interval in seconds
                                 retryScale: RetryScale.exponential,
@@ -127,7 +128,7 @@ class _UploadPageState extends State<UploadPage> {
                                       '$uid/${_file!.name}', // name to be saved in supabase
                                   'contentType':
                                       'application/octet-stream', //content type, e.g. application/octet-stream
-                                  'cacheControl': '3600',
+                                  // 'cacheControl': '3600',
                                 },
                                 headers: {
                                   'Authorization':

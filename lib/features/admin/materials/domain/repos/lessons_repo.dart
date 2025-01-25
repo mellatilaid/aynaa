@@ -1,5 +1,6 @@
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class LessonsRepo {
@@ -7,11 +8,15 @@ abstract class LessonsRepo {
 
   Future<Either<Failures, List<LessonEntity>>> fetchLessons(
       {required String subjectID, required String versionID});
-  Future<Either<Failures, void>> addLesson({
+  Future<Either<Failures, void>> addTextLesson({
     required LessonEntity lesson,
-    String? filePath,
   });
 
+  Stream<Either<Failures, double>> addFileLesson({
+    required LessonEntity lesson,
+    required XFile file,
+    required String uri,
+  });
   Future<Either<Failures, void>> deleteLesson({required String lessonID});
 
   Future<Either<Failures, void>> updateLesson(

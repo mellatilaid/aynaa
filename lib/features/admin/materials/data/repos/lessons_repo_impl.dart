@@ -1,14 +1,16 @@
 import 'dart:developer';
+import 'dart:io';
 
-import 'package:atm_app/const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
-import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tus_client_dart/tus_client_dart.dart';
 
 import '../../../../../core/services/data_base.dart';
 import '../../../../../core/utils/db_enpoints.dart';
@@ -18,29 +20,21 @@ class LessonsRepoImpl extends LessonsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final LessonsRemoteDataSource lessonsRemoteDataSource;
+
   LessonsRepoImpl({
     required this.dataBase,
     required this.lessonsRemoteDataSource,
     required this.storageService,
   });
   @override
-  Future<Either<Failures, void>> addLesson({
+  Future<Either<Failures, void>> addTextLesson({
     required LessonEntity lesson,
-    String? filePath,
   }) async {
     try {
       final LessonModel lessonModel = LessonModel.fromLessonEntity(lesson);
 
       final data = lessonModel.toMap();
-      if (filePath != null) {
-        final fileName = path.basename(filePath);
-        final String fullPath = await storageService.uploadFile(
-          bucketName: lesson.versionName,
-          filePath: filePath,
-          fileName: '${lesson.subjectName}/$fileName',
-        );
-        data[kUrl] = fullPath;
-      }
+
       await dataBase.setDate(path: DbEnpoints.lessons, data: data);
       return const Right(null);
       /*final String bucketId = await storageService.createBucket(versionName);
@@ -88,5 +82,54 @@ class LessonsRepoImpl extends LessonsRepo {
       {required String lessonID, required Map<String, dynamic> data}) {
     // TODO: implement updateLesson
     throw UnimplementedError();
+  }
+
+  @override
+  Stream<Either<Failures, double>> addFileLesson(
+      {required LessonEntity lesson,
+      required XFile file,
+      required String uri}) async* {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final tempDirectory = Directory('${tempDir.path}/${file.name}_uploads');
+      if (!tempDirectory.existsSync()) {
+        tempDirectory.createSync(recursive: true);
+      }
+      final tusClient = TusClient(
+        file,
+        store: TusFileStore(tempDirectory),
+        maxChunkSize: 1024 * 1024 * 6,
+        retries: 10, // change as wanted
+        retryInterval: 2, // interval in seconds
+        retryScale: RetryScale.exponential,
+      );
+
+      await tusClient.upload(
+        uri: Uri.parse(uri),
+        metadata: {
+          'bucketName': lesson.versionName,
+          'objectName': '${lesson.subjectName}/${file.name}',
+          //content type, e.g. application/octet-
+          'contentType': 'application/pdf',
+          'cacheControl': '3600',
+        },
+        onProgress: (progress, estimate) async* {
+          log('progress $progress');
+          yield right(progress); // Emit progress updates
+        },
+        onComplete: () async {
+          tempDirectory.deleteSync(recursive: true);
+        },
+        headers: {
+          'Authorization':
+              'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
+          // Set to true to enable overwrite
+          'x-upsert': 'true'
+        },
+      );
+    } catch (e) {
+      log(e.toString());
+      yield left(ServerFailure(errMessage: e.toString()));
+    }
   }
 }

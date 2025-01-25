@@ -19,8 +19,7 @@ class AddLessonCubit extends Cubit<AddLessonState> {
   Future<void> addLesson(
       {required LessonEntity lesson, String? filePath}) async {
     emit(AddLessonLoading());
-    final result =
-        await lessonsRepo.addLesson(lesson: lesson, filePath: filePath);
+    final result = await lessonsRepo.addTextLesson(lesson: lesson);
     result.fold((failure) {
       emit(AddLessonFailure(errMessage: failure.errMessage));
     }, (success) {

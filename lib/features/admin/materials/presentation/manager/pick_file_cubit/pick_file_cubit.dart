@@ -1,5 +1,6 @@
 import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:bloc/bloc.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:meta/meta.dart';
 
 part 'pick_file_state.dart';
@@ -16,7 +17,7 @@ class PickFileCubit extends Cubit<PickFileState> {
       if (file == null) {
         PickFileFailure(errMessage: 'No file selected.');
       } else {
-        emit(PickFileLoaded(filePath: file.path));
+        emit(PickFileLoaded(filePath: file));
       }
     } catch (e) {
       PickFileFailure(errMessage: 'No file selected.');

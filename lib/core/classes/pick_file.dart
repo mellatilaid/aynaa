@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 
 class FilePickerHelper {
@@ -15,11 +14,11 @@ class FilePickerHelper {
     return _pickFile(FileType.custom, allowedExtensions: allowedExtensions);
   }*/
 
-  Future<File?> pickFile({List<String>? allowedExtensions}) async {
+  Future<XFile?> pickFile({List<String>? allowedExtensions}) async {
     final result = await FilePicker.platform.pickFiles();
 
     if (result != null && result.files.single.path != null) {
-      return File(result.files.single.path!);
+      return XFile(result.files.single.path!);
     } else {
       print("No file selected.");
       return null;

@@ -8,7 +8,7 @@ final class PickFileInitial extends PickFileState {}
 final class PickFileLoading extends PickFileState {}
 
 final class PickFileLoaded extends PickFileState {
-  final String filePath;
+  final XFile filePath;
 
   PickFileLoaded({required this.filePath});
 }

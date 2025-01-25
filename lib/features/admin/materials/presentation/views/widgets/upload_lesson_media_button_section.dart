@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_file_lesson_button_builder.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_media_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/classes/pick_file.dart';
-import 'uplaod_lesson_button_bloc_builder.dart';
 
 class UplaodLessonMediaButtonBlocBuilder extends StatefulWidget {
   final TextEditingController lessonContent;
@@ -31,12 +29,11 @@ class _UplaodLessonMediaButtonBlocBuilderState
     return BlocBuilder<PickFileCubit, PickFileState>(
       builder: (context, state) {
         if (state is PickFileLoaded) {
-          log(state.filePath);
+          //log(state.filePath);
 
-          return UploadLessonButtonBuilder(
+          return UploadFileLessonButtonBuilder(
             lessonContent: widget.lessonContent,
             filePath: state.filePath,
-            isButtonEnabled: true,
           );
         } else if (state is PickFileFailure) {
           return ErrorWidget(state.errMessage);

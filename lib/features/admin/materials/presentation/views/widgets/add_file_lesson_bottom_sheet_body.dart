@@ -1,6 +1,8 @@
+import 'package:atm_app/features/admin/materials/presentation/manager/add_file_lesson_cubit/add_file_lesson_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_media_content_builder.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/upload_lesson_media_button_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/widgets/invisibla_text_field.dart';
 
@@ -33,8 +35,7 @@ class _AddFileLessonBottomSheetBodyState
       children: [
         // Scrollable content
         Padding(
-          padding:
-              const EdgeInsets.only(bottom: 60.0), // Leave space for the button
+          padding: const EdgeInsets.only(bottom: 60.0),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -53,6 +54,7 @@ class _AddFileLessonBottomSheetBodyState
                       maxLines: 6,
                     ),
                     const SizedBox(height: 16),
+                    const UploadFileProgressIndicatorBuilder(),
                   ],
                 ),
               ),
@@ -71,6 +73,56 @@ class _AddFileLessonBottomSheetBodyState
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class UploadFileProgressIndicatorBuilder extends StatelessWidget {
+  const UploadFileProgressIndicatorBuilder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AddFileLessonCubit, AddFileLessonState>(
+      builder: (context, state) {
+        if (state is AddFileLessonLoading) {
+          return UploadProgressWidget(
+            progress: state.progress,
+            estimate: state.estimate,
+          );
+        }
+        return Container();
+      },
+    );
+  }
+}
+
+class UploadProgressWidget extends StatelessWidget {
+  final double progress;
+  final Duration estimate;
+
+  const UploadProgressWidget({
+    super.key,
+    required this.progress,
+    required this.estimate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          "Uploading File...",
+          style: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 20),
+        LinearProgressIndicator(value: progress),
+        const SizedBox(height: 10),
+        Text("Progress: ${(progress * 100).toStringAsFixed(1)}%"),
+        const SizedBox(height: 10),
+        Text("Estimated time remaining: ${estimate.inSeconds}s"),
       ],
     );
   }

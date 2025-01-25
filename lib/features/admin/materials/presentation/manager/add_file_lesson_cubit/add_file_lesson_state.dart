@@ -5,7 +5,11 @@ sealed class AddFileLessonState {}
 
 final class AddFileLessonInitial extends AddFileLessonState {}
 
-final class AddFileLessonLoading extends AddFileLessonState {}
+final class AddFileLessonLoading extends AddFileLessonState {
+  final double progress;
+  final Duration estimate;
+  AddFileLessonLoading({required this.progress, required this.estimate});
+}
 
 final class AddFileLessonFailure extends AddFileLessonState {
   final String errMessage;
