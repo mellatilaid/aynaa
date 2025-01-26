@@ -7,11 +7,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../../core/utils/app_route.dart';
 import 'materials/domain/repos/lessons_repo.dart';
 
-class AdminMaterialApp extends StatelessWidget {
+class AdminMaterialApp extends StatefulWidget {
   const AdminMaterialApp({
     super.key,
   });
 
+  @override
+  State<AdminMaterialApp> createState() => _AdminMaterialAppState();
+}
+
+class _AdminMaterialAppState extends State<AdminMaterialApp>
+    with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

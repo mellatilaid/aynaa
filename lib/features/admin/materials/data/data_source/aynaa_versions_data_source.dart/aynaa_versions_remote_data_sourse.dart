@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/hive_service.dart';
 import 'package:atm_app/features/admin/materials/data/models/aynaa_versions_model.dart';
@@ -27,7 +28,7 @@ class AynaaVersionsRemoteDataSourceImpl
 
     List<AynaaVersionsEntity> versions =
         convertToAynaaVersionEntity(aynaaVersions);
-    hiveCache.add(boxName: 'versions', items: versions);
+    hiveCache.add(boxName: kVersionsBox, items: versions);
     return versions;
   }
 

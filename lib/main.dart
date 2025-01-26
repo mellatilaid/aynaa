@@ -1,4 +1,5 @@
 import 'package:atm_app/core/services/initiliaze_cache.dart';
+import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/admin_material_app.dart';
 import 'package:device_preview/device_preview.dart';
@@ -16,6 +17,7 @@ void main() async {
 
   await initializeCache();
   setUpServiceLocator();
+
   //await Firebase.initializeApp();
   if (0 == 0) {
     runApp(DevicePreview(
@@ -27,8 +29,38 @@ void main() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+
+    // Add observer to monitor app lifecycle
+    WidgetsBinding.instance.addObserver(this);
+
+    // Subscribe to the channel when the app starts
+    RealtimeSyncService().init();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      // App is in the foreground, subscribe to the channel
+      RealtimeSyncService().init();
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      // App is in the background or closed, unsubscribe from the channel
+      RealtimeSyncService().dispose();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

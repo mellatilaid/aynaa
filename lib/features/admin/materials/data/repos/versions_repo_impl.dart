@@ -20,8 +20,8 @@ class VersionsRepoImpl extends VersionsRepo {
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
 
-  VersionsRepoImpl(
-    this.remoteDataSource, {
+  VersionsRepoImpl({
+    required this.remoteDataSource,
     required this.dataBase,
     required this.storageService,
     required this.versionsLocalDataSource,
@@ -34,7 +34,6 @@ class VersionsRepoImpl extends VersionsRepo {
           await versionsLocalDataSource.fetchVersion();
       log(localVersions.length.toString());
       if (localVersions.isNotEmpty) {
-        remoteDataSource.fetchAynaaVersions();
         return right(localVersions);
       }
       final List<AynaaVersionsEntity> remoteVersions =

@@ -19,7 +19,6 @@ import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../features/admin/materials/data/repos/versions_repo_impl.dart';
 
@@ -30,22 +29,23 @@ setUpServiceLocator() {
       authServices: SupabaseAuthService(), dataBase: SupabaseDb()));
   getit.registerSingleton<DataBase>(SupabaseDb());
   getit.registerSingleton<StorageService>(SupaBaseStorage());
-  getit.registerFactory<HiveCache<AynaaVersionsEntity>>(
-      () => BaseHiveCache<AynaaVersionsEntity>());
-  getit.registerFactoryParam<BaseHiveCache<HiveObject>, String, void>(
-    (typeName, _) => BaseHiveCache<HiveObject>(),
+  getit.registerSingleton<HiveCache<AynaaVersionsEntity>>(BaseHiveCache());
+  getit.registerSingleton<VersionsLocalDataSource>(
+    VersionsLocalDataSourceImpl(
+      hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
+    ),
   );
+  getit.registerSingleton<AynaaVersionsRemoteDataSource>(
+      AynaaVersionsRemoteDataSourceImpl(
+    dataBase: getit.get<DataBase>(),
+    hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
+  ));
   getit.registerSingleton<VersionsRepo>(
     VersionsRepoImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
-      AynaaVersionsRemoteDataSourceImpl(
-        dataBase: getit.get<DataBase>(),
-        hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
-      ),
-      versionsLocalDataSource: VersionsLocalDataSourceImpl(
-        hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
-      ),
+      remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
+      versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
     ),
   );
   getit.registerSingleton<SubjectsRepo>(

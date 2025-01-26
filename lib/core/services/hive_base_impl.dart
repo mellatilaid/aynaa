@@ -45,8 +45,11 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   }
 
   @override
-  Future<void> clear() async {
-    await _box.clear();
+  Future<void> clear({required String boxName}) async {
+    await init(boxName: boxName);
+    var box = Hive.box<T>(boxName);
+
+    await box.clear();
   }
 
   @override

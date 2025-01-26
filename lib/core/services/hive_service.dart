@@ -23,7 +23,7 @@ abstract class HiveCache<T extends HiveObject> {
   Future<void> delete(List<String> ids);
 
   /// Clear entire cache
-  Future<void> clear();
+  Future<void> clear({required String boxName});
 
   /// Watch for changes in the cache
   Stream<BoxEvent> watch(String? id);

@@ -16,6 +16,7 @@ class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    //getit.get<HiveCache<AynaaVersionsEntity>>().clear(boxName: kVersionsBox);
     BlocProvider.of<FetchAynaaVersionsCubit>(context).fetchAynaaVersions();
   }
 
