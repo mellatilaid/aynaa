@@ -18,6 +18,13 @@ class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
     );
   }
 
+  static AynaaVersionsModel fromMap(Map<String, dynamic> data) {
+    return AynaaVersionsModel(
+      data[kUuid].toString(),
+      aynaaVersion: data[kVersionName],
+    );
+  }
+
   @override
   Map<String, dynamic> toMap() {
     // TODO: implement toMap

@@ -3,6 +3,7 @@ import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
+import '../../../../../../core/services/hive_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
 abstract class SubjectsRemoteDataSource {
@@ -11,8 +12,9 @@ abstract class SubjectsRemoteDataSource {
 
 class subjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   final DataBase dataBase;
-
-  subjectsRemoteDataSourceImpl({required this.dataBase});
+  final HiveCache hiveCache;
+  subjectsRemoteDataSourceImpl(
+      {required this.dataBase, required this.hiveCache});
 
   @override
   Future<List<SubjectsEntity>> fetchSubjects(

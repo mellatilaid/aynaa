@@ -9,10 +9,12 @@ import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/aynaa_versions_remote_data_sourse.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/repos/lessons_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/repos/subjects_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart';
@@ -30,8 +32,15 @@ setUpServiceLocator() {
   getit.registerSingleton<DataBase>(SupabaseDb());
   getit.registerSingleton<StorageService>(SupaBaseStorage());
   getit.registerSingleton<HiveCache<AynaaVersionsEntity>>(BaseHiveCache());
+  getit.registerSingleton<HiveCache<SubjectsEntity>>(BaseHiveCache());
+
   getit.registerSingleton<VersionsLocalDataSource>(
     VersionsLocalDataSourceImpl(
+      hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
+    ),
+  );
+  getit.registerSingleton<SubjectsLocalDataSource>(
+    SubjectsLocalDataSourceImpl(
       hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
     ),
   );
@@ -53,6 +62,7 @@ setUpServiceLocator() {
       dataBase: getit.get<DataBase>(),
       subjectsRemoteDataSource: subjectsRemoteDataSourceImpl(
         dataBase: getit.get<DataBase>(),
+        hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
       ),
     ),
   );

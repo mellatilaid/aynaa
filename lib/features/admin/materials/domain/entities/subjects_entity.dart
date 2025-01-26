@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 part 'subjects_entity.g.dart';
 
 @HiveType(typeId: 1)
-class SubjectsEntity implements Entity {
+class SubjectsEntity extends HiveObject with Entity {
   @override
   @HiveField(0)
   final String? id;

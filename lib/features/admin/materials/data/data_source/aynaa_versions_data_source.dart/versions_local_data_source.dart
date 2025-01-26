@@ -15,7 +15,7 @@ class VersionsLocalDataSourceImpl implements VersionsLocalDataSource {
   VersionsLocalDataSourceImpl({required this.hiveCache});
   @override
   Future<List<AynaaVersionsEntity>> fetchVersion() async {
-    final versions = await hiveCache.getAll(boxName: 'versions');
+    final versions = await hiveCache.getAll(boxName: kVersionsBox);
     return versions as List<AynaaVersionsEntity>;
   }
 

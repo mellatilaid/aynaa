@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     // Subscribe to the channel when the app starts
-    RealtimeSyncService().init();
+    RealtimeSyncService().initialize();
   }
 
   @override
@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.resumed) {
       // App is in the foreground, subscribe to the channel
-      RealtimeSyncService().init();
+      RealtimeSyncService().initialize();
     } else if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
       // App is in the background or closed, unsubscribe from the channel

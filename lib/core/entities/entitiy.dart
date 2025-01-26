@@ -1,6 +1,4 @@
-abstract class Entity {
-  final String? id;
-  final String? name;
-
-  Entity({required this.id, required this.name});
+mixin Entity {
+  String? get id; // Abstract getter (required)
+  String? get name; // Abstract getter (required)
 }
