@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
@@ -18,7 +19,7 @@ class RealtimeSyncService {
         .onPostgresChanges(
           event: PostgresChangeEvent.all,
           schema: 'public',
-          table: 'aynaaVersions',
+          table: kVersionsBox,
           callback: (payload) {
             log(payload.eventType.toString());
             if (payload.eventType == PostgresChangeEvent.insert) {
@@ -27,9 +28,9 @@ class RealtimeSyncService {
                 versionName: payload.newRecord[kVersionName],
               );
 
-              getit
-                  .get<VersionsLocalDataSource>()
-                  .handleUpdate([aynaaVersionsEntity]);
+              getit.get<VersionsLocalDataSource>().handleUpdate(
+                [aynaaVersionsEntity],
+              );
             }
           },
         )
