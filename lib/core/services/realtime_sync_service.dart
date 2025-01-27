@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:atm_app/core/const/local_db_const.dart';
+import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/aynaa_versions_model.dart';
@@ -56,17 +57,17 @@ class RealtimeSyncService {
   void initialize() {
     // Add multiple table subscriptions
     _subscribeToTable(
-      table: kVersionsBox,
+      table: DbEnpoints.aynaaVersions,
       handler: _handleVersionChange,
     );
 
     _subscribeToTable(
-      table: kSubjectsBox,
+      table: DbEnpoints.subjects,
       handler: _handleSubjectChange,
     );
 
     _subscribeToTable(
-      table: kLessonsBox,
+      table: DbEnpoints.lessons,
       handler: _handleLessonChange,
     );
   }
@@ -100,7 +101,12 @@ class RealtimeSyncService {
   void _handleSubjectChange(PostgresChangePayload payload) {
     if (payload.eventType == PostgresChangeEvent.insert) {
       final entity = SubjectsModel.fromMap(payload.newRecord);
-      getit.get<SubjectsLocalDataSource>().handleUpdate([entity]);
+
+      log(payload.toString());
+      getit.get<SubjectsLocalDataSource>().handleUpdate(
+            subject: entity,
+            versionID: payload.newRecord[kVersionID],
+          );
     }
   }
 

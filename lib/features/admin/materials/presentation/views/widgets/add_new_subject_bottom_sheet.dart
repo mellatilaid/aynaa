@@ -26,10 +26,12 @@ class NewSubjectBottomSheet extends StatelessWidget {
             final versionID = context.read<AddLessonCubit>().versionID;
             BlocProvider.of<FetchSubjectCubit>(context)
                 .fetchSubjects(versionID: versionID!);
-            context.pop();
+            Future.microtask(() {
+              if (!context.mounted) return;
+              context.pop();
+            });
           } else if (state is AddNewSubjectFailure) {
             showScaffoldMessage(context, state.errMessage);
-            Future.microtask(() => context.pop());
           }
           return const AddImageNoteBottomSheetBody();
         },

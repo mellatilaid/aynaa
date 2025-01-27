@@ -51,14 +51,17 @@ class SubjectsRepoImpl extends SubjectsRepo {
   Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects(
       {required String versionID}) async {
     try {
-      final List<SubjectsEntity> subjects;
-      subjects = await subjectsLocalDataSource.fetchSubjects();
+      List<SubjectsEntity> subjects;
+      subjects =
+          await subjectsLocalDataSource.fetchSubjects(versionID: versionID);
       log(subjects.length.toString());
       if (subjects.isNotEmpty) return right(subjects);
-      await subjectsRemoteDataSource.fetchSubjects(versionID: versionID);
+      subjects =
+          await subjectsRemoteDataSource.fetchSubjects(versionID: versionID);
       log(subjects.length.toString());
       return right(subjects);
     } catch (e) {
+      log(e.toString());
       return left(ServerFailure(errMessage: e.toString()));
     }
   }

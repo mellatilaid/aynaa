@@ -8,13 +8,19 @@ abstract class HiveCache<T extends HiveObject> {
   String get boxName;
 
   /// Get all cached items
-  Future<List<T>> getAll({required String boxName});
+  Future<List<T>> getAll(
+      {required String boxName, Map<String, dynamic> query = const {}});
 
   /// Get a single item by ID
   Future<T?> get(String boxName, String id);
 
   /// Add new items to cache
+
   Future<void> add({required String boxName, required List<T> items});
+
+  Future<void> putAll({required String boxName, required List<T> items});
+  Future<void> put(
+      {required String boxName, required T item, required String id});
 
   /// Update existing items
   Future<void> update(List<T> items);

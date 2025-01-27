@@ -24,7 +24,7 @@ class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
         .getData(path: DbEnpoints.subjects, query: {kVersionID: versionID});
 
     List<SubjectsEntity> subjects = _convertToAynaaVersionEntity(aynaaSubjects);
-    hiveCache.add(boxName: kSubjectsBox, items: subjects);
+    hiveCache.putAll(boxName: kSubjectsBox, items: subjects);
     return subjects;
   }
 
