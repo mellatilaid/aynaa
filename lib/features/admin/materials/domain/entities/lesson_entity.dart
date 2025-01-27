@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 part 'lesson_entity.g.dart';
 
 @HiveType(typeId: 2)
-class LessonEntity implements Entity {
+class LessonEntity extends HiveObject with Entity {
   @override
   @HiveField(0)
   final String? id;
@@ -23,7 +23,7 @@ class LessonEntity implements Entity {
   final String versionName;
   @HiveField(7)
   final String subjectName;
-  const LessonEntity({
+  LessonEntity({
     this.id,
     this.name,
     this.url,

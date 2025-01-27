@@ -6,6 +6,7 @@ import '../../../../../core/const/remote_db_const.dart';
 class SubjectsModel extends SubjectsEntity with Mappable {
   @override
   final String id;
+
   @override
   final String subjectName;
   @override

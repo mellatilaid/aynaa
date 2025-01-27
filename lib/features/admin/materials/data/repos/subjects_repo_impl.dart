@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
@@ -14,9 +15,13 @@ import '../../../../../core/utils/db_enpoints.dart';
 class SubjectsRepoImpl extends SubjectsRepo {
   final DataBase dataBase;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
+  final SubjectsLocalDataSource subjectsLocalDataSource;
 
-  SubjectsRepoImpl(
-      {required this.dataBase, required this.subjectsRemoteDataSource});
+  SubjectsRepoImpl({
+    required this.dataBase,
+    required this.subjectsRemoteDataSource,
+    required this.subjectsLocalDataSource,
+  });
   @override
   Future<Either<Failures, void>> addSubject(
       {required SubjectsEntity subject}) async {
@@ -46,8 +51,12 @@ class SubjectsRepoImpl extends SubjectsRepo {
   Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects(
       {required String versionID}) async {
     try {
-      final List<SubjectsEntity> subjects =
-          await subjectsRemoteDataSource.fetchSubjects(versionID: versionID);
+      final List<SubjectsEntity> subjects;
+      subjects = await subjectsLocalDataSource.fetchSubjects();
+      log(subjects.length.toString());
+      if (subjects.isNotEmpty) return right(subjects);
+      await subjectsRemoteDataSource.fetchSubjects(versionID: versionID);
+      log(subjects.length.toString());
       return right(subjects);
     } catch (e) {
       return left(ServerFailure(errMessage: e.toString()));

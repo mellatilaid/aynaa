@@ -41,7 +41,7 @@ setUpServiceLocator() {
   );
   getit.registerSingleton<SubjectsLocalDataSource>(
     SubjectsLocalDataSourceImpl(
-      hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
+      hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
     ),
   );
   getit.registerSingleton<AynaaVersionsRemoteDataSource>(
@@ -59,12 +59,14 @@ setUpServiceLocator() {
   );
   getit.registerSingleton<SubjectsRepo>(
     SubjectsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      subjectsRemoteDataSource: subjectsRemoteDataSourceImpl(
         dataBase: getit.get<DataBase>(),
-        hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
-      ),
-    ),
+        subjectsRemoteDataSource: SubjectsRemoteDataSourceImpl(
+          dataBase: getit.get<DataBase>(),
+          hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
+        ),
+        subjectsLocalDataSource: SubjectsLocalDataSourceImpl(
+          hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
+        )),
   );
   getit.registerSingleton<LessonsRepo>(
     LessonsRepoImpl(
