@@ -14,6 +14,7 @@ import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_
 import 'package:atm_app/features/admin/materials/data/repos/lessons_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/repos/subjects_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
@@ -33,7 +34,7 @@ setUpServiceLocator() {
   getit.registerSingleton<StorageService>(SupaBaseStorage());
   getit.registerSingleton<HiveCache<AynaaVersionsEntity>>(BaseHiveCache());
   getit.registerSingleton<HiveCache<SubjectsEntity>>(BaseHiveCache());
-
+  getit.registerSingleton<HiveCache<LessonEntity>>(BaseHiveCache());
   getit.registerSingleton<VersionsLocalDataSource>(
     VersionsLocalDataSourceImpl(
       hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
@@ -74,6 +75,7 @@ setUpServiceLocator() {
       storageService: getit.get<StorageService>(),
       lessonsRemoteDataSource: LessonsRemoteDataSourceImpl(
         dataBase: getit.get<DataBase>(),
+        hiveCache: getit.get<HiveCache<LessonEntity>>(),
       ),
     ),
   );
