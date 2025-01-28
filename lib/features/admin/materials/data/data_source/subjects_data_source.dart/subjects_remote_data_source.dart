@@ -1,10 +1,10 @@
+import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 
 import '../../../../../../core/const/local_db_const.dart';
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/enums/entities.dart';
-import '../../../../../../core/functions/map_to_list_of_entity.dart';
 import '../../../../../../core/services/hive_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 

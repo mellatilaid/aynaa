@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
@@ -20,11 +21,13 @@ class LessonsRepoImpl extends LessonsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final LessonsRemoteDataSource lessonsRemoteDataSource;
+  final LessonsLocalDataSource lessonsLocalDataSource;
 
   LessonsRepoImpl({
     required this.dataBase,
     required this.lessonsRemoteDataSource,
     required this.storageService,
+    required this.lessonsLocalDataSource,
   });
   @override
   Future<Either<Failures, void>> addTextLesson({
@@ -60,8 +63,11 @@ class LessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, List<LessonEntity>>> fetchLessons(
       {required String subjectID, required String versionID}) async {
     try {
-      final List<LessonEntity> lesson = await lessonsRemoteDataSource
-          .fetchLessons(subjectID: subjectID, versionID: versionID);
+      List<LessonEntity> lesson;
+      lesson = await lessonsLocalDataSource.fetchLessons();
+      if (lesson.isNotEmpty) return right(lesson);
+      lesson = await lessonsRemoteDataSource.fetchLessons(
+          subjectID: subjectID, versionID: versionID);
       return right(lesson);
     } on PostgrestException catch (e) {
       log(e.toString());

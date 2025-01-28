@@ -31,7 +31,8 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
       kVersionID: versionID,
     });
 
-    List<LessonEntity> lessons = mapToListOfEntity(data, Entities.lesson);
+    List<LessonEntity> lessons =
+        mapToListOfEntity<LessonEntity>(data, Entities.lesson);
     hiveCache.putAll(boxName: kLessonsBox, items: lessons);
     return lessons;
   }

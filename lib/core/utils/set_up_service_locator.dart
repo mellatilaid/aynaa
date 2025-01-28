@@ -8,6 +8,7 @@ import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/aynaa_versions_remote_data_sourse.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
@@ -45,10 +46,24 @@ setUpServiceLocator() {
       hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
     ),
   );
+  getit.registerSingleton<LessonsLocalDataSource>(
+    LessonsLocalDataSourceImpl(
+      hiveCache: getit.get<HiveCache<LessonEntity>>(),
+    ),
+  );
   getit.registerSingleton<AynaaVersionsRemoteDataSource>(
       AynaaVersionsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
     hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
+  ));
+  getit
+      .registerSingleton<SubjectsRemoteDataSource>(SubjectsRemoteDataSourceImpl(
+    dataBase: getit.get<DataBase>(),
+    hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
+  ));
+  getit.registerSingleton<LessonsRemoteDataSource>(LessonsRemoteDataSourceImpl(
+    dataBase: getit.get<DataBase>(),
+    hiveCache: getit.get<HiveCache<LessonEntity>>(),
   ));
   getit.registerSingleton<VersionsRepo>(
     VersionsRepoImpl(
@@ -60,24 +75,17 @@ setUpServiceLocator() {
   );
   getit.registerSingleton<SubjectsRepo>(
     SubjectsRepoImpl(
-        dataBase: getit.get<DataBase>(),
-        subjectsRemoteDataSource: SubjectsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
-        ),
-        subjectsLocalDataSource: SubjectsLocalDataSourceImpl(
-          hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
-        )),
+      dataBase: getit.get<DataBase>(),
+      subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
+      subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
+    ),
   );
   getit.registerSingleton<LessonsRepo>(
     LessonsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
-      lessonsRemoteDataSource: LessonsRemoteDataSourceImpl(
         dataBase: getit.get<DataBase>(),
-        hiveCache: getit.get<HiveCache<LessonEntity>>(),
-      ),
-    ),
+        storageService: getit.get<StorageService>(),
+        lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
+        lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
   );
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
 }

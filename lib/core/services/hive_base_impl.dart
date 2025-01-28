@@ -14,7 +14,8 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   Future<void> init({required String boxName}) async {
     if (!Hive.isBoxOpen(boxName)) {
       await Hive.openBox<T>(boxName);
-      log('box is  opened');
+
+      log('box is  opened $boxName');
     }
   }
 

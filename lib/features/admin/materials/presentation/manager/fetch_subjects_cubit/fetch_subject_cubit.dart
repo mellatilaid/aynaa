@@ -17,7 +17,7 @@ class FetchSubjectCubit extends Cubit<FetchSubjectState> {
   @override
   bool isClosed = false;
   FetchSubjectCubit(this.subjectsRepo) : super(FetchSubjectInitial()) {
-    sync();
+    _sync();
   }
 
   Future<void> fetchSubjects({required String versionID}) async {
@@ -29,7 +29,7 @@ class FetchSubjectCubit extends Cubit<FetchSubjectState> {
     );
   }
 
-  sync() {
+  _sync() {
     _subscription = getit.get<SubjectsLocalDataSource>().subjectsStream.listen(
       (subjects) {
         if (isClosed) {
