@@ -23,6 +23,8 @@ class LessonEntity extends HiveObject with Entity {
   final String versionName;
   @HiveField(7)
   final String subjectName;
+  @HiveField(8)
+  String? localFilePath;
   LessonEntity({
     this.id,
     this.name,
@@ -32,5 +34,6 @@ class LessonEntity extends HiveObject with Entity {
     required this.subjectId,
     required this.versionName,
     required this.subjectName,
+    this.localFilePath,
   });
 }

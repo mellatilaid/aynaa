@@ -17,12 +17,12 @@ class SupaBaseStorage extends StorageService<Bucket> {
   }
 
   @override
-  Future<Uint8List> downloadFile(
-      {required String bucketName,
-      required String filePath,
-      required String fileName}) async {
+  Future<Uint8List> downloadFile({
+    required String bucketName,
+    required String filePath,
+  }) async {
     final Uint8List file =
-        await _supabase.storage.from(bucketName).download(fileName);
+        await _supabase.storage.from(bucketName).download(filePath);
     return file;
   }
 

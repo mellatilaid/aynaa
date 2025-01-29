@@ -1,6 +1,9 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:atm_app/core/const/local_db_const.dart';
+import 'package:atm_app/core/services/file_cach_manager.dart';
+import 'package:atm_app/core/services/supabase_storage.dart';
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
@@ -33,6 +36,20 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
 
     List<LessonEntity> lessons =
         mapToListOfEntity<LessonEntity>(data, Entities.lesson);
+
+    for (var lesson in lessons) {
+      if (lesson.url != null) {
+        final String fileName =
+            lesson.url!.replaceFirst('${lesson.versionName}/', '');
+        log(fileName);
+        final Uint8List file = await SupaBaseStorage()
+            .downloadFile(bucketName: lesson.versionName, filePath: fileName);
+        final String localPath =
+            await FileSystemCacheManager().cacheFile(fileName, file);
+        log('local lesson file path is $localPath');
+        lesson.localFilePath = localPath;
+      }
+    }
     hiveCache.putAll(boxName: kLessonsBox, items: lessons);
     return lessons;
   }

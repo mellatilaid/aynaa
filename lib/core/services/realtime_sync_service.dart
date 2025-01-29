@@ -9,6 +9,7 @@ import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import '../../features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 
 /*class RealtimeSyncService {
@@ -113,7 +114,7 @@ class RealtimeSyncService {
   void _handleLessonChange(PostgresChangePayload payload) {
     if (payload.eventType == PostgresChangeEvent.insert) {
       final entity = LessonModel.fromMap(payload.newRecord);
-      //getit.get<LessonsLocalDataSource>().handleUpdate([entity]);
+      getit.get<LessonsLocalDataSource>().handleUpdate([entity]);
     }
   }
 

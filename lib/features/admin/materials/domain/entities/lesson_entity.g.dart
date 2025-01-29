@@ -25,13 +25,14 @@ class LessonEntityAdapter extends TypeAdapter<LessonEntity> {
       subjectId: fields[5] as String,
       versionName: fields[6] as String,
       subjectName: fields[7] as String,
+      localFilePath: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, LessonEntity obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class LessonEntityAdapter extends TypeAdapter<LessonEntity> {
       ..writeByte(6)
       ..write(obj.versionName)
       ..writeByte(7)
-      ..write(obj.subjectName);
+      ..write(obj.subjectName)
+      ..writeByte(8)
+      ..write(obj.localFilePath);
   }
 
   @override

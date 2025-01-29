@@ -9,10 +9,10 @@ abstract class StorageService<T> {
       required String fileName});
   Future<List<FileObject>> deleteFile(
       {required String bucketName, required String fileName});
-  Future<Uint8List> downloadFile(
-      {required String bucketName,
-      required String filePath,
-      required String fileName});
+  Future<Uint8List> downloadFile({
+    required String bucketName,
+    required String filePath,
+  });
   Future<String> updateFile(
       {required String bucketName,
       required String filePath,
