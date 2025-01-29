@@ -71,23 +71,24 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
         ),
         // Fixed button at the bottom
         Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: ValueListenableBuilder(
-                valueListenable: _isButtonEnabled,
-                builder: (context, value, child) {
-                  return UploadLessonButtonBuilder(
-                    isButtonEnabled: value,
-                    lessonContent: _lessonTitleController,
-                  );
-                },
-                /*child: UploadLessonButtonBuilder(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ValueListenableBuilder(
+              valueListenable: _isButtonEnabled,
+              builder: (context, value, child) {
+                return UploadLessonButtonBuilder(
+                  isButtonEnabled: value,
+                  lessonContent: _lessonTitleController,
+                );
+              },
+              /*child: UploadLessonButtonBuilder(
                         lessonContent: _lessonTitleController),*/
-              ),
-            )),
+            ),
+          ),
+        ),
       ],
     );
   }

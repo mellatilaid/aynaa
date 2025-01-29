@@ -39,7 +39,7 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
     );
     final newVersions = await hiveCache.getAll(
         boxName: kSubjectsBox,
-        query: {kVersionID: versionID}) as List<SubjectsEntity>;
+        query: {kVersionID: subject}) as List<SubjectsEntity>;
     _controller.add(newVersions);
   }
 

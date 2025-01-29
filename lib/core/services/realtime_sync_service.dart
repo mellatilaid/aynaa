@@ -114,7 +114,8 @@ class RealtimeSyncService {
   void _handleLessonChange(PostgresChangePayload payload) {
     if (payload.eventType == PostgresChangeEvent.insert) {
       final entity = LessonModel.fromMap(payload.newRecord);
-      getit.get<LessonsLocalDataSource>().handleUpdate([entity]);
+      log(payload.toString());
+      getit.get<LessonsLocalDataSource>().handleUpdate(lesson: entity);
     }
   }
 

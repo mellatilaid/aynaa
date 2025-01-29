@@ -24,23 +24,23 @@ class UploadLessonButtonBuilder extends StatelessWidget {
     return BlocBuilder<AddLessonCubit, AddLessonState>(
       builder: (context, state) {
         return CustomActionButtonType2(
-            isLoading: state is AddLessonLoading ? true : false,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            onPressed: isButtonEnabled
-                ? () async {
-                    final addLessonBloc = context.read<AddLessonCubit>();
-                    final lesson =
-                        _toLessonEnitiy(addLessonCubit: addLessonBloc);
-                    BlocProvider.of<AddLessonCubit>(context)
-                        .addLesson(lesson: lesson, filePath: filePath);
-                  }
-                : null,
-            backGroundColor: kPrimaryColor,
-            icon: const FaIcon(
-              FontAwesomeIcons.upload,
-              color: Colors.white,
-            ),
-            title: 'تحميل');
+          isLoading: state is AddLessonLoading ? true : false,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          onPressed: isButtonEnabled
+              ? () async {
+                  final addLessonBloc = context.read<AddLessonCubit>();
+                  final lesson = _toLessonEnitiy(addLessonCubit: addLessonBloc);
+                  BlocProvider.of<AddLessonCubit>(context)
+                      .addLesson(lesson: lesson);
+                }
+              : null,
+          backGroundColor: kPrimaryColor,
+          icon: const FaIcon(
+            FontAwesomeIcons.upload,
+            color: Colors.white,
+          ),
+          title: 'تحميل',
+        );
       },
     );
   }

@@ -114,6 +114,7 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
     var box = Hive.box<T>(boxName);
 
     await box.put(id, item);
+    log('item added to box');
   }
 
   @override

@@ -9,10 +9,12 @@ import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tus_client_dart/tus_client_dart.dart';
 
+import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/services/data_base.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 import '../../domain/repos/lessons_repo.dart';
@@ -32,11 +34,22 @@ class LessonsRepoImpl extends LessonsRepo {
   @override
   Future<Either<Failures, void>> addTextLesson({
     required LessonEntity lesson,
+    String? filePath,
   }) async {
     try {
       final LessonModel lessonModel = LessonModel.fromLessonEntity(lesson);
 
       final data = lessonModel.toMap();
+
+      if (filePath != null) {
+        final fileName = path.basename(filePath);
+        final fullPath = await storageService.uploadFile(
+          bucketName: lesson.versionName,
+          filePath: filePath,
+          fileName: '${lesson.subjectName}/$fileName',
+        );
+        data[kUrl] = fullPath;
+      }
 
       await dataBase.setDate(path: DbEnpoints.lessons, data: data);
       return const Right(null);

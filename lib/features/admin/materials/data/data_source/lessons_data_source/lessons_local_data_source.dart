@@ -7,7 +7,7 @@ import '../../../domain/entities/lesson_entity.dart';
 
 abstract class LessonsLocalDataSource {
   Future<List<LessonEntity>> fetchLessons();
-  Future<void> handleUpdate(List<LessonEntity> versions);
+  Future<void> handleUpdate({required LessonEntity lesson});
   Stream<List<LessonEntity>> get lessonsStream;
 }
 
@@ -26,8 +26,8 @@ class LessonsLocalDataSourceImpl implements LessonsLocalDataSource {
   Stream<List<LessonEntity>> get lessonsStream => _controller.stream;
 
   @override
-  Future<void> handleUpdate(List<LessonEntity> lessons) async {
-    await hiveCache.add(boxName: kLessonsBox, items: lessons);
+  Future<void> handleUpdate({required LessonEntity lesson}) async {
+    await hiveCache.put(boxName: kLessonsBox, item: lesson, id: lesson.id!);
     final newLessons =
         await hiveCache.getAll(boxName: kLessonsBox) as List<LessonEntity>;
     _controller.add(newLessons);

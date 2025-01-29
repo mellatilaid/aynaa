@@ -21,7 +21,7 @@ class _LessonsViewBodyState extends State<LessonsViewBody> {
     // TODO: implement initState
     super.initState();
     final versionID = _getVersionID();
-    // getit.get<HiveCache<LessonEntity>>().clear(boxName: kLessonsBox);
+    //getit.get<HiveCache<LessonEntity>>().clear(boxName: kLessonsBox);
     BlocProvider.of<FetchLessonsCubit>(context).fetchLessons(
         subjectID: widget.subjectsEntity.id!, versionID: versionID);
   }

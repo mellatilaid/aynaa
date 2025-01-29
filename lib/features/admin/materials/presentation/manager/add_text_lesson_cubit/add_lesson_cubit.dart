@@ -15,11 +15,11 @@ class AddLessonCubit extends Cubit<AddLessonState> {
   String? _subjectID;
   String? _versionName;
   String? _subjectName;
-
-  Future<void> addLesson(
-      {required LessonEntity lesson, String? filePath}) async {
+  String? _filePath;
+  Future<void> addLesson({required LessonEntity lesson}) async {
     emit(AddLessonLoading());
-    final result = await lessonsRepo.addTextLesson(lesson: lesson);
+    final result =
+        await lessonsRepo.addTextLesson(lesson: lesson, filePath: _filePath);
     result.fold((failure) {
       emit(AddLessonFailure(errMessage: failure.errMessage));
     }, (success) {
@@ -53,6 +53,11 @@ class AddLessonCubit extends Cubit<AddLessonState> {
   void setSubjectName(String subjectName) {
     _subjectName = subjectName;
     log(subjectName ?? 'subject name is null');
+  }
+
+  void setFilePath(String filePath) {
+    _filePath = filePath;
+    log(_filePath ?? 'subject name is null');
   }
 
   String? get subjectName => _subjectName;

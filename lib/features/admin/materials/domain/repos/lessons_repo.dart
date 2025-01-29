@@ -10,6 +10,7 @@ abstract class LessonsRepo {
       {required String subjectID, required String versionID});
   Future<Either<Failures, void>> addTextLesson({
     required LessonEntity lesson,
+    String? filePath,
   });
 
   Stream<Either<Failures, double>> addFileLesson({

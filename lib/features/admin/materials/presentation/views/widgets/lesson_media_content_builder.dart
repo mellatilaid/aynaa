@@ -1,3 +1,4 @@
+import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_media_preview.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,24 @@ class LessonMediaContentBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<PickFileCubit, PickFileState>(
+      listener: (context, state) {
+        if (state is PickFileLoaded) {
+          BlocProvider.of<AddLessonCubit>(context)
+              .setFilePath(state.filePath.path);
+        }
+      },
+      builder: (context, state) {
+        if (state is PickFileFailure) {
+          return ErrorWidget(state.errMessage);
+        } else if (state is PickFileLoaded) {
+          return LessonMediaPreview(
+            filePath: state.filePath,
+          );
+        }
+        return const LessonMediaPreview();
+      },
+    );
     return BlocBuilder<PickFileCubit, PickFileState>(
       builder: (context, state) {
         if (state is PickFileFailure) {
