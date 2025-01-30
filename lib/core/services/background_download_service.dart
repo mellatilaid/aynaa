@@ -7,7 +7,7 @@ import 'package:atm_app/core/services/storage_service.dart';
 
 class BackgroundDownloadService<T extends Entity> {
   final StorageService storageService;
-  final FileSystemCacheManager fileSystemCacheManager;
+  final FileCacheManager fileSystemCacheManager;
   final Future<void> Function(T entity) updateLocalDataSource;
   BackgroundDownloadService({
     required this.storageService,

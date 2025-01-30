@@ -1,5 +1,6 @@
 import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/hive_base_impl.dart';
 import 'package:atm_app/core/services/hive_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
@@ -36,6 +37,7 @@ setUpServiceLocator() {
   getit.registerSingleton<HiveCache<AynaaVersionsEntity>>(BaseHiveCache());
   getit.registerSingleton<HiveCache<SubjectsEntity>>(BaseHiveCache());
   getit.registerSingleton<HiveCache<LessonEntity>>(BaseHiveCache());
+  getit.registerSingleton<FileCacheManager>(FileSystemCacheManager());
   getit.registerSingleton<VersionsLocalDataSource>(
     VersionsLocalDataSourceImpl(
       hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
@@ -64,6 +66,8 @@ setUpServiceLocator() {
   getit.registerSingleton<LessonsRemoteDataSource>(LessonsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
     hiveCache: getit.get<HiveCache<LessonEntity>>(),
+    storageService: getit.get<StorageService>(),
+    fileCacheManager: getit.get<FileCacheManager>(),
   ));
   getit.registerSingleton<VersionsRepo>(
     VersionsRepoImpl(

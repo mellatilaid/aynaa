@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/supabase_storage.dart';
+import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 
@@ -24,8 +24,14 @@ abstract class LessonsRemoteDataSource {
 class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
   final HiveCache hiveCache;
-  LessonsRemoteDataSourceImpl(
-      {required this.dataBase, required this.hiveCache});
+  final StorageService storageService;
+  final FileCacheManager fileCacheManager;
+  LessonsRemoteDataSourceImpl({
+    required this.dataBase,
+    required this.hiveCache,
+    required this.storageService,
+    required this.fileCacheManager,
+  });
   @override
   Future<List<LessonEntity>> fetchLessons(
       {required String subjectID, required String versionID}) async {
@@ -41,8 +47,8 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
 
     hiveCache.putAll(boxName: kLessonsBox, items: lessons);
     BackgroundDownloadService(
-      fileSystemCacheManager: FileSystemCacheManager(),
-      storageService: SupaBaseStorage(),
+      fileSystemCacheManager: fileCacheManager,
+      storageService: storageService,
       updateLocalDataSource: (LessonEntity entity) =>
           getit.get<LessonsLocalDataSource>().handleUpdate(
                 lesson: entity,
@@ -50,28 +56,6 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
     ).startBackgroundDownloads(lessons);
     //_startBackgroundDownloads(lessons);
     return lessons;
-  }
-
-  void _startBackgroundDownloads(List<LessonEntity> lessons) {
-    for (final lesson in lessons) {
-      if (lesson.url == null || lesson.localFilePath != null) continue;
-      unawaited(_downloadAndUpdateLesson(lesson));
-    }
-  }
-
-  Future<void> _downloadAndUpdateLesson(LessonEntity lesson) async {
-    try {
-      // Download and cache file
-      final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
-      final file = await SupaBaseStorage()
-          .downloadFile(bucketName: lesson.versionName, filePath: fileName);
-      final localPath =
-          await FileSystemCacheManager().cacheFile(fileName, file);
-      log(fileName);
-      lesson.localFilePath = localPath;
-      await getit.get<LessonsLocalDataSource>().handleUpdate(lesson: lesson);
-      // _lessonUpdatesController.add(updatedLesson);
-    } catch (e) {}
   }
 }
 
