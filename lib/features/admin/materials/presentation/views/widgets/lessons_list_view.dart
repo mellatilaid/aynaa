@@ -1,6 +1,7 @@
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/Custom_lesson_preview_card.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../../../core/widgets/custom_item_card_type_2.dart';
 
 class LessonsListView extends StatelessWidget {
   final List<LessonEntity> lessons;
@@ -11,8 +12,8 @@ class LessonsListView extends StatelessWidget {
     return ListView.builder(
       itemCount: lessons.length,
       itemBuilder: (context, index) {
-        return CustomLessonPreviewCard(
-          lesson: lessons[index],
+        return CustomItemCardType2(
+          item: lessons[index],
         );
         //return CustomCard(entity: lessons[index]);
       },

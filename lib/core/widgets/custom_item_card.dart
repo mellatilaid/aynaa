@@ -1,4 +1,5 @@
 import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/Custom_lesson_preview_card.dart';
 import 'package:flutter/material.dart';
 
 class CustomItemCard extends StatelessWidget {
@@ -24,26 +25,28 @@ class CustomItemCard extends StatelessWidget {
         child: Stack(
           children: [
             // Background image
-            Image.network(
-              'https://www.bing.com/th?id=OIP.HW9o-gKESImEapaUq7WbIgHaJQ&w=98&h=106&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            (loadingProgress.expectedTotalBytes ?? 1)
-                        : null,
-                  ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                Icons.broken_image,
-                size: 80,
-                color: Colors.grey,
+            CustomImageFame(
+              child: Image.network(
+                'https://www.bing.com/th?id=OIP.HW9o-gKESImEapaUq7WbIgHaJQ&w=98&h=106&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              (loadingProgress.expectedTotalBytes ?? 1)
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.broken_image,
+                  size: 80,
+                  color: Colors.grey,
+                ),
               ),
             ),
 
