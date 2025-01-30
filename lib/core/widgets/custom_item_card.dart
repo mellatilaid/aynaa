@@ -1,5 +1,5 @@
 import 'package:atm_app/core/entities/entitiy.dart';
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/Custom_lesson_preview_card.dart';
+import 'package:atm_app/core/widgets/custom_image_frame.dart';
 import 'package:flutter/material.dart';
 
 class CustomItemCard extends StatelessWidget {

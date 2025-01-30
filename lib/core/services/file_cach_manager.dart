@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -36,8 +37,10 @@ class FileSystemCacheManager implements FileCacheManager {
     // Extract the file extension
     final extension = p.extension(filePath);
 
+    final baseName = p.basename(filePath);
+    log('$hashedName$baseName$extension');
     // Return the hash with the original file extension
-    return '$hashedName$extension';
+    return "$hashedName$baseName$extension";
   }
 
   @override
@@ -54,6 +57,7 @@ class FileSystemCacheManager implements FileCacheManager {
     final file =
         File(p.join(_cacheDirectory.path, _generateFilename(filePath)));
     final File cachedFile = await file.writeAsBytes(data);
+    log('chacked file path is ${cachedFile.path}');
     return cachedFile.path;
   }
 

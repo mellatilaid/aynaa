@@ -1,13 +1,20 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:atm_app/core/const/app_const.dart';
 import 'package:atm_app/core/widgets/custom_image_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 
+import '../regex/get_base_file_name.dart';
+
 buildPreview({String? filePath}) {
+  log('file path is $filePath');
   if (filePath != null) {
     final fileExtension = path.extension(filePath);
-
+    log(fileExtension);
+    final baseName = path.basename(filePath);
+    final fileName = getBaseFileName(baseName);
     if (['.jpg', '.jpeg', '.png', '.gif']
         .contains(fileExtension.toLowerCase())) {
       // Preview image
@@ -43,11 +50,15 @@ buildPreview({String? filePath}) {
       );
     } else {
       // Show file name for unsupported types
-      return Align(
-          alignment: Alignment.center,
-          child: Text(
-            "File: $filePath",
-          ));
+      return ListTile(
+        leading:
+            const Icon(Icons.insert_drive_file, size: 32, color: kPrimaryColor),
+        title:
+            Text(fileName, style: const TextStyle(fontWeight: FontWeight.w600)),
+        //subtitle: Text(fileSize, style: TextStyle(color: Colors.grey[600])),
+
+        onTap: () {},
+      );
     }
   } else {
     return const CustomImageFame(

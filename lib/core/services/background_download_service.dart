@@ -33,6 +33,8 @@ class BackgroundDownloadService<T extends Entity> {
       lesson.localFilePath = localPath;
       await updateLocalDataSource(lesson);
       // _lessonUpdatesController.add(updatedLesson);
-    } catch (e) {}
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
