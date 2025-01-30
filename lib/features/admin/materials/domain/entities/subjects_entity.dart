@@ -22,4 +22,19 @@ class SubjectsEntity extends HiveObject with Entity {
   @override
   // TODO: implement name
   String get name => subjectName;
+
+  @override
+  // TODO: implement localFilePath
+  String? get localFilePath => throw UnimplementedError();
+
+  @override
+  // TODO: implement url
+  String? get url => throw UnimplementedError();
+
+  @override
+  // TODO: implement versionName
+  String get versionName => throw UnimplementedError();
+
+  @override
+  set localFilePath(String? path) {}
 }

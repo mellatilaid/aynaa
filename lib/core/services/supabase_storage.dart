@@ -51,6 +51,7 @@ class SupaBaseStorage extends StorageService<Bucket> {
           file,
           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
         );
+
     return fullPath;
   }
 

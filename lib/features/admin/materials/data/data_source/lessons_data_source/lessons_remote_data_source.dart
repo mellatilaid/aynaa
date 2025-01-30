@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:atm_app/core/const/local_db_const.dart';
+import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/supabase_storage.dart';
-import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
+import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/enums/entities.dart';
@@ -37,28 +39,61 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
     List<LessonEntity> lessons =
         mapToListOfEntity<LessonEntity>(data, Entities.lesson);
 
-    for (var lesson in lessons) {
-      if (lesson.url != null) {
-        final String fileName =
-            lesson.url!.replaceFirst('${lesson.versionName}/', '');
-        log(fileName);
-        final Uint8List file = await SupaBaseStorage()
-            .downloadFile(bucketName: lesson.versionName, filePath: fileName);
-        final String localPath =
-            await FileSystemCacheManager().cacheFile(fileName, file);
-        log('local lesson file path is $localPath');
-        lesson.localFilePath = localPath;
-      }
-    }
     hiveCache.putAll(boxName: kLessonsBox, items: lessons);
+    BackgroundDownloadService(
+      fileSystemCacheManager: FileSystemCacheManager(),
+      storageService: SupaBaseStorage(),
+      updateLocalDataSource: (LessonEntity entity) =>
+          getit.get<LessonsLocalDataSource>().handleUpdate(
+                lesson: entity,
+              ),
+    ).startBackgroundDownloads(lessons);
+    //_startBackgroundDownloads(lessons);
     return lessons;
   }
 
-  List<LessonEntity> convertToAynaaVersionEntity(
-      List<Map<String, dynamic>> data) {
-    final List<LessonEntity> lessons = data.map((item) {
-      return LessonModel.fromMap(item);
-    }).toList();
-    return lessons;
+  void _startBackgroundDownloads(List<LessonEntity> lessons) {
+    for (final lesson in lessons) {
+      if (lesson.url == null || lesson.localFilePath != null) continue;
+      unawaited(_downloadAndUpdateLesson(lesson));
+    }
+  }
+
+  Future<void> _downloadAndUpdateLesson(LessonEntity lesson) async {
+    try {
+      // Download and cache file
+      final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
+      final file = await SupaBaseStorage()
+          .downloadFile(bucketName: lesson.versionName, filePath: fileName);
+      final localPath =
+          await FileSystemCacheManager().cacheFile(fileName, file);
+      log(fileName);
+      lesson.localFilePath = localPath;
+      await getit.get<LessonsLocalDataSource>().handleUpdate(lesson: lesson);
+      // _lessonUpdatesController.add(updatedLesson);
+    } catch (e) {}
   }
 }
+
+
+/*final cachingFutures = lessons.map((lesson) async {
+      if (lesson.url == null) return;
+
+      final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
+      /*final cachedPath = await FileSystemCacheManager().getCachedPath(fileName);
+    
+    // Return early if already cached
+    if (cachedPath != null) {
+      lesson.localFilePath = cachedPath;
+      return;
+    }*/
+
+      final file = await SupaBaseStorage()
+          .downloadFile(bucketName: lesson.versionName, filePath: fileName);
+      final localPath =
+          await FileSystemCacheManager().cacheFile(fileName, file);
+      lesson.localFilePath = localPath;
+    }).toList();
+
+    // Wait for all downloads to complete before caching lessons
+    await Future.wait(cachingFutures);*/

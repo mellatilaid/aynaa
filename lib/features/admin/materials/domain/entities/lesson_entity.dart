@@ -11,6 +11,7 @@ class LessonEntity extends HiveObject with Entity {
   @override
   @HiveField(1)
   final String? name;
+  @override
   @HiveField(2)
   final String? url;
   @HiveField(3)
@@ -19,10 +20,12 @@ class LessonEntity extends HiveObject with Entity {
   final String aynaaVersionId;
   @HiveField(5)
   final String subjectId;
+  @override
   @HiveField(6)
   final String versionName;
   @HiveField(7)
   final String subjectName;
+  @override
   @HiveField(8)
   String? localFilePath;
   LessonEntity({

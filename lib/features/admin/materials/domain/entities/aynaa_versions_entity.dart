@@ -8,6 +8,7 @@ class AynaaVersionsEntity extends HiveObject with Entity {
   @override
   @HiveField(0)
   final String id;
+  @override
   @HiveField(1)
   final String versionName;
 
@@ -16,4 +17,17 @@ class AynaaVersionsEntity extends HiveObject with Entity {
   @override
   // TODO: implement name
   String get name => versionName;
+
+  @override
+  // TODO: implement localFilePath
+  String get localFilePath => throw UnimplementedError();
+
+  @override
+  // TODO: implement url
+  String get url => throw UnimplementedError();
+
+  @override
+  set localFilePath(String? path) {
+    // TODO: implement localFilePath
+  }
 }
