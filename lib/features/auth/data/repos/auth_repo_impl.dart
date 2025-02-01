@@ -44,12 +44,15 @@ class AuthRepoImpl extends AuthRepo {
           path: DbEnpoints.users,
           uID: user.id,
         );
+
         userEntity = UserModel.fromJson(userData);
         return right(userEntity);
       } else {
         userEntity.role = kStudentRole;
         await dataBase.setDate(
             path: DbEnpoints.users, data: userEntity.toMap());
+        await dataBase.setDate(
+            path: 'profiles', data: {'user_id': user.id, 'wallet_balance': 0});
         return right(userEntity);
       }
     } catch (e) {

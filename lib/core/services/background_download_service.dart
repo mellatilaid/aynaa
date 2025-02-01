@@ -24,6 +24,7 @@ class BackgroundDownloadService<T extends Entity> {
   Future<void> _downloadAndUpdateLesson(T lesson) async {
     try {
       // Download and cache file
+
       final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
       final file = await storageService.downloadFile(
           bucketName: lesson.versionName, filePath: fileName);

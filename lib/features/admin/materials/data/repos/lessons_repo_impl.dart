@@ -77,7 +77,8 @@ class LessonsRepoImpl extends LessonsRepo {
       {required String subjectID, required String versionID}) async {
     try {
       List<LessonEntity> lesson;
-      lesson = await lessonsLocalDataSource.fetchLessons();
+      lesson = await lessonsLocalDataSource.fetchLessons(
+          versionID: versionID, subjectID: subjectID);
       if (lesson.isNotEmpty) return right(lesson);
       lesson = await lessonsRemoteDataSource.fetchLessons(
           subjectID: subjectID, versionID: versionID);

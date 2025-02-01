@@ -26,6 +26,7 @@ import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../features/admin/materials/data/repos/versions_repo_impl.dart';
+import '../services/background_download_service.dart';
 
 final getit = GetIt.instance;
 
@@ -90,6 +91,16 @@ setUpServiceLocator() {
         storageService: getit.get<StorageService>(),
         lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
         lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
+  );
+
+  getit.registerSingleton<BackgroundDownloadService<LessonEntity>>(
+    BackgroundDownloadService(
+        fileSystemCacheManager: getit.get<FileCacheManager>(),
+        storageService: getit.get<StorageService>(),
+        updateLocalDataSource: (LessonEntity entity) =>
+            getit.get<LessonsLocalDataSource>().handleUpdate(
+                  lesson: entity,
+                )),
   );
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
 }

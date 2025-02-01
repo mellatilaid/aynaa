@@ -21,8 +21,9 @@ class SupaBaseStorage extends StorageService<Bucket> {
     required String bucketName,
     required String filePath,
   }) async {
-    final Uint8List file =
-        await _supabase.storage.from(bucketName).download(filePath);
+    final Uint8List file = await _supabase.storage.from(bucketName).download(
+          filePath,
+        );
     return file;
   }
 

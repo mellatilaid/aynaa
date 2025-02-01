@@ -6,7 +6,6 @@ import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/enums/entities.dart';
@@ -46,15 +45,10 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
         mapToListOfEntity<LessonEntity>(data, Entities.lesson);
 
     hiveCache.putAll(boxName: kLessonsBox, items: lessons);
-    BackgroundDownloadService(
-      fileSystemCacheManager: fileCacheManager,
-      storageService: storageService,
-      updateLocalDataSource: (LessonEntity entity) =>
-          getit.get<LessonsLocalDataSource>().handleUpdate(
-                lesson: entity,
-              ),
-    ).startBackgroundDownloads(lessons);
-    //_startBackgroundDownloads(lessons);
+    getit
+        .get<BackgroundDownloadService<LessonEntity>>()
+        .startBackgroundDownloads(lessons);
+
     return lessons;
   }
 }
