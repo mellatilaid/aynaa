@@ -34,7 +34,9 @@ class _AddTextLessonBottomSheetState extends State<AddTextLessonBottomSheet> {
           builder: (context, state) {
             if (state is AddLessonFailure) {
               context.pop();
+
               showScaffoldMessage(context, state.errMessage);
+              BlocProvider.of<AddLessonCubit>(context).resetState();
             } else if (state is AddLessonSuccuss) {
               Future.microtask(() {
                 if (!context.mounted) return;
@@ -44,6 +46,7 @@ class _AddTextLessonBottomSheetState extends State<AddTextLessonBottomSheet> {
                     subjectID: _getSubjectID(),
                     versionID: _getVersionID(),
                   );
+              BlocProvider.of<AddLessonCubit>(context).resetState();
             }
             return AddLessonBottomSheetBody(
               isTextOnly: widget.isTextOnly,

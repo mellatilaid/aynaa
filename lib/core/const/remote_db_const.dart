@@ -16,6 +16,7 @@ const String kUrl = 'url';
 const String kContent = 'content';
 const String kVersionID = 'version_id';
 const String kSubjectID = 'subject_id';
+const String kLessonID = 'lesson_id';
 const String kColumn = 'column';
 const String kValue = 'value';
 const String kVersionName = 'version-name';

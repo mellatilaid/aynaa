@@ -44,7 +44,10 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
     List<LessonEntity> lessons =
         mapToListOfEntity<LessonEntity>(data, Entities.lesson);
 
-    hiveCache.putAll(boxName: kLessonsBox, items: lessons);
+    hiveCache.putAll(boxName: kLessonsBox, items: lessons, query: {
+      kSubjectID: subjectID,
+      kVersionID: versionID,
+    });
     getit
         .get<BackgroundDownloadService<LessonEntity>>()
         .startBackgroundDownloads(lessons);

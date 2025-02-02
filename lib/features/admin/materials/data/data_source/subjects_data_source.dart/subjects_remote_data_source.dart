@@ -26,7 +26,8 @@ class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
 
     List<SubjectsEntity> subjects =
         mapToListOfEntity(aynaaSubjects, Entities.subject);
-    hiveCache.putAll(boxName: kSubjectsBox, items: subjects);
+    hiveCache.putAll(
+        boxName: kSubjectsBox, items: subjects, query: {kVersionID: versionID});
     return subjects;
   }
 }

@@ -7,6 +7,8 @@ import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.d
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../functions/idexed_cache_helper.dart';
+
 class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   late Box<T> _box;
 
@@ -20,13 +22,23 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   }
 
   @override
-  Future<List<T>> getAll(
-      {required String boxName, Map<String, dynamic> query = const {}}) async {
+  Future<List<T>> getAll({
+    required String boxName,
+    Map<String, dynamic> query = const {},
+    List<String> indexedKeys = const [],
+  }) async {
     await init(boxName: boxName);
     final box = Hive.box<T>(boxName);
 
     if (query.isEmpty) return box.values.toList();
-
+    if (query[kSubjectID] == null) {
+      return box.values.where((item) {
+        final String value = propertyAccessor(item, kVersionID);
+        return value == query[kVersionID];
+      }).toList();
+    }
+    final resault = getIndex<T>(query[kVersionID], query[kSubjectID]);
+    return resault as List<T>;
     return box.values.where((item) {
       return query.entries.every((entry) {
         final dynamic value = propertyAccessor(item, entry.value);
@@ -45,6 +57,8 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
             return item.subjectId;
           case kVersionID:
             return item.aynaaVersionId;
+          case kLessonID:
+            return item.id;
         }
       default:
     }
@@ -118,11 +132,18 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   }
 
   @override
-  Future<void> putAll({required String boxName, required List<T> items}) async {
+  Future<void> putAll({
+    required String boxName,
+    required List<T> items,
+    Map<String, dynamic> query = const {},
+  }) async {
     await init(boxName: boxName);
     var box = Hive.box<T>(boxName);
     final map = _listToMap<T>(items);
     await box.putAll(map);
+    if (query[kSubjectID] == null) return;
+    putIndex<T>(
+        query[kVersionID], query[kSubjectID], items as List<LessonEntity>);
   }
 }
 
