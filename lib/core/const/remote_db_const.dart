@@ -21,3 +21,4 @@ const String kColumn = 'column';
 const String kValue = 'value';
 const String kVersionName = 'version-name';
 const String kSubjectName = 'subject-name';
+const String kLocalFilePath = 'localFilePath';

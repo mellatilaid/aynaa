@@ -5,15 +5,16 @@ import '../../../../../core/mixins/mappable.dart';
 
 class LessonModel extends LessonEntity with Mappable {
   LessonModel(
-    String? id,
-    String? name,
-    String? url,
-    String? description,
-    String aynaaVersionId,
-    String subjectId,
-    String versionName,
-    String subjectName,
-  ) : super(
+      String? id,
+      String? name,
+      String? url,
+      String? description,
+      String aynaaVersionId,
+      String subjectId,
+      String versionName,
+      String subjectName,
+      String? localFilePath)
+      : super(
           id: id,
           name: name,
           url: url,
@@ -22,6 +23,7 @@ class LessonModel extends LessonEntity with Mappable {
           subjectId: subjectId,
           versionName: versionName,
           subjectName: subjectName,
+          localFilePath: localFilePath,
         );
 
   @override
@@ -47,6 +49,7 @@ class LessonModel extends LessonEntity with Mappable {
       map[kSubjectID],
       map[kVersionName],
       map[kSubjectName],
+      map[kLocalFilePath],
     );
   }
 
@@ -60,6 +63,7 @@ class LessonModel extends LessonEntity with Mappable {
       lesson.subjectId,
       lesson.versionName,
       lesson.subjectName,
+      lesson.localFilePath,
     );
   }
 }

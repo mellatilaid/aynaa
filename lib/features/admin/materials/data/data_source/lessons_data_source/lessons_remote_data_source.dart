@@ -11,7 +11,7 @@ import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/enums/entities.dart';
 import '../../../../../../core/functions/map_to_list_of_entity.dart';
 import '../../../../../../core/services/data_base.dart';
-import '../../../../../../core/services/hive_service.dart';
+import '../../../../../../core/services/local_storage_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../domain/entities/lesson_entity.dart';
 
@@ -22,7 +22,7 @@ abstract class LessonsRemoteDataSource {
 
 class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
-  final HiveCache hiveCache;
+  final LocalCacheService hiveCache;
   final StorageService storageService;
   final FileCacheManager fileCacheManager;
   LessonsRemoteDataSourceImpl({

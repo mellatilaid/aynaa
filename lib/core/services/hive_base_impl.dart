@@ -1,15 +1,16 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/entities/entitiy.dart';
-import 'package:atm_app/core/services/hive_service.dart';
+import 'package:atm_app/core/services/local_storage_service.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../functions/idexed_cache_helper.dart';
 
-class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
+class BaseHiveCache<T extends HiveObject> implements LocalCacheService<T> {
   late Box<T> _box;
 
   @override
@@ -91,7 +92,7 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
   Future<void> clear({required String boxName}) async {
     await init(boxName: boxName);
     var box = Hive.box<T>(boxName);
-
+    indexCache.clear();
     await box.clear();
   }
 
@@ -128,7 +129,13 @@ class BaseHiveCache<T extends HiveObject> implements HiveCache<T> {
     var box = Hive.box<T>(boxName);
 
     await box.put(id, item);
-    log('item added to box');
+    if (boxName == kLessonsBox) {
+      putIndex(
+        propertyAccessor(item, kVersionID),
+        propertyAccessor(item, kSubjectID),
+        [item as LessonEntity],
+      );
+    }
   }
 
   @override

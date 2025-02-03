@@ -1,8 +1,9 @@
 import 'package:atm_app/core/classes/pick_file.dart';
+import 'package:atm_app/core/services/cach_index_lessons_in_background.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/hive_base_impl.dart';
-import 'package:atm_app/core/services/hive_service.dart';
+import 'package:atm_app/core/services/local_storage_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
@@ -35,38 +36,39 @@ setUpServiceLocator() {
       authServices: SupabaseAuthService(), dataBase: SupabaseDb()));
   getit.registerSingleton<DataBase>(SupabaseDb());
   getit.registerSingleton<StorageService>(SupaBaseStorage());
-  getit.registerSingleton<HiveCache<AynaaVersionsEntity>>(BaseHiveCache());
-  getit.registerSingleton<HiveCache<SubjectsEntity>>(BaseHiveCache());
-  getit.registerSingleton<HiveCache<LessonEntity>>(BaseHiveCache());
+  getit.registerSingleton<LocalCacheService<AynaaVersionsEntity>>(
+      BaseHiveCache());
+  getit.registerSingleton<LocalCacheService<SubjectsEntity>>(BaseHiveCache());
+  getit.registerSingleton<LocalCacheService<LessonEntity>>(BaseHiveCache());
   getit.registerSingleton<FileCacheManager>(FileSystemCacheManager());
   getit.registerSingleton<VersionsLocalDataSource>(
     VersionsLocalDataSourceImpl(
-      hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
+      hiveCache: getit.get<LocalCacheService<AynaaVersionsEntity>>(),
     ),
   );
   getit.registerSingleton<SubjectsLocalDataSource>(
     SubjectsLocalDataSourceImpl(
-      hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
+      hiveCache: getit.get<LocalCacheService<SubjectsEntity>>(),
     ),
   );
   getit.registerSingleton<LessonsLocalDataSource>(
     LessonsLocalDataSourceImpl(
-      hiveCache: getit.get<HiveCache<LessonEntity>>(),
+      hiveCache: getit.get<LocalCacheService<LessonEntity>>(),
     ),
   );
   getit.registerSingleton<AynaaVersionsRemoteDataSource>(
       AynaaVersionsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
-    hiveCache: getit.get<HiveCache<AynaaVersionsEntity>>(),
+    hiveCache: getit.get<LocalCacheService<AynaaVersionsEntity>>(),
   ));
   getit
       .registerSingleton<SubjectsRemoteDataSource>(SubjectsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
-    hiveCache: getit.get<HiveCache<SubjectsEntity>>(),
+    hiveCache: getit.get<LocalCacheService<SubjectsEntity>>(),
   ));
   getit.registerSingleton<LessonsRemoteDataSource>(LessonsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
-    hiveCache: getit.get<HiveCache<LessonEntity>>(),
+    hiveCache: getit.get<LocalCacheService<LessonEntity>>(),
     storageService: getit.get<StorageService>(),
     fileCacheManager: getit.get<FileCacheManager>(),
   ));
@@ -103,4 +105,9 @@ setUpServiceLocator() {
                 )),
   );
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
+  getit
+      .registerSingleton<CachIndexLessonsInBackground>(
+          CachIndexLessonsInBackground(
+              hiveCache: getit.get<LocalCacheService<LessonEntity>>()))
+      .initializeCacheInBackground();
 }

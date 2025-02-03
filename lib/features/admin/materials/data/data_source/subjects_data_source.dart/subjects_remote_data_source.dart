@@ -5,7 +5,7 @@ import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity
 import '../../../../../../core/const/local_db_const.dart';
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/enums/entities.dart';
-import '../../../../../../core/services/hive_service.dart';
+import '../../../../../../core/services/local_storage_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
 abstract class SubjectsRemoteDataSource {
@@ -14,7 +14,7 @@ abstract class SubjectsRemoteDataSource {
 
 class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   final DataBase dataBase;
-  final HiveCache hiveCache;
+  final LocalCacheService hiveCache;
   SubjectsRemoteDataSourceImpl(
       {required this.dataBase, required this.hiveCache});
 

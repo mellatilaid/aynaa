@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
-import 'package:atm_app/core/services/hive_service.dart';
+import 'package:atm_app/core/services/local_storage_service.dart';
 
 import '../../../domain/entities/subjects_entity.dart';
 
@@ -14,7 +14,7 @@ abstract class SubjectsLocalDataSource {
 }
 
 class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
-  final HiveCache hiveCache;
+  final LocalCacheService hiveCache;
   SubjectsLocalDataSourceImpl({required this.hiveCache});
   @override
   Future<List<SubjectsEntity>> fetchSubjects(

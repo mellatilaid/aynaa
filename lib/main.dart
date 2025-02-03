@@ -17,7 +17,6 @@ void main() async {
 
   await initializeCache();
   setUpServiceLocator();
-
   //await Firebase.initializeApp();
   if (0 == 0) {
     runApp(DevicePreview(

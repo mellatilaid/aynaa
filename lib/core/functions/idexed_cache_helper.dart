@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 
-final Map<String, Map<String, List<LessonEntity>>> indexCache = {};
+Map<String, Map<String, List<LessonEntity>>> indexCache = {};
 //Map<String, dynamic>
 void ensureIndex(String versionID, [String? subjectID]) {
   if (!indexCache.containsKey(versionID)) {
