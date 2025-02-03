@@ -1,5 +1,5 @@
 mixin Entity {
-  String? get id; // Abstract getter (required)
+  String get entityID; // Abstract getter (required)
   String? get name;
   String? get url;
   String? get localFilePath;

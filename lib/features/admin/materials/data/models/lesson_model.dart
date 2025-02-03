@@ -5,7 +5,7 @@ import '../../../../../core/mixins/mappable.dart';
 
 class LessonModel extends LessonEntity with Mappable {
   LessonModel(
-      String? id,
+      String id,
       String? name,
       String? url,
       String? description,
@@ -15,7 +15,7 @@ class LessonModel extends LessonEntity with Mappable {
       String subjectName,
       String? localFilePath)
       : super(
-          id: id,
+          entityID: id,
           name: name,
           url: url,
           description: description,
@@ -55,7 +55,7 @@ class LessonModel extends LessonEntity with Mappable {
 
   factory LessonModel.fromLessonEntity(LessonEntity lesson) {
     return LessonModel(
-      lesson.id,
+      lesson.entityID,
       lesson.name,
       lesson.url,
       lesson.description,

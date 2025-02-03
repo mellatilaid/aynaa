@@ -5,7 +5,7 @@ import '../../../../../core/const/remote_db_const.dart';
 
 class SubjectsModel extends SubjectsEntity with Mappable {
   @override
-  final String id;
+  final String entityID;
 
   @override
   final String subjectName;
@@ -13,8 +13,11 @@ class SubjectsModel extends SubjectsEntity with Mappable {
   final String versionID;
 
   SubjectsModel(
-      {required this.id, required this.subjectName, required this.versionID})
-      : super(id: id, subjectName: subjectName, versionID: versionID);
+      {required this.entityID,
+      required this.subjectName,
+      required this.versionID})
+      : super(
+            entityID: entityID, subjectName: subjectName, versionID: versionID);
 
   /*factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
     return SubjectsModel(id: data[kID].toString(), subjectName: data[kName]);
@@ -22,7 +25,7 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   factory SubjectsModel.fromSubjectEntity(SubjectsEntity subject) {
     return SubjectsModel(
-        id: subject.id ?? '0',
+        entityID: subject.entityID ?? '0',
         subjectName: subject.subjectName,
         versionID: subject.versionID);
   }
@@ -37,7 +40,7 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   static SubjectsModel fromMap(Map<String, dynamic> data) {
     return SubjectsModel(
-        id: data[kID].toString(),
+        entityID: data[kID].toString(),
         subjectName: data[kSubjectName],
         versionID: data[kVersionID]);
   }

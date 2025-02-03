@@ -6,10 +6,10 @@ class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
   final String aynaaVersion;
 
   @override
-  final String id;
+  final String entityID;
 
-  AynaaVersionsModel(this.id, {required this.aynaaVersion})
-      : super(versionName: aynaaVersion, id: id);
+  AynaaVersionsModel(this.entityID, {required this.aynaaVersion})
+      : super(versionName: aynaaVersion, entityID: entityID);
 
   factory AynaaVersionsModel.fromSupabase(Map<String, dynamic> data) {
     return AynaaVersionsModel(

@@ -10,7 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../functions/idexed_cache_helper.dart';
 
-class BaseHiveCache<T extends HiveObject> implements LocalCacheService<T> {
+class BaseHiveCache<T> implements LocalCacheService<T> {
   late Box<T> _box;
 
   @override
@@ -59,7 +59,7 @@ class BaseHiveCache<T extends HiveObject> implements LocalCacheService<T> {
           case kVersionID:
             return item.aynaaVersionId;
           case kLessonID:
-            return item.id;
+            return item.entityID;
         }
       default:
     }
@@ -158,7 +158,7 @@ _listToMap<T>(List<T> items) {
   Map<dynamic, T> map = {};
   for (var item in items) {
     if (item is Entity) {
-      map[item.id!] = item;
+      map[item.entityID] = item;
     }
   }
   return map;

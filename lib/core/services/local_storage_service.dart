@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-abstract class LocalCacheService<T extends HiveObject> {
+abstract class LocalCacheService<T> {
   /// Initialize the cache (register adapters and open boxes)
   Future<void> init({required String boxName});
 

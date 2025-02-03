@@ -38,7 +38,8 @@ class LessonsLocalDataSourceImpl implements LessonsLocalDataSource {
 
   @override
   Future<void> handleUpdate({required LessonEntity lesson}) async {
-    await hiveCache.put(boxName: kLessonsBox, item: lesson, id: lesson.id!);
+    await hiveCache.put(
+        boxName: kLessonsBox, item: lesson, id: lesson.entityID);
     final newLessons =
         await hiveCache.getAll(boxName: kLessonsBox) as List<LessonEntity>;
     _controller.add(newLessons);

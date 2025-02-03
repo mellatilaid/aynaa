@@ -24,7 +24,7 @@ class AynaaVersionListView extends StatelessWidget {
               context.push(AdminAppRouter.versionSubjectsView,
                   extra: aynaaVersions[index]);
               BlocProvider.of<AddLessonCubit>(context).setVersionIDAndName(
-                  aynaaVersions[index].id, aynaaVersions[index].name);
+                  aynaaVersions[index].entityID, aynaaVersions[index].name);
             },
             child: CustomCard(
               entity: aynaaVersions[index],

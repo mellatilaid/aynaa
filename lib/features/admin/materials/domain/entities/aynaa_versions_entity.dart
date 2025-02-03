@@ -1,18 +1,17 @@
 import 'package:atm_app/core/entities/entitiy.dart';
-import 'package:hive/hive.dart';
+import 'package:isar/isar.dart';
 
 part 'aynaa_versions_entity.g.dart';
 
-@HiveType(typeId: 0)
-class AynaaVersionsEntity extends HiveObject with Entity {
+@Collection()
+class AynaaVersionsEntity with Entity {
+  Id id = Isar.autoIncrement;
   @override
-  @HiveField(0)
-  final String id;
+  final String entityID;
   @override
-  @HiveField(1)
   final String versionName;
 
-  AynaaVersionsEntity({required this.id, required this.versionName});
+  AynaaVersionsEntity({required this.entityID, required this.versionName});
 
   @override
   // TODO: implement name

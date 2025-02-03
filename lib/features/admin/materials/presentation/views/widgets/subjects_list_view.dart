@@ -24,9 +24,9 @@ class SubjectsListView extends StatelessWidget {
               AdminAppRouter.lessonsView,
               extra: subjects[index],
             );
-            log(subjects[index].id!);
+            log(subjects[index].entityID);
             BlocProvider.of<AddLessonCubit>(context).setSubjectIDAndName(
-              subjects[index].id!,
+              subjects[index].entityID,
               subjects[index].name,
             );
           },

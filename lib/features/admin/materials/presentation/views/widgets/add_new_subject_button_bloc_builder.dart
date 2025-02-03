@@ -49,7 +49,7 @@ class _AddNewSubjectButtonBlocBuilderState
     final versionID = _getVersionID();
 
     final SubjectsEntity subject = SubjectsModel(
-      id: '0',
+      entityID: '0',
       subjectName: widget.subjectTitleController.text.trim(),
       versionID: versionID,
     );

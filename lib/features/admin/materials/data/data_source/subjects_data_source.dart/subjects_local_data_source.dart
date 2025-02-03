@@ -35,7 +35,7 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
     await hiveCache.put(
       boxName: kSubjectsBox,
       item: subject,
-      id: subject.id!,
+      id: subject.entityID,
     );
     final newVersions = await hiveCache.getAll(
         boxName: kSubjectsBox,

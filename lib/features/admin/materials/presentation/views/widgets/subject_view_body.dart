@@ -22,7 +22,7 @@ class _SubjectsViewBodyState extends State<SubjectsViewBody> {
     super.initState();
     //getit.get<HiveCache<SubjectsEntity>>().clear(boxName: kSubjectsBox);
     BlocProvider.of<FetchSubjectCubit>(context)
-        .fetchSubjects(versionID: widget.versionsEntity.id);
+        .fetchSubjects(versionID: widget.versionsEntity.entityID);
   }
 
   @override

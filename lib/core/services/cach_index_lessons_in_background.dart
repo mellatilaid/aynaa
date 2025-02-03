@@ -104,7 +104,7 @@ class CachIndexLessonsInBackground {
 
       // 2. Skip invalid entries
       if (versionId.isEmpty || subjectId.isEmpty) {
-        log('Skipping lesson ${lesson.id} - invalid version/subject ID');
+        log('Skipping lesson ${lesson.entityID} - invalid version/subject ID');
         continue;
       }
 

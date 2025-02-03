@@ -25,7 +25,7 @@ class CustomCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(entity.name.toString()),
-              Text(entity.id ?? 'id is null'),
+              Text(entity.entityID ?? 'id is null'),
             ],
           ),
         ),

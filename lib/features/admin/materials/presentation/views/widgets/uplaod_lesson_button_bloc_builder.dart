@@ -47,6 +47,7 @@ class UploadLessonButtonBuilder extends StatelessWidget {
 
   _toLessonEnitiy({required AddLessonCubit addLessonCubit}) {
     return LessonEntity(
+      entityID: '',
       description: lessonContent.text,
       aynaaVersionId: addLessonCubit.versionID!,
       subjectId: addLessonCubit.subjectID!,

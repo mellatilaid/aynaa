@@ -3,6 +3,7 @@ import 'package:atm_app/core/services/cach_index_lessons_in_background.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/hive_base_impl.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/services/local_storage_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
@@ -36,6 +37,7 @@ setUpServiceLocator() {
       authServices: SupabaseAuthService(), dataBase: SupabaseDb()));
   getit.registerSingleton<DataBase>(SupabaseDb());
   getit.registerSingleton<StorageService>(SupaBaseStorage());
+  getit.registerSingleton<IsarStorageService>(IsarStorageService());
   getit.registerSingleton<LocalCacheService<AynaaVersionsEntity>>(
       BaseHiveCache());
   getit.registerSingleton<LocalCacheService<SubjectsEntity>>(BaseHiveCache());
@@ -59,7 +61,7 @@ setUpServiceLocator() {
   getit.registerSingleton<AynaaVersionsRemoteDataSource>(
       AynaaVersionsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
-    hiveCache: getit.get<LocalCacheService<AynaaVersionsEntity>>(),
+    isarStorageService: getit.get<IsarStorageService>(),
   ));
   getit
       .registerSingleton<SubjectsRemoteDataSource>(SubjectsRemoteDataSourceImpl(
