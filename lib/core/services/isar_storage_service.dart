@@ -48,6 +48,7 @@ class IsarStorageService {
     required CollentionType collentionType,
   }) async {
     await init();
+
     switch (collentionType) {
       case CollentionType.lessons:
         await _isar.writeTxn(() async {
@@ -59,9 +60,11 @@ class IsarStorageService {
               .putAll(items as List<AynaaVersionsEntity>);
         });
       case CollentionType.subjects:
-        await _isar.writeTxn(() async {
-          await _isar.subjectsEntitys.putAll(items as List<SubjectsEntity>);
-        });
+        await _isar.writeTxn(
+          () async {
+            await _isar.subjectsEntitys.putAll(items as List<SubjectsEntity>);
+          },
+        );
     }
   }
 

@@ -1,4 +1,3 @@
-import 'package:atm_app/core/services/initiliaze_cache.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/admin_material_app.dart';
@@ -15,7 +14,7 @@ void main() async {
     anonKey: dotenv.get('ANON_KEY'),
   );
 
-  await initializeCache();
+  //await initializeCache();
   setUpServiceLocator();
   //await Firebase.initializeApp();
   if (0 == 0) {

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:atm_app/core/const/local_db_const.dart';
-import 'package:atm_app/core/services/local_storage_service.dart';
+import 'package:atm_app/core/enums/entities.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 
 abstract class VersionsLocalDataSource {
@@ -11,11 +11,12 @@ abstract class VersionsLocalDataSource {
 }
 
 class VersionsLocalDataSourceImpl implements VersionsLocalDataSource {
-  final LocalCacheService hiveCache;
-  VersionsLocalDataSourceImpl({required this.hiveCache});
+  final IsarStorageService isarStorageService;
+  VersionsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<AynaaVersionsEntity>> fetchVersion() async {
-    final versions = await hiveCache.getAll(boxName: kVersionsBox);
+    final versions = await isarStorageService.getAll(
+        collentionType: CollentionType.versions);
     return versions as List<AynaaVersionsEntity>;
   }
 
@@ -26,10 +27,10 @@ class VersionsLocalDataSourceImpl implements VersionsLocalDataSource {
 
   @override
   Future<void> handleUpdate(List<AynaaVersionsEntity> versions) async {
-    await hiveCache.add(boxName: kVersionsBox, items: versions);
+    /*await hiveCache.add(boxName: kVersionsBox, items: versions);
     final newVersions = await hiveCache.getAll(boxName: kVersionsBox)
         as List<AynaaVersionsEntity>;
-    _controller.add(newVersions);
+    _controller.add(newVersions);*/
   }
 
   void dispose() {
