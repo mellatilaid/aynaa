@@ -100,8 +100,8 @@ class SupaBaseStorage extends StorageService<Bucket> {
   }
 
   @override
-  Future<String> deleteBucket(String bucketName) async {
-    final String res = await _supabase.storage.deleteBucket('avatars');
+  Future<String> deleteBucket(String id) async {
+    final String res = await _supabase.storage.deleteBucket(id);
     log(res);
     return res;
   }

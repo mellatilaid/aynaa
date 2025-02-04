@@ -42,7 +42,7 @@ class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
 
   Future<void> fetchAynaaVersions() async {
     emit(FetchAynaaVersionsLoading());
-    final result = await materialsRepo.fetchAynaaVersions();
+    final result = await materialsRepo.fetchVersions();
     result.fold(
         (failure) =>
             emit(FetchAynaaVersionsFailure(errMessage: failure.errMessage)),

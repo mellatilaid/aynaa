@@ -11,8 +11,7 @@ class CreateNewAynaaVersionCubit extends Cubit<CreateNewAynaaVersionState> {
 
   Future<void> createNewAynaaVersion({required String versionName}) async {
     emit(CreateNewAynaaVersionLoading());
-    final resault =
-        await versionsRepo.setAynaaVersion(versionName: versionName);
+    final resault = await versionsRepo.setVersion(versionName: versionName);
 
     resault.fold((failure) {
       emit(CreateNewAynaaVersionFailure(errMessage: failure.errMessage));

@@ -3,9 +3,10 @@ import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_
 import 'package:dartz/dartz.dart';
 
 abstract class VersionsRepo {
-  Future<Either<Failures, List<AynaaVersionsEntity>>> fetchAynaaVersions();
-  Future<Either<Failures, String>> setAynaaVersion(
-      {required String versionName});
-  Future<Either<Failures, String>> saveAynaaVersion(
+  Future<Either<Failures, List<AynaaVersionsEntity>>> fetchVersions();
+  Future<Either<Failures, String>> setVersion({required String versionName});
+  Future<Either<Failures, String>> saveVersion(
+      {required AynaaVersionsEntity aynaaVersion});
+  Future<Either<Failures, String>> deleteVersion(
       {required AynaaVersionsEntity aynaaVersion});
 }
