@@ -94,7 +94,7 @@ class RealtimeSyncService {
   void _handleVersionChange(PostgresChangePayload payload) {
     if (payload.eventType == PostgresChangeEvent.insert) {
       final entity = AynaaVersionsModel.fromMap(payload.newRecord);
-      getit.get<VersionsLocalDataSource>().handleUpdate([entity]);
+      getit.get<VersionsLocalDataSource>().handleUpdate(entity);
     }
     // Add update/delete handling
   }

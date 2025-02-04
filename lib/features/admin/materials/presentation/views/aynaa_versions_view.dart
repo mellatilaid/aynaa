@@ -1,3 +1,4 @@
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_aynaa_versions_cubit/fetch_aynaa_versions_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_new_aynaa_version_dialog.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,10 @@ class AynaaVersionsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FetchAynaaVersionsCubit(getit.get<VersionsRepo>()),
+      create: (context) => FetchAynaaVersionsCubit(
+        getit.get<VersionsRepo>(),
+        getit.get<IsarStorageService>(),
+      ),
       child: Scaffold(
         body: const AynaaVersionsViewBody(),
         floatingActionButton: Builder(builder: (fabContext) {

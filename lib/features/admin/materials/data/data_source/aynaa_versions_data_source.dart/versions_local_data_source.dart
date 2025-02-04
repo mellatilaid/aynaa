@@ -6,7 +6,7 @@ import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_
 
 abstract class VersionsLocalDataSource {
   Future<List<AynaaVersionsEntity>> fetchVersion();
-  Future<void> handleUpdate(List<AynaaVersionsEntity> versions);
+  Future<void> handleUpdate(AynaaVersionsEntity versions);
   Stream<List<AynaaVersionsEntity>> get versionsStream;
 }
 
@@ -26,9 +26,12 @@ class VersionsLocalDataSourceImpl implements VersionsLocalDataSource {
   Stream<List<AynaaVersionsEntity>> get versionsStream => _controller.stream;
 
   @override
-  Future<void> handleUpdate(List<AynaaVersionsEntity> versions) async {
-    /*await hiveCache.add(boxName: kVersionsBox, items: versions);
-    final newVersions = await hiveCache.getAll(boxName: kVersionsBox)
+  Future<void> handleUpdate(AynaaVersionsEntity versions) async {
+    await isarStorageService.put(
+      item: versions,
+      collentionType: CollentionType.versions,
+    );
+    /* final newVersions = await hiveCache.getAll(boxName: kVersionsBox)
         as List<AynaaVersionsEntity>;
     _controller.add(newVersions);*/
   }

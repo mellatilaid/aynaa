@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/enums/entities.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
@@ -12,14 +14,15 @@ part 'fetch_aynaa_versions_state.dart';
 
 class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
   final VersionsRepo materialsRepo;
+  final IsarStorageService isarStorageService;
   StreamSubscription? _subscription;
   @override
   bool isClosed = false;
-  FetchAynaaVersionsCubit(this.materialsRepo)
+  FetchAynaaVersionsCubit(this.materialsRepo, this.isarStorageService)
       : super(FetchAynaaVersionsInitial()) {
-    sync();
+    //_sync();
   }
-  sync() {
+  _sync() {
     _subscription = getit.get<VersionsLocalDataSource>().versionsStream.listen(
       (versions) {
         if (isClosed) {
@@ -41,12 +44,25 @@ class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
     emit(FetchAynaaVersionsLoading());
     final result = await materialsRepo.fetchAynaaVersions();
     result.fold(
-      (failure) =>
-          emit(FetchAynaaVersionsFailure(errMessage: failure.errMessage)),
-      (aynaaVersions) => emit(
-        FetchAynaaVersionsSucuss(aynaaVersions: aynaaVersions),
-      ),
-    );
+        (failure) =>
+            emit(FetchAynaaVersionsFailure(errMessage: failure.errMessage)),
+        (aynaaVersions) {
+      emit(
+        FetchAynaaVersionsSucuss(
+            aynaaVersions: aynaaVersions.reversed.toList()),
+      );
+      _stream();
+    });
+  }
+
+  void _stream() {
+    isarStorageService
+        .watchAll<AynaaVersionsEntity>(collectionType: CollentionType.versions)
+        .listen((versions) {
+      emit(
+        FetchAynaaVersionsSucuss(aynaaVersions: versions.reversed.toList()),
+      ); // Emit updated data
+    });
   }
 
   @override

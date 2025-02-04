@@ -81,9 +81,11 @@ class IsarStorageService {
           await _isar.aynaaVersionsEntitys.put(item as AynaaVersionsEntity);
         });
       case CollentionType.subjects:
-        await _isar.writeTxn(() async {
-          await _isar.subjectsEntitys.put(item as SubjectsEntity);
-        });
+        await _isar.writeTxn(
+          () async {
+            await _isar.subjectsEntitys.put(item as SubjectsEntity);
+          },
+        );
     }
   }
 
@@ -147,11 +149,35 @@ class IsarStorageService {
     }
   }
 
+  Stream<List<T>> watchAll<T>({required CollentionType collectionType}) async* {
+    await init(); // Ensure Isar is initialized
+
+    switch (collectionType) {
+      case CollentionType.lessons:
+        Stream<void> lessonStream = _isar.lessonEntitys.watchLazy();
+        yield* lessonStream.asyncMap((_) async {
+          return await _isar.lessonEntitys.where().findAll()
+              as List<T>; // Fetch updated data
+        });
+
+      case CollentionType.versions:
+        Stream<void> versionsStream = _isar.aynaaVersionsEntitys.watchLazy();
+        yield* versionsStream.asyncMap((_) async {
+          return await _isar.aynaaVersionsEntitys.where().findAll() as List<T>;
+        });
+
+      case CollentionType.subjects:
+        Stream<void> subjectsStream = _isar.subjectsEntitys.watchLazy();
+        yield* subjectsStream.asyncMap((_) async {
+          return await _isar.subjectsEntitys.where().findAll() as List<T>;
+        });
+    }
+  }
+
   /// Watch for changes in the cache
   //Stream<BoxEvent> watch(String? id) {}
 
   /// Watch all items in cache
-  //Stream<List<dynamic>> watchAll() {}
 
   /// Get cached items with pagination
   //Future<List> paginate({int page = 1, int limit = 20}) {}
