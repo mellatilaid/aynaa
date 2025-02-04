@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:atm_app/core/const/local_db_const.dart';
-import 'package:atm_app/core/services/local_storage_service.dart';
+import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/enums/entities.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 
-import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/services/background_download_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../domain/entities/lesson_entity.dart';
@@ -16,13 +16,13 @@ abstract class LessonsLocalDataSource {
 }
 
 class LessonsLocalDataSourceImpl implements LessonsLocalDataSource {
-  final LocalCacheService hiveCache;
-  LessonsLocalDataSourceImpl({required this.hiveCache});
+  final IsarStorageService isarStorageService;
+  LessonsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<LessonEntity>> fetchLessons(
       {required String versionID, required String subjectID}) async {
-    final lessons = await hiveCache.getAll(
-      boxName: kLessonsBox,
+    final lessons = await isarStorageService.filter(
+      collentionType: CollentionType.lessons,
       query: {kVersionID: versionID, kSubjectID: subjectID},
     ) as List<LessonEntity>;
     getit
@@ -38,10 +38,12 @@ class LessonsLocalDataSourceImpl implements LessonsLocalDataSource {
 
   @override
   Future<void> handleUpdate({required LessonEntity lesson}) async {
-    await hiveCache.put(
-        boxName: kLessonsBox, item: lesson, id: lesson.entityID);
-    final newLessons =
-        await hiveCache.getAll(boxName: kLessonsBox) as List<LessonEntity>;
+    await isarStorageService.put(
+        item: lesson, collentionType: CollentionType.lessons);
+    final newLessons = await isarStorageService.filter(
+      collentionType: CollentionType.lessons,
+      query: {kVersionID: lesson.aynaaVersionId, kSubjectID: lesson.subjectId},
+    ) as List<LessonEntity>;
     _controller.add(newLessons);
   }
 

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 
@@ -11,7 +11,6 @@ import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/enums/entities.dart';
 import '../../../../../../core/functions/map_to_list_of_entity.dart';
 import '../../../../../../core/services/data_base.dart';
-import '../../../../../../core/services/local_storage_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../domain/entities/lesson_entity.dart';
 
@@ -22,12 +21,12 @@ abstract class LessonsRemoteDataSource {
 
 class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
-  final LocalCacheService hiveCache;
+  final IsarStorageService isarStorageService;
   final StorageService storageService;
   final FileCacheManager fileCacheManager;
   LessonsRemoteDataSourceImpl({
     required this.dataBase,
-    required this.hiveCache,
+    required this.isarStorageService,
     required this.storageService,
     required this.fileCacheManager,
   });
@@ -44,10 +43,10 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
     List<LessonEntity> lessons =
         mapToListOfEntity<LessonEntity>(data, Entities.lesson);
 
-    hiveCache.putAll(boxName: kLessonsBox, items: lessons, query: {
-      kSubjectID: subjectID,
-      kVersionID: versionID,
-    });
+    isarStorageService.putAll(
+      items: lessons,
+      collentionType: CollentionType.lessons,
+    );
     getit
         .get<BackgroundDownloadService<LessonEntity>>()
         .startBackgroundDownloads(lessons);
