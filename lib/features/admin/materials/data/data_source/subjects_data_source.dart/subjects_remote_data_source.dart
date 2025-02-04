@@ -1,11 +1,10 @@
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 
-import '../../../../../../core/const/local_db_const.dart';
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/enums/entities.dart';
-import '../../../../../../core/services/local_storage_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
 abstract class SubjectsRemoteDataSource {
@@ -14,9 +13,9 @@ abstract class SubjectsRemoteDataSource {
 
 class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   final DataBase dataBase;
-  final LocalCacheService hiveCache;
+  final IsarStorageService isarStorageService;
   SubjectsRemoteDataSourceImpl(
-      {required this.dataBase, required this.hiveCache});
+      {required this.dataBase, required this.isarStorageService});
 
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
@@ -26,8 +25,10 @@ class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
 
     List<SubjectsEntity> subjects =
         mapToListOfEntity(aynaaSubjects, Entities.subject);
-    hiveCache.putAll(
-        boxName: kSubjectsBox, items: subjects, query: {kVersionID: versionID});
+    isarStorageService.putAll(
+      items: subjects,
+      collentionType: CollentionType.subjects,
+    );
     return subjects;
   }
 }

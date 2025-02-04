@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
-import 'package:atm_app/core/services/local_storage_service.dart';
+import 'package:atm_app/core/enums/entities.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 
 import '../../../domain/entities/subjects_entity.dart';
 
@@ -14,13 +14,15 @@ abstract class SubjectsLocalDataSource {
 }
 
 class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
-  final LocalCacheService hiveCache;
-  SubjectsLocalDataSourceImpl({required this.hiveCache});
+  final IsarStorageService isarStorageService;
+  SubjectsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
       {required String versionID}) async {
-    final subjects = await hiveCache
-        .getAll(boxName: kSubjectsBox, query: {kVersionID: versionID});
+    final subjects = await isarStorageService.filter(
+      collentionType: CollentionType.subjects,
+      query: {kVersionID: versionID},
+    );
     return subjects as List<SubjectsEntity>;
   }
 
@@ -32,15 +34,15 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
   @override
   Future<void> handleUpdate(
       {required SubjectsEntity subject, required String versionID}) async {
-    await hiveCache.put(
-      boxName: kSubjectsBox,
+    await isarStorageService.put(
       item: subject,
-      id: subject.entityID,
+      collentionType: CollentionType.subjects,
     );
-    final newVersions = await hiveCache.getAll(
-        boxName: kSubjectsBox,
-        query: {kVersionID: subject}) as List<SubjectsEntity>;
-    _controller.add(newVersions);
+    final subjects = await isarStorageService.filter(
+      collentionType: CollentionType.subjects,
+      query: {kVersionID: subject.versionID},
+    );
+    _controller.add(subjects as List<SubjectsEntity>);
   }
 
   void dispose() {

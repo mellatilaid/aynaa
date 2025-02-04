@@ -8,12 +8,16 @@ import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/core/services/supabase_storage.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/aynaa_versions_remote_data_sourse.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
+import '../../features/admin/materials/data/repos/subjects_repo_impl.dart';
 import '../../features/admin/materials/data/repos/versions_repo_impl.dart';
+import '../../features/admin/materials/domain/repos/subjects_repo.dart';
 
 final getit = GetIt.instance;
 
@@ -33,12 +37,12 @@ setUpServiceLocator() {
       isarStorageService: getit.get<IsarStorageService>(),
     ),
   );
-  /*getit.registerSingleton<SubjectsLocalDataSource>(
+  getit.registerSingleton<SubjectsLocalDataSource>(
     SubjectsLocalDataSourceImpl(
-      hiveCache: getit.get<LocalCacheService<SubjectsEntity>>(),
+      isarStorageService: getit.get<IsarStorageService>(),
     ),
   );
-  getit.registerSingleton<LessonsLocalDataSource>(
+  /*getit.registerSingleton<LessonsLocalDataSource>(
     LessonsLocalDataSourceImpl(
       hiveCache: getit.get<LocalCacheService<LessonEntity>>(),
     ),
@@ -48,12 +52,12 @@ setUpServiceLocator() {
     dataBase: getit.get<DataBase>(),
     isarStorageService: getit.get<IsarStorageService>(),
   ));
-  /*getit
+  getit
       .registerSingleton<SubjectsRemoteDataSource>(SubjectsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
-    hiveCache: getit.get<LocalCacheService<SubjectsEntity>>(),
+    isarStorageService: getit.get<IsarStorageService>(),
   ));
-  getit.registerSingleton<LessonsRemoteDataSource>(LessonsRemoteDataSourceImpl(
+  /*getit.registerSingleton<LessonsRemoteDataSource>(LessonsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
     hiveCache: getit.get<LocalCacheService<LessonEntity>>(),
     storageService: getit.get<StorageService>(),
@@ -67,14 +71,14 @@ setUpServiceLocator() {
       versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
     ),
   );
-  /* getit.registerSingleton<SubjectsRepo>(
+  getit.registerSingleton<SubjectsRepo>(
     SubjectsRepoImpl(
       dataBase: getit.get<DataBase>(),
       subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
       subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
     ),
   );
-  getit.registerSingleton<LessonsRepo>(
+  /*getit.registerSingleton<LessonsRepo>(
     LessonsRepoImpl(
         dataBase: getit.get<DataBase>(),
         storageService: getit.get<StorageService>(),

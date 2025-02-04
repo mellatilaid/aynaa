@@ -23,15 +23,15 @@ class SubjectsEntity with Entity {
 
   @override
   // TODO: implement localFilePath
-  String? get localFilePath => throw UnimplementedError();
+  String? get localFilePath => '';
 
   @override
   // TODO: implement url
-  String? get url => throw UnimplementedError();
+  String? get url => '';
 
   @override
   // TODO: implement versionName
-  String get versionName => throw UnimplementedError();
+  String get versionName => '';
 
   @override
   set localFilePath(String? path) {}

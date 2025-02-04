@@ -34,7 +34,7 @@ class IsarStorageService {
       case CollentionType.versions:
         return _isar.aynaaVersionsEntitys.where().findAll();
       case CollentionType.subjects:
-        return _isar.aynaaVersionsEntitys.where().findAll();
+        return _isar.subjectsEntitys.where().findAll();
     }
   }
 
