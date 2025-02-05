@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
@@ -112,10 +113,23 @@ class RealtimeSyncService {
   }
 
   void _handleLessonChange(PostgresChangePayload payload) {
-    if (payload.eventType == PostgresChangeEvent.insert) {
-      final entity = LessonModel.fromMap(payload.newRecord);
-      log(payload.toString());
-      getit.get<LessonsLocalDataSource>().handleUpdate(lesson: entity);
+    log(payload.toString());
+    switch (payload.eventType) {
+      case PostgresChangeEvent.insert:
+        final entity = LessonModel.fromMap(payload.newRecord);
+        log(payload.toString());
+        getit
+            .get<LessonsLocalDataSource>()
+            .handleUpdate(lesson: entity, eventType: PostgressEventType.insert);
+        break;
+      case PostgresChangeEvent.delete:
+        log(payload.oldRecord[kUuid]);
+        getit.get<LessonsLocalDataSource>().handleUpdate(
+              id: payload.oldRecord[kUuid],
+              eventType: PostgressEventType.delete,
+            );
+        break;
+      default:
     }
   }
 

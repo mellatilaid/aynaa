@@ -17,4 +17,8 @@ abstract class DataBase {
     required String uid,
     required Map<String, dynamic> data,
   });
+  Future<void> callingrpcFuc({
+    required String functionName,
+    required Map<String, dynamic> params,
+  });
 }

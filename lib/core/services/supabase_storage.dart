@@ -105,6 +105,12 @@ class SupaBaseStorage extends StorageService<Bucket> {
     log(res);
     return res;
   }
+
+  @override
+  Future<String> emptyBucket(String id) async {
+    final String res = await _supabase.storage.emptyBucket(id);
+    return res;
+  }
 }
 
 /*Future<String> createBucket(String bucketName) async {

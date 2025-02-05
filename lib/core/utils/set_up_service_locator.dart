@@ -1,4 +1,5 @@
 import 'package:atm_app/core/classes/pick_file.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
@@ -96,10 +97,12 @@ setUpServiceLocator() {
     BackgroundDownloadService(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
-      updateLocalDataSource: (LessonEntity entity) =>
-          getit.get<LessonsLocalDataSource>().handleUpdate(
-                lesson: entity,
-              ),
+      updateLocalDataSource:
+          (LessonEntity entity, PostgressEventType eventType) =>
+              getit.get<LessonsLocalDataSource>().handleUpdate(
+                    lesson: entity,
+                    eventType: eventType,
+                  ),
     ),
   );
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());

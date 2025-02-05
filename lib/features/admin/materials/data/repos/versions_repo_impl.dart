@@ -75,14 +75,16 @@ class VersionsRepoImpl extends VersionsRepo {
   Future<Either<Failures, String>> deleteVersion(
       {required AynaaVersionsEntity aynaaVersion}) async {
     try {
-      await storageService.deleteBucket(aynaaVersion.versionName);
-      await dataBase.deleteData(
-        path: DbEnpoints.aynaaVersions,
-        uid: aynaaVersion.entityID,
+      //await storageService.emptyBucket(aynaaVersion.versionName);
+      //await storageService.deleteBucket(aynaaVersion.versionName);
+      await dataBase.callingrpcFuc(
+        functionName: DbEnpoints.deleteVersioAndRelatedData,
+        params: {krpcVersionID: aynaaVersion.entityID},
       );
       return const Right('');
     } on PostgrestException catch (e) {
       log(e.toString());
+
       return Left(ServerFailure.fromSupaDataBase(e: e));
     } on StorageException catch (e) {
       log(e.toString());

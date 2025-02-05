@@ -8,8 +8,8 @@ import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
-import '../../../../../../core/enums/entities.dart';
 import '../../../../../../core/functions/map_to_list_of_entity.dart';
+import '../../../../../../core/helper/enums.dart';
 import '../../../../../../core/services/data_base.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../domain/entities/lesson_entity.dart';

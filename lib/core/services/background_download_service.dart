@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 
 class BackgroundDownloadService<T extends Entity> {
   final StorageService storageService;
   final FileCacheManager fileSystemCacheManager;
-  final Future<void> Function(T entity) updateLocalDataSource;
+  final Future<void> Function(T entity, PostgressEventType eventType)
+      updateLocalDataSource;
   BackgroundDownloadService({
     required this.storageService,
     required this.fileSystemCacheManager,
@@ -32,7 +34,7 @@ class BackgroundDownloadService<T extends Entity> {
           await FileSystemCacheManager().cacheFile(fileName, file);
       log(fileName);
       lesson.localFilePath = localPath;
-      await updateLocalDataSource(lesson);
+      await updateLocalDataSource(lesson, PostgressEventType.insert);
       // _lessonUpdatesController.add(updatedLesson);
     } catch (e) {
       log(e.toString());

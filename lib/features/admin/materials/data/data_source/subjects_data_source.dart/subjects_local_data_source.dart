@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
-import 'package:atm_app/core/enums/entities.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 
 import '../../../domain/entities/subjects_entity.dart';

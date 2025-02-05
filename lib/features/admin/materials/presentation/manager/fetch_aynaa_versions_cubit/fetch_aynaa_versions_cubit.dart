@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:atm_app/core/enums/entities.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';

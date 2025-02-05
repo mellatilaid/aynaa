@@ -30,4 +30,5 @@ abstract class StorageService<T> {
   Future<List<T>> getAllBuckets();
 
   Future<T> getBucket(String bucketName);
+  Future<String> emptyBucket(String id);
 }

@@ -69,4 +69,12 @@ class SupabaseDb extends DataBase {
       required Map<String, dynamic> data}) async {
     await _supabase.from(path).update(data).eq(kUuid, uid);
   }
+
+  @override
+  Future<void> callingrpcFuc(
+      {required String functionName,
+      required Map<String, dynamic> params}) async {
+    // TODO: implement callingrpcFuc
+    await _supabase.rpc(functionName, params: params);
+  }
 }

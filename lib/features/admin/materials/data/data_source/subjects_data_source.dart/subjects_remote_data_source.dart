@@ -4,7 +4,7 @@ import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
-import '../../../../../../core/enums/entities.dart';
+import '../../../../../../core/helper/enums.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
 abstract class SubjectsRemoteDataSource {

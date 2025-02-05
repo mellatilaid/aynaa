@@ -1,7 +1,7 @@
 import '../../features/admin/materials/data/models/aynaa_versions_model.dart';
 import '../../features/admin/materials/data/models/lesson_model.dart';
 import '../../features/admin/materials/data/models/subjects_model.dart';
-import '../enums/entities.dart';
+import '../helper/enums.dart';
 
 List<T> mapToListOfEntity<T>(List<Map<String, dynamic>> data, Entities value) {
   final List<T> resault;

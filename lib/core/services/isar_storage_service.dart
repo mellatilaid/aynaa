@@ -5,7 +5,7 @@ import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../enums/entities.dart';
+import '../helper/enums.dart';
 
 class IsarStorageService {
   late Isar _isar;

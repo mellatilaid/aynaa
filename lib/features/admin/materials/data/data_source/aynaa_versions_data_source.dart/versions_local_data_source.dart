@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:atm_app/core/enums/entities.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 
