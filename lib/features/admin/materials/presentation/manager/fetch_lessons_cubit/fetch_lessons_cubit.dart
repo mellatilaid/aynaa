@@ -4,6 +4,7 @@ import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_s
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../../../core/services/isar_storage_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../domain/entities/lesson_entity.dart';
 import '../../../domain/repos/lessons_repo.dart';
@@ -12,10 +13,12 @@ part 'fetch_lessons_state.dart';
 
 class FetchLessonsCubit extends Cubit<FetchLessonsState> {
   final LessonsRepo lessonsRepo;
+  final IsarStorageService isarStorageService;
   StreamSubscription? _subscription;
   @override
   bool isClosed = false;
-  FetchLessonsCubit({required this.lessonsRepo})
+  FetchLessonsCubit(
+      {required this.lessonsRepo, required this.isarStorageService})
       : super(FetchLessonsInitial()) {
     _sync();
   }
@@ -28,17 +31,31 @@ class FetchLessonsCubit extends Cubit<FetchLessonsState> {
     resault.fold((failure) {
       emit(FetchLessonsFailure(errMessage: failure.errMessage));
     }, (lessons) {
-      emit(FetchLessonsSuccess(lessons: lessons));
+      emit(FetchLessonsSuccess(lessons: lessons.reversed.toList()));
+      //_stream(subjectID: subjectID);
     });
   }
 
+  /*void _stream({
+    required String subjectID,
+  }) {
+    isarStorageService
+        .watchAll<LessonEntity>(
+            collectionType: CollentionType.lessons, id: subjectID)
+        .listen((items) {
+      emit(
+        FetchLessonsSuccess(lessons: items.reversed.toList()),
+      ); // Emit updated data
+    });
+  }*/
+
   _sync() {
     _subscription = getit.get<LessonsLocalDataSource>().lessonsStream.listen(
-      (subjects) {
+      (items) {
         if (isClosed) {
           return;
         }
-        emit(FetchLessonsSuccess(lessons: subjects));
+        emit(FetchLessonsSuccess(lessons: items.reversed.toList()));
       },
     );
   }

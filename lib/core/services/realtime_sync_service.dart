@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
@@ -12,6 +13,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import '../../features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
+import '../../features/admin/materials/domain/entities/lesson_entity.dart';
 
 /*class RealtimeSyncService {
   /*final DataBase _supabase;
@@ -121,6 +123,9 @@ class RealtimeSyncService {
         getit
             .get<LessonsLocalDataSource>()
             .handleUpdate(lesson: entity, eventType: PostgressEventType.insert);
+        getit
+            .get<BackgroundDownloadService<LessonEntity>>()
+            .startBackgroundDownloads([entity]);
         break;
       case PostgresChangeEvent.delete:
         log(payload.oldRecord[kUuid]);

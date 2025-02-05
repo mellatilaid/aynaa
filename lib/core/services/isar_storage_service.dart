@@ -149,15 +149,19 @@ class IsarStorageService {
     }
   }
 
-  Stream<List<T>> watchAll<T>({required CollentionType collectionType}) async* {
+  Stream<List<T>> watchAll<T>(
+      {required CollentionType collectionType, String? id}) async* {
     await init(); // Ensure Isar is initialized
 
     switch (collectionType) {
       case CollentionType.lessons:
         Stream<void> lessonStream = _isar.lessonEntitys.watchLazy();
         yield* lessonStream.asyncMap((_) async {
-          return await _isar.lessonEntitys.where().findAll()
-              as List<T>; // Fetch updated data
+          return await _isar.lessonEntitys
+              .where()
+              .filter()
+              .subjectIdEqualTo(id!)
+              .findAll() as List<T>; // Fetch updated data
         });
 
       case CollentionType.versions:
@@ -169,7 +173,11 @@ class IsarStorageService {
       case CollentionType.subjects:
         Stream<void> subjectsStream = _isar.subjectsEntitys.watchLazy();
         yield* subjectsStream.asyncMap((_) async {
-          return await _isar.subjectsEntitys.where().findAll() as List<T>;
+          return await _isar.subjectsEntitys
+              .where()
+              .filter()
+              .versionIDEqualTo(id!)
+              .findAll() as List<T>;
         });
     }
   }

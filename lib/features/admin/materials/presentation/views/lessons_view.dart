@@ -1,3 +1,4 @@
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/widgets/floating_optional_speed_dial.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_lessons_cubit/fetch_lessons_cubit.dart';
@@ -20,8 +21,10 @@ class LessonsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          FetchLessonsCubit(lessonsRepo: getit.get<LessonsRepo>()),
+      create: (context) => FetchLessonsCubit(
+        lessonsRepo: getit.get<LessonsRepo>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+      ),
       child: Scaffold(
         appBar: AppBar(
           leading: const BackButton(),
