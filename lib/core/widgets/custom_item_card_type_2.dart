@@ -5,7 +5,9 @@ import '../functions/build_preview.dart';
 
 class CustomItemCardType2 extends StatefulWidget {
   final Entity item;
-  const CustomItemCardType2({super.key, required this.item});
+  final VoidCallback onDelete;
+  const CustomItemCardType2(
+      {super.key, required this.item, required this.onDelete});
 
   @override
   State<CustomItemCardType2> createState() => _CustomItemCardType2State();
@@ -24,26 +26,40 @@ class _CustomItemCardType2State extends State<CustomItemCardType2> {
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Display image or placeholder
-              SizedBox(
-                width: double.infinity,
-                child: buildPreview(filePath: widget.item.localFilePath),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Display image or placeholder
+                  SizedBox(
+                    width: double.infinity,
+                    child: buildPreview(filePath: widget.item.localFilePath),
+                  ),
+                  const SizedBox(height: 16),
+                  // Display description
+                  if (widget.item.name != null)
+                    Text(
+                      widget.item.name!,
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                ],
               ),
-              const SizedBox(height: 16),
-              // Display description
-              if (widget.item.name != null)
-                Text(
-                  widget.item.name!,
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(fontSize: 14),
-                ),
-            ],
-          ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: IconButton(
+                  onPressed: widget.onDelete,
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  )),
+            ),
+          ],
         ),
       ),
     );

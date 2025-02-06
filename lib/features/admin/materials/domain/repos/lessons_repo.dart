@@ -18,7 +18,7 @@ abstract class LessonsRepo {
     required XFile file,
     required String uri,
   });
-  Future<Either<Failures, void>> deleteLesson({required String lessonID});
+  Future<Either<Failures, void>> deleteLesson({required LessonEntity lesson});
 
   Future<Either<Failures, void>> updateLesson(
       {required String lessonID, required Map<String, dynamic> data});

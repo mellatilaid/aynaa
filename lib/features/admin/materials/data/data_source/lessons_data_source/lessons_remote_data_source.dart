@@ -43,13 +43,15 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
     List<LessonEntity> lessons =
         mapToListOfEntity<LessonEntity>(data, Entities.lesson);
 
-    isarStorageService.putAll(
-      items: lessons,
-      collentionType: CollentionType.lessons,
-    );
-    getit
-        .get<BackgroundDownloadService<LessonEntity>>()
-        .startBackgroundDownloads(lessons);
+    if (lessons.isNotEmpty) {
+      isarStorageService.putAll(
+        items: lessons,
+        collentionType: CollentionType.lessons,
+      );
+      getit
+          .get<BackgroundDownloadService<LessonEntity>>()
+          .startBackgroundDownloads(lessons);
+    }
 
     return lessons;
   }

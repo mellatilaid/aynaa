@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
@@ -52,7 +54,8 @@ class IsarStorageService {
     switch (collentionType) {
       case CollentionType.lessons:
         await _isar.writeTxn(() async {
-          await _isar.lessonEntitys.putAll(items as List<LessonEntity>);
+          await _isar.lessonEntitys
+              .putAllByEntityID(items as List<LessonEntity>);
         });
       case CollentionType.versions:
         await _isar.writeTxn(() async {
@@ -73,9 +76,13 @@ class IsarStorageService {
     await init();
     switch (collentionType) {
       case CollentionType.lessons:
+        log('i am trigrred again ${_isar.lessonEntitys.count().toString()}');
         await _isar.writeTxn(() async {
-          await _isar.lessonEntitys.put(item as LessonEntity);
+          await _isar.lessonEntitys
+              .putByIndex('entityID', item as LessonEntity);
         });
+        log(_isar.lessonEntitys.count().toString());
+        log('item added to isar');
       case CollentionType.versions:
         await _isar.writeTxn(() async {
           await _isar.aynaaVersionsEntitys.put(item as AynaaVersionsEntity);
@@ -124,6 +131,8 @@ class IsarStorageService {
             .and()
             .group((q) => q.subjectIdEqualTo(query[kSubjectID]))
             .findAll();
+        final number = await _isar.lessonEntitys.count();
+        log(number.toString());
         return result;
       case CollentionType.versions:
       case CollentionType.subjects:
@@ -140,7 +149,9 @@ class IsarStorageService {
     await init();
     switch (collentionType) {
       case CollentionType.lessons:
-        await _isar.lessonEntitys.clear();
+        await _isar.writeTxn(() async {
+          await _isar.lessonEntitys.clear();
+        });
 
       case CollentionType.versions:
         await _isar.aynaaVersionsEntitys.clear();

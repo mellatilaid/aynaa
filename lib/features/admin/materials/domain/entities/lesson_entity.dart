@@ -7,6 +7,7 @@ part 'lesson_entity.g.dart';
 class LessonEntity with Entity {
   Id id = Isar.autoIncrement;
   @override
+  @Index(unique: true)
   final String entityID;
   @override
   final String? name;

@@ -91,6 +91,7 @@ class RealtimeSyncService {
         .subscribe();
 
     _subscriptions.add(channel);
+
     _tableHandlers[table] = handler;
   }
 
@@ -128,7 +129,6 @@ class RealtimeSyncService {
             .startBackgroundDownloads([entity]);
         break;
       case PostgresChangeEvent.delete:
-        log(payload.oldRecord[kUuid]);
         getit.get<LessonsLocalDataSource>().handleUpdate(
               id: payload.oldRecord[kUuid],
               eventType: PostgressEventType.delete,

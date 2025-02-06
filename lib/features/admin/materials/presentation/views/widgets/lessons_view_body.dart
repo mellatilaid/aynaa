@@ -5,6 +5,9 @@ import 'package:atm_app/features/admin/materials/presentation/views/widgets/less
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/helper/enums.dart';
+import '../../../../../../core/services/isar_storage_service.dart';
+import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 
 class LessonsViewBody extends StatefulWidget {
@@ -21,9 +24,15 @@ class _LessonsViewBodyState extends State<LessonsViewBody> {
     // TODO: implement initState
     super.initState();
     final versionID = _getVersionID();
-    //getit.get<HiveCache<LessonEntity>>().clear(boxName: kLessonsBox);
-    BlocProvider.of<FetchLessonsCubit>(context).fetchLessons(
-        subjectID: widget.subjectsEntity.entityID, versionID: versionID);
+    if (0 == 0) {
+      BlocProvider.of<FetchLessonsCubit>(context).fetchLessons(
+          subjectID: widget.subjectsEntity.entityID, versionID: versionID);
+    } else {
+      getit
+          .get<IsarStorageService>()
+          .clear(collentionType: CollentionType.lessons);
+    }
+    /* */
   }
 
   _getVersionID() {

@@ -23,6 +23,13 @@ class BackgroundDownloadService<T extends Entity> {
     }
   }
 
+  void startBackgroundDelete(List<T> lessons) {
+    for (final lesson in lessons) {
+      if (lesson.url == null || lesson.localFilePath != null) continue;
+      unawaited(deleteItemFile(lesson));
+    }
+  }
+
   Future<void> _downloadAndUpdateLesson(T lesson) async {
     try {
       // Download and cache file
@@ -31,11 +38,34 @@ class BackgroundDownloadService<T extends Entity> {
       final file = await storageService.downloadFile(
           bucketName: lesson.versionName, filePath: fileName);
       final localPath =
-          await FileSystemCacheManager().cacheFile(fileName, file);
+          await FileSystemCacheManager().cacheFile(lesson.url!, file);
       log(fileName);
       lesson.localFilePath = localPath;
       await updateLocalDataSource(lesson, PostgressEventType.insert);
+
       // _lessonUpdatesController.add(updatedLesson);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> deleteItemFile(T lesson) async {
+    try {
+      // Download and cache file
+
+      if (lesson.localFilePath != null && lesson.url != null) {
+        final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
+        await storageService.deleteFile(
+          bucketName: lesson.versionName,
+          fileName: fileName,
+        );
+
+        await FileSystemCacheManager().deleteCachedFile(lesson.url!);
+        log(fileName);
+
+        //await updateLocalDataSource(lesson, PostgressEventType.delete);
+        // _lessonUpdatesController.add(updatedLesson);
+      }
     } catch (e) {
       log(e.toString());
     }

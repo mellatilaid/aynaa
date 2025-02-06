@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
@@ -15,6 +16,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tus_client_dart/tus_client_dart.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
+import '../../../../../core/services/background_download_service.dart';
 import '../../../../../core/services/data_base.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 import '../../domain/repos/lessons_repo.dart';
@@ -67,9 +69,23 @@ class LessonsRepoImpl extends LessonsRepo {
   }
 
   @override
-  Future<Either<Failures, void>> deleteLesson({required String lessonID}) {
-    // TODO: implement deleteLesson
-    throw UnimplementedError();
+  Future<Either<Failures, void>> deleteLesson(
+      {required LessonEntity lesson}) async {
+    try {
+      getit
+          .get<BackgroundDownloadService<LessonEntity>>()
+          .deleteItemFile(lesson);
+      await dataBase.deleteData(path: DbEnpoints.lessons, uid: lesson.entityID);
+      return right(null);
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } on StorageException catch (e) {
+      return Left(ServerFailure.fromStorage(e: e));
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override
