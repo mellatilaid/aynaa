@@ -26,7 +26,7 @@ class BackgroundDownloadService<T extends Entity> {
   void startBackgroundDelete(List<T> lessons) {
     for (final lesson in lessons) {
       if (lesson.url == null || lesson.localFilePath != null) continue;
-      unawaited(deleteItemFile(lesson));
+      unawaited(deleteItemFile(lesson: lesson));
     }
   }
 
@@ -49,7 +49,7 @@ class BackgroundDownloadService<T extends Entity> {
     }
   }
 
-  Future<void> deleteItemFile(T lesson) async {
+  Future<void> deleteItemFile({required T lesson}) async {
     try {
       // Download and cache file
 
@@ -61,7 +61,6 @@ class BackgroundDownloadService<T extends Entity> {
         );
 
         await FileSystemCacheManager().deleteCachedFile(lesson.url!);
-        log(fileName);
 
         //await updateLocalDataSource(lesson, PostgressEventType.delete);
         // _lessonUpdatesController.add(updatedLesson);

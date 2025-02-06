@@ -74,7 +74,7 @@ class LessonsRepoImpl extends LessonsRepo {
     try {
       getit
           .get<BackgroundDownloadService<LessonEntity>>()
-          .deleteItemFile(lesson);
+          .deleteItemFile(lesson: lesson);
       await dataBase.deleteData(path: DbEnpoints.lessons, uid: lesson.entityID);
       return right(null);
     } on PostgrestException catch (e) {

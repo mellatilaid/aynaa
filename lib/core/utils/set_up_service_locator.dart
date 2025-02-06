@@ -2,6 +2,7 @@ import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
@@ -106,7 +107,10 @@ setUpServiceLocator() {
     ),
   );
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
-
+  getit.registerSingleton<DeleteItemsService>(DeleteItemsServiceImpl(
+      dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
+      isarStorageService: getit.get<IsarStorageService>()));
   /*getit
       .registerSingleton<CachIndexLessonsInBackground>(
           CachIndexLessonsInBackground(

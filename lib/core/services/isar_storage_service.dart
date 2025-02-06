@@ -39,6 +39,8 @@ class IsarStorageService {
         return _isar.aynaaVersionsEntitys.where().findAll();
       case CollentionType.subjects:
         return _isar.subjectsEntitys.where().findAll();
+      case CollentionType.deletedItmes:
+        return _isar.deletedItmesEntitys.where().findAll();
     }
   }
 
@@ -62,6 +64,7 @@ class IsarStorageService {
             await _isar.subjectsEntitys.getByEntityID(id);
           },
         );
+      case CollentionType.deletedItmes:
     }
   }
 
@@ -88,6 +91,7 @@ class IsarStorageService {
             await _isar.subjectsEntitys.putAll(items as List<SubjectsEntity>);
           },
         );
+      case CollentionType.deletedItmes:
     }
   }
 
@@ -113,6 +117,7 @@ class IsarStorageService {
             await _isar.subjectsEntitys.put(item as SubjectsEntity);
           },
         );
+      case CollentionType.deletedItmes:
     }
   }
 
@@ -136,6 +141,7 @@ class IsarStorageService {
         await _isar.writeTxn(() async {
           await _isar.subjectsEntitys.filter().entityIDEqualTo(id).deleteAll();
         });
+      case CollentionType.deletedItmes:
     }
   }
 
@@ -163,6 +169,7 @@ class IsarStorageService {
             .group((q) => q.isDeletedEqualTo(false))
             .findAll();
         return result;
+      case CollentionType.deletedItmes:
     }
   }
 
@@ -179,6 +186,7 @@ class IsarStorageService {
         await _isar.aynaaVersionsEntitys.clear();
       case CollentionType.subjects:
         await _isar.subjectsEntitys.clear();
+      case CollentionType.deletedItmes:
     }
   }
 
@@ -213,6 +221,8 @@ class IsarStorageService {
               .group((q) => q.isDeletedEqualTo(false))
               .findAll() as List<T>;
         });
+      case CollentionType.deletedItmes:
+      default:
     }
   }
 
@@ -245,6 +255,7 @@ class IsarStorageService {
           final itemDeleted = DeletedItmesEntity(id, false, false);
           _isar.deletedItmesEntitys.putByIndex('itemID', itemDeleted);
         }
+      case CollentionType.deletedItmes:
     }
   }
 
