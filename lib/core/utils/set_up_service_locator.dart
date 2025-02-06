@@ -106,6 +106,7 @@ setUpServiceLocator() {
     ),
   );
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
+
   /*getit
       .registerSingleton<CachIndexLessonsInBackground>(
           CachIndexLessonsInBackground(

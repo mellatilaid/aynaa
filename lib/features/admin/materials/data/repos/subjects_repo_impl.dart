@@ -43,9 +43,16 @@ class SubjectsRepoImpl extends SubjectsRepo {
 
   @override
   Future<Either<Failures, void>> deleteSubject(
-      {required SubjectsEntity subject}) {
-    // TODO: implement deleteSubject
-    throw UnimplementedError();
+      {required SubjectsEntity subject}) async {
+    try {
+      await subjectsLocalDataSource.deleteSubject(subjectID: subject.entityID);
+      return const Right(null);
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } catch (e) {
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override

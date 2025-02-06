@@ -8,6 +8,7 @@ import '../../../domain/entities/subjects_entity.dart';
 
 abstract class SubjectsLocalDataSource {
   Future<List<SubjectsEntity>> fetchSubjects({required String versionID});
+  Future<void> deleteSubject({required String subjectID});
   Future<void> handleUpdate(
       {required SubjectsEntity subject, required String versionID});
   Stream<List<SubjectsEntity>> get subjectsStream;
@@ -47,5 +48,11 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
 
   void dispose() {
     _controller.close();
+  }
+
+  @override
+  Future<void> deleteSubject({required String subjectID}) async {
+    await isarStorageService.markAsDeleted(
+        id: subjectID, collentionType: CollentionType.subjects);
   }
 }

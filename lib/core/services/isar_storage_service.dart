@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:isar/isar.dart';
@@ -19,6 +20,7 @@ class IsarStorageService {
           AynaaVersionsEntitySchema,
           LessonEntitySchema,
           SubjectsEntitySchema,
+          DeletedItmesEntitySchema,
         ],
         directory: dir.path,
       );
@@ -229,7 +231,8 @@ class IsarStorageService {
             collentionType: CollentionType.versions,
           );
         }
-
+        final itemDeleted = DeletedItmesEntity(id, true, false);
+        _isar.deletedItmesEntitys.putByIndex('itemID', itemDeleted);
       case CollentionType.subjects:
         final deletedSubject =
             await get(id: id, collentionType: CollentionType.subjects);
@@ -239,6 +242,8 @@ class IsarStorageService {
             item: deletedSubject,
             collentionType: CollentionType.subjects,
           );
+          final itemDeleted = DeletedItmesEntity(id, false, false);
+          _isar.deletedItmesEntitys.putByIndex('itemID', itemDeleted);
         }
     }
   }
