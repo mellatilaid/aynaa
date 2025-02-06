@@ -40,8 +40,9 @@ class SubjectsView extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return BlocProvider.value(
-                        value: subjectsCubit,
-                        child: const NewSubjectBottomSheet());
+                      value: subjectsCubit,
+                      child: const NewSubjectBottomSheet(),
+                    );
                   });
             },
             child: const Icon(Icons.add),

@@ -83,12 +83,13 @@ class IsarStorageService {
       case CollentionType.versions:
         await _isar.writeTxn(() async {
           await _isar.aynaaVersionsEntitys
-              .putAll(items as List<AynaaVersionsEntity>);
+              .putAllByEntityID(items as List<AynaaVersionsEntity>);
         });
       case CollentionType.subjects:
         await _isar.writeTxn(
           () async {
-            await _isar.subjectsEntitys.putAll(items as List<SubjectsEntity>);
+            await _isar.subjectsEntitys
+                .putAllByEntityID(items as List<SubjectsEntity>);
           },
         );
       case CollentionType.deletedItmes:
@@ -109,12 +110,14 @@ class IsarStorageService {
         log('item added to isar');
       case CollentionType.versions:
         await _isar.writeTxn(() async {
-          await _isar.aynaaVersionsEntitys.put(item as AynaaVersionsEntity);
+          await _isar.aynaaVersionsEntitys
+              .putByIndex('entityID', item as AynaaVersionsEntity);
         });
       case CollentionType.subjects:
         await _isar.writeTxn(
           () async {
-            await _isar.subjectsEntitys.put(item as SubjectsEntity);
+            await _isar.subjectsEntitys
+                .putByIndex('entityID', item as SubjectsEntity);
           },
         );
       case CollentionType.deletedItmes:

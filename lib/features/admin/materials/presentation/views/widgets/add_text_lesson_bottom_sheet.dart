@@ -27,32 +27,28 @@ class _AddTextLessonBottomSheetState extends State<AddTextLessonBottomSheet> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PickFileCubit(getit.get<FilePickerHelper>()),
-      child: FractionallySizedBox(
-        heightFactor:
-            0.8, // Adjust this for the height you need (e.g., 90% of the screen)
-        child: BlocBuilder<AddLessonCubit, AddLessonState>(
-          builder: (context, state) {
-            if (state is AddLessonFailure) {
-              context.pop();
+      child: BlocBuilder<AddLessonCubit, AddLessonState>(
+        builder: (context, state) {
+          if (state is AddLessonFailure) {
+            context.pop();
 
-              showScaffoldMessage(context, state.errMessage);
-              BlocProvider.of<AddLessonCubit>(context).resetState();
-            } else if (state is AddLessonSuccuss) {
-              Future.microtask(() {
-                if (!context.mounted) return;
-                context.pop();
-              });
-              context.read<FetchLessonsCubit>().fetchLessons(
-                    subjectID: _getSubjectID(),
-                    versionID: _getVersionID(),
-                  );
-              BlocProvider.of<AddLessonCubit>(context).resetState();
-            }
-            return AddLessonBottomSheetBody(
-              isTextOnly: widget.isTextOnly,
-            );
-          },
-        ),
+            showScaffoldMessage(context, state.errMessage);
+            BlocProvider.of<AddLessonCubit>(context).resetState();
+          } else if (state is AddLessonSuccuss) {
+            Future.microtask(() {
+              if (!context.mounted) return;
+              context.pop();
+            });
+            context.read<FetchLessonsCubit>().fetchLessons(
+                  subjectID: _getSubjectID(),
+                  versionID: _getVersionID(),
+                );
+            BlocProvider.of<AddLessonCubit>(context).resetState();
+          }
+          return AddLessonBottomSheetBody(
+            isTextOnly: widget.isTextOnly,
+          );
+        },
       ),
     );
   }

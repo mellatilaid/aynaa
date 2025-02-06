@@ -12,10 +12,16 @@ class SubjectsEntity with Entity {
   final String subjectName;
   final String versionID;
   final bool isDeleted = false;
+  @override
+  final String url;
+  @override
+  String? localFilePath;
   SubjectsEntity({
     required this.entityID,
     required this.subjectName,
     required this.versionID,
+    required this.url,
+    this.localFilePath,
   });
 
   @override
@@ -23,17 +29,6 @@ class SubjectsEntity with Entity {
   String get name => subjectName;
 
   @override
-  // TODO: implement localFilePath
-  String? get localFilePath => '';
-
-  @override
-  // TODO: implement url
-  String? get url => '';
-
-  @override
   // TODO: implement versionName
   String get versionName => '';
-
-  @override
-  set localFilePath(String? path) {}
 }

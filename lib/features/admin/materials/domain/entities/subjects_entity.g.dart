@@ -101,12 +101,7 @@ int _subjectsEntityEstimateSize(
   }
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.subjectName.length * 3;
-  {
-    final value = object.url;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.url.length * 3;
   bytesCount += 3 + object.versionID.length * 3;
   bytesCount += 3 + object.versionName.length * 3;
   return bytesCount;
@@ -136,11 +131,12 @@ SubjectsEntity _subjectsEntityDeserialize(
 ) {
   final object = SubjectsEntity(
     entityID: reader.readString(offsets[0]),
+    localFilePath: reader.readStringOrNull(offsets[2]),
     subjectName: reader.readString(offsets[4]),
+    url: reader.readString(offsets[5]),
     versionID: reader.readString(offsets[6]),
   );
   object.id = id;
-  object.localFilePath = reader.readStringOrNull(offsets[2]);
   return object;
 }
 
@@ -162,7 +158,7 @@ P _subjectsEntityDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
@@ -996,26 +992,8 @@ extension SubjectsEntityQueryFilter
   }
 
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
-      urlIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'url',
-      ));
-    });
-  }
-
-  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
-      urlIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'url',
-      ));
-    });
-  }
-
-  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
       urlEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1029,7 +1007,7 @@ extension SubjectsEntityQueryFilter
 
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
       urlGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1045,7 +1023,7 @@ extension SubjectsEntityQueryFilter
 
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
       urlLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1061,8 +1039,8 @@ extension SubjectsEntityQueryFilter
 
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
       urlBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1755,7 +1733,7 @@ extension SubjectsEntityQueryProperty
     });
   }
 
-  QueryBuilder<SubjectsEntity, String?, QQueryOperations> urlProperty() {
+  QueryBuilder<SubjectsEntity, String, QQueryOperations> urlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'url');
     });

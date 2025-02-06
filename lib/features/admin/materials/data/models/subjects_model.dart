@@ -11,13 +11,22 @@ class SubjectsModel extends SubjectsEntity with Mappable {
   final String subjectName;
   @override
   final String versionID;
-
+  @override
+  final String url;
+  @override
+  final String? localFilePath;
   SubjectsModel(
       {required this.entityID,
       required this.subjectName,
-      required this.versionID})
+      required this.versionID,
+      required this.url,
+      this.localFilePath})
       : super(
-            entityID: entityID, subjectName: subjectName, versionID: versionID);
+            entityID: entityID,
+            subjectName: subjectName,
+            versionID: versionID,
+            url: url,
+            localFilePath: localFilePath);
 
   /*factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
     return SubjectsModel(id: data[kID].toString(), subjectName: data[kName]);
@@ -27,21 +36,22 @@ class SubjectsModel extends SubjectsEntity with Mappable {
     return SubjectsModel(
         entityID: subject.entityID ?? '0',
         subjectName: subject.subjectName,
-        versionID: subject.versionID);
+        versionID: subject.versionID,
+        url: subject.url,
+        localFilePath: subject.localFilePath);
   }
 
   @override
   toMap() {
-    return {
-      kSubjectName: subjectName,
-      kVersionID: versionID,
-    };
+    return {kSubjectName: subjectName, kVersionID: versionID, kUrl: url};
   }
 
   static SubjectsModel fromMap(Map<String, dynamic> data) {
     return SubjectsModel(
-        entityID: data[kID].toString(),
-        subjectName: data[kSubjectName],
-        versionID: data[kVersionID]);
+      entityID: data[kID].toString(),
+      subjectName: data[kSubjectName],
+      versionID: data[kVersionID],
+      url: data[kUrl],
+    );
   }
 }

@@ -52,6 +52,7 @@ class _AddNewSubjectButtonBlocBuilderState
       entityID: '0',
       subjectName: widget.subjectTitleController.text.trim(),
       versionID: versionID,
+      url: '',
     );
     return subject;
   }
