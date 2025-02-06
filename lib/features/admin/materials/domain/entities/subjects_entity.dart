@@ -7,10 +7,11 @@ part 'subjects_entity.g.dart';
 class SubjectsEntity with Entity {
   Id id = Isar.autoIncrement;
   @override
+  @Index(unique: true)
   final String entityID;
   final String subjectName;
   final String versionID;
-
+  final bool isDeleted = false;
   SubjectsEntity({
     required this.entityID,
     required this.subjectName,

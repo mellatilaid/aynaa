@@ -22,33 +22,38 @@ const SubjectsEntitySchema = CollectionSchema(
       name: r'entityID',
       type: IsarType.string,
     ),
-    r'localFilePath': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 1,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'localFilePath': PropertySchema(
+      id: 2,
       name: r'localFilePath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'subjectName': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'subjectName',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionID': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'versionID',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -58,7 +63,21 @@ const SubjectsEntitySchema = CollectionSchema(
   deserialize: _subjectsEntityDeserialize,
   deserializeProp: _subjectsEntityDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'entityID': IndexSchema(
+      id: -7245804469100520399,
+      name: r'entityID',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'entityID',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _subjectsEntityGetId,
@@ -100,12 +119,13 @@ void _subjectsEntitySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.entityID);
-  writer.writeString(offsets[1], object.localFilePath);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.subjectName);
-  writer.writeString(offsets[4], object.url);
-  writer.writeString(offsets[5], object.versionID);
-  writer.writeString(offsets[6], object.versionName);
+  writer.writeBool(offsets[1], object.isDeleted);
+  writer.writeString(offsets[2], object.localFilePath);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.subjectName);
+  writer.writeString(offsets[5], object.url);
+  writer.writeString(offsets[6], object.versionID);
+  writer.writeString(offsets[7], object.versionName);
 }
 
 SubjectsEntity _subjectsEntityDeserialize(
@@ -116,11 +136,11 @@ SubjectsEntity _subjectsEntityDeserialize(
 ) {
   final object = SubjectsEntity(
     entityID: reader.readString(offsets[0]),
-    subjectName: reader.readString(offsets[3]),
-    versionID: reader.readString(offsets[5]),
+    subjectName: reader.readString(offsets[4]),
+    versionID: reader.readString(offsets[6]),
   );
   object.id = id;
-  object.localFilePath = reader.readStringOrNull(offsets[1]);
+  object.localFilePath = reader.readStringOrNull(offsets[2]);
   return object;
 }
 
@@ -134,16 +154,18 @@ P _subjectsEntityDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
-    case 5:
       return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -161,6 +183,61 @@ List<IsarLinkBase<dynamic>> _subjectsEntityGetLinks(SubjectsEntity object) {
 void _subjectsEntityAttach(
     IsarCollection<dynamic> col, Id id, SubjectsEntity object) {
   object.id = id;
+}
+
+extension SubjectsEntityByIndex on IsarCollection<SubjectsEntity> {
+  Future<SubjectsEntity?> getByEntityID(String entityID) {
+    return getByIndex(r'entityID', [entityID]);
+  }
+
+  SubjectsEntity? getByEntityIDSync(String entityID) {
+    return getByIndexSync(r'entityID', [entityID]);
+  }
+
+  Future<bool> deleteByEntityID(String entityID) {
+    return deleteByIndex(r'entityID', [entityID]);
+  }
+
+  bool deleteByEntityIDSync(String entityID) {
+    return deleteByIndexSync(r'entityID', [entityID]);
+  }
+
+  Future<List<SubjectsEntity?>> getAllByEntityID(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return getAllByIndex(r'entityID', values);
+  }
+
+  List<SubjectsEntity?> getAllByEntityIDSync(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'entityID', values);
+  }
+
+  Future<int> deleteAllByEntityID(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'entityID', values);
+  }
+
+  int deleteAllByEntityIDSync(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'entityID', values);
+  }
+
+  Future<Id> putByEntityID(SubjectsEntity object) {
+    return putByIndex(r'entityID', object);
+  }
+
+  Id putByEntityIDSync(SubjectsEntity object, {bool saveLinks = true}) {
+    return putByIndexSync(r'entityID', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByEntityID(List<SubjectsEntity> objects) {
+    return putAllByIndex(r'entityID', objects);
+  }
+
+  List<Id> putAllByEntityIDSync(List<SubjectsEntity> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'entityID', objects, saveLinks: saveLinks);
+  }
 }
 
 extension SubjectsEntityQueryWhereSort
@@ -240,6 +317,51 @@ extension SubjectsEntityQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterWhereClause>
+      entityIDEqualTo(String entityID) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'entityID',
+        value: [entityID],
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterWhereClause>
+      entityIDNotEqualTo(String entityID) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [],
+              upper: [entityID],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [entityID],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [entityID],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [],
+              upper: [entityID],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
@@ -433,6 +555,16 @@ extension SubjectsEntityQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      isDeletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
       ));
     });
   }
@@ -1311,6 +1443,19 @@ extension SubjectsEntityQuerySortBy
     });
   }
 
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy> sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy>
+      sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy>
       sortByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
@@ -1418,6 +1563,19 @@ extension SubjectsEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy> thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy>
+      thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy>
       thenByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
@@ -1508,6 +1666,13 @@ extension SubjectsEntityQueryWhereDistinct
   }
 
   QueryBuilder<SubjectsEntity, SubjectsEntity, QDistinct>
+      distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QDistinct>
       distinctByLocalFilePath({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'localFilePath',
@@ -1562,6 +1727,12 @@ extension SubjectsEntityQueryProperty
   QueryBuilder<SubjectsEntity, String, QQueryOperations> entityIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entityID');
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, bool, QQueryOperations> isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
     });
   }
 

@@ -41,8 +41,26 @@ class IsarStorageService {
   }
 
   /// Get a single item by ID
-  Future<dynamic> get(String id) {
-    throw UnimplementedError();
+  Future<dynamic> get(
+      {required String id, required CollentionType collentionType}) async {
+    await init();
+
+    switch (collentionType) {
+      case CollentionType.lessons:
+        await _isar.writeTxn(() async {
+          await _isar.lessonEntitys.getByEntityID(id);
+        });
+      case CollentionType.versions:
+        await _isar.writeTxn(() async {
+          await _isar.aynaaVersionsEntitys.getByEntityID(id);
+        });
+      case CollentionType.subjects:
+        await _isar.writeTxn(
+          () async {
+            await _isar.subjectsEntitys.getByEntityID(id);
+          },
+        );
+    }
   }
 
   Future<void> putAll({
@@ -139,6 +157,8 @@ class IsarStorageService {
         final result = await _isar.subjectsEntitys
             .filter()
             .versionIDEqualTo(query[kVersionID])
+            .and()
+            .group((q) => q.isDeletedEqualTo(false))
             .findAll();
         return result;
     }
@@ -188,8 +208,38 @@ class IsarStorageService {
               .where()
               .filter()
               .versionIDEqualTo(id!)
+              .group((q) => q.isDeletedEqualTo(false))
               .findAll() as List<T>;
         });
+    }
+  }
+
+  Future<void> markAsDeleted(
+      {required String id, required CollentionType collentionType}) async {
+    await init();
+    switch (collentionType) {
+      case CollentionType.lessons:
+      case CollentionType.versions:
+        final deletedVersion =
+            await get(id: id, collentionType: CollentionType.versions);
+        if (deletedVersion != null) {
+          deletedVersion.isDeleted = true;
+          await put(
+            item: deletedVersion,
+            collentionType: CollentionType.versions,
+          );
+        }
+
+      case CollentionType.subjects:
+        final deletedSubject =
+            await get(id: id, collentionType: CollentionType.subjects);
+        if (deletedSubject != null) {
+          deletedSubject.isDeleted = true;
+          await put(
+            item: deletedSubject,
+            collentionType: CollentionType.subjects,
+          );
+        }
     }
   }
 

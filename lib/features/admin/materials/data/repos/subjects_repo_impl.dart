@@ -42,7 +42,8 @@ class SubjectsRepoImpl extends SubjectsRepo {
   }
 
   @override
-  Future<Either<Failures, void>> deleteSubject({required String subjectID}) {
+  Future<Either<Failures, void>> deleteSubject(
+      {required SubjectsEntity subject}) {
     // TODO: implement deleteSubject
     throw UnimplementedError();
   }

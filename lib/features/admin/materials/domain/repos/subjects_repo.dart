@@ -9,7 +9,8 @@ abstract class SubjectsRepo {
   Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects(
       {required String versionID});
   Future<Either<Failures, void>> addSubject({required SubjectsEntity subject});
-  Future<Either<Failures, void>> deleteSubject({required String subjectID});
+  Future<Either<Failures, void>> deleteSubject(
+      {required SubjectsEntity subject});
   Future<Either<Failures, void>> updateSubject(
       {required String subjectID, required Map<String, dynamic> data});
 }

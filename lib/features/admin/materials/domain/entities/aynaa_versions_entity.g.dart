@@ -49,7 +49,21 @@ const AynaaVersionsEntitySchema = CollectionSchema(
   deserialize: _aynaaVersionsEntityDeserialize,
   deserializeProp: _aynaaVersionsEntityDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'entityID': IndexSchema(
+      id: -7245804469100520399,
+      name: r'entityID',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'entityID',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _aynaaVersionsEntityGetId,
@@ -136,6 +150,62 @@ void _aynaaVersionsEntityAttach(
   object.id = id;
 }
 
+extension AynaaVersionsEntityByIndex on IsarCollection<AynaaVersionsEntity> {
+  Future<AynaaVersionsEntity?> getByEntityID(String entityID) {
+    return getByIndex(r'entityID', [entityID]);
+  }
+
+  AynaaVersionsEntity? getByEntityIDSync(String entityID) {
+    return getByIndexSync(r'entityID', [entityID]);
+  }
+
+  Future<bool> deleteByEntityID(String entityID) {
+    return deleteByIndex(r'entityID', [entityID]);
+  }
+
+  bool deleteByEntityIDSync(String entityID) {
+    return deleteByIndexSync(r'entityID', [entityID]);
+  }
+
+  Future<List<AynaaVersionsEntity?>> getAllByEntityID(
+      List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return getAllByIndex(r'entityID', values);
+  }
+
+  List<AynaaVersionsEntity?> getAllByEntityIDSync(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'entityID', values);
+  }
+
+  Future<int> deleteAllByEntityID(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'entityID', values);
+  }
+
+  int deleteAllByEntityIDSync(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'entityID', values);
+  }
+
+  Future<Id> putByEntityID(AynaaVersionsEntity object) {
+    return putByIndex(r'entityID', object);
+  }
+
+  Id putByEntityIDSync(AynaaVersionsEntity object, {bool saveLinks = true}) {
+    return putByIndexSync(r'entityID', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByEntityID(List<AynaaVersionsEntity> objects) {
+    return putAllByIndex(r'entityID', objects);
+  }
+
+  List<Id> putAllByEntityIDSync(List<AynaaVersionsEntity> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'entityID', objects, saveLinks: saveLinks);
+  }
+}
+
 extension AynaaVersionsEntityQueryWhereSort
     on QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QWhere> {
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterWhere> anyId() {
@@ -212,6 +282,51 @@ extension AynaaVersionsEntityQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterWhereClause>
+      entityIDEqualTo(String entityID) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'entityID',
+        value: [entityID],
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterWhereClause>
+      entityIDNotEqualTo(String entityID) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [],
+              upper: [entityID],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [entityID],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [entityID],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [],
+              upper: [entityID],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }

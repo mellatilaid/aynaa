@@ -7,6 +7,7 @@ part 'aynaa_versions_entity.g.dart';
 class AynaaVersionsEntity with Entity {
   Id id = Isar.autoIncrement;
   @override
+  @Index(unique: true)
   final String entityID;
   @override
   final String versionName;

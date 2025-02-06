@@ -1,3 +1,4 @@
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
@@ -15,7 +16,10 @@ class SubjectsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FetchSubjectCubit(getit.get<SubjectsRepo>()),
+      create: (context) => FetchSubjectCubit(
+        getit.get<SubjectsRepo>(),
+        getit.get<IsarStorageService>(),
+      ),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
