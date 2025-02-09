@@ -1,6 +1,6 @@
 import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/background_download_service.dart';
+import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
@@ -15,6 +15,7 @@ import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/repos/lessons_repo_impl.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
@@ -73,16 +74,9 @@ setUpServiceLocator() {
     storageService: getit.get<StorageService>(),
     fileCacheManager: getit.get<FileCacheManager>(),
   ));
-  getit.registerSingleton<VersionsRepo>(
-    VersionsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
-      remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
-      versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-    ),
-  );
-  getit.registerSingleton<BackgroundDownloadService<SubjectsEntity>>(
-    BackgroundDownloadService(
+
+  getit.registerSingleton<BackgroundServices<SubjectsEntity>>(
+    BackgroundServices(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -93,6 +87,27 @@ setUpServiceLocator() {
                   ),
     ),
   );
+  getit.registerSingleton<BackgroundServices<AynaaVersionsEntity>>(
+    BackgroundServices(
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (AynaaVersionsEntity entity, PostgressEventType eventType) =>
+              getit.get<VersionsLocalDataSource>().handleUpdate(
+                    version: entity,
+                    eventType: eventType,
+                  ),
+    ),
+  );
+  getit.registerSingleton<VersionsRepo>(
+    VersionsRepoImpl(
+      dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
+      remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
+      versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
+      backgroundServices: getit.get<BackgroundServices<AynaaVersionsEntity>>(),
+    ),
+  );
   getit.registerSingleton<SubjectsRepo>(
     SubjectsRepoImpl(
       dataBase: getit.get<DataBase>(),
@@ -100,7 +115,7 @@ setUpServiceLocator() {
       subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
       subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
       backgroundDownloadService:
-          getit.get<BackgroundDownloadService<SubjectsEntity>>(),
+          getit.get<BackgroundServices<SubjectsEntity>>(),
     ),
   );
   getit.registerSingleton<LessonsRepo>(
@@ -111,8 +126,8 @@ setUpServiceLocator() {
         lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
   );
 
-  getit.registerSingleton<BackgroundDownloadService<LessonEntity>>(
-    BackgroundDownloadService(
+  getit.registerSingleton<BackgroundServices<LessonEntity>>(
+    BackgroundServices(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:

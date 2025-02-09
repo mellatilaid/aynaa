@@ -4,7 +4,7 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 
-import '../../../../../../core/services/background_download_service.dart';
+import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../domain/entities/subjects_entity.dart';
 
@@ -29,7 +29,7 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
       query: {kVersionID: versionID},
     );
     getit
-        .get<BackgroundDownloadService<SubjectsEntity>>()
+        .get<BackgroundServices<SubjectsEntity>>()
         .startBackgroundDownloads(subjects);
     return subjects as List<SubjectsEntity>;
   }

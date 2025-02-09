@@ -222,7 +222,10 @@ class IsarStorageService {
         });
 
       case CollentionType.versions:
-        await _isar.aynaaVersionsEntitys.clear();
+        await _isar.writeTxn(() async {
+          await _isar.aynaaVersionsEntitys.clear();
+        });
+
       case CollentionType.subjects:
         await _isar.writeTxn(() async {
           await _isar.subjectsEntitys.clear();

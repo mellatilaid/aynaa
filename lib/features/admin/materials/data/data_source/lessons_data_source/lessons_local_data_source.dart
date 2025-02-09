@@ -4,7 +4,7 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 
-import '../../../../../../core/services/background_download_service.dart';
+import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../domain/entities/lesson_entity.dart';
 
@@ -28,7 +28,7 @@ class LessonsLocalDataSourceImpl implements LessonsLocalDataSource {
     ) as List<LessonEntity>;
 
     getit
-        .get<BackgroundDownloadService<LessonEntity>>()
+        .get<BackgroundServices<LessonEntity>>()
         .startBackgroundDownloads(lessons);
     return lessons;
   }

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:atm_app/core/services/background_download_service.dart';
+import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
@@ -49,7 +49,7 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
         collentionType: CollentionType.lessons,
       );
       getit
-          .get<BackgroundDownloadService<LessonEntity>>()
+          .get<BackgroundServices<LessonEntity>>()
           .startBackgroundDownloads(lessons);
     }
 

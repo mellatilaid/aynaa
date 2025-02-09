@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/core/services/background_download_service.dart';
+import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
@@ -22,7 +22,7 @@ class SubjectsRepoImpl extends SubjectsRepo {
   final StorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
-  final BackgroundDownloadService backgroundDownloadService;
+  final BackgroundServices backgroundDownloadService;
   SubjectsRepoImpl({
     required this.dataBase,
     required this.storageService,

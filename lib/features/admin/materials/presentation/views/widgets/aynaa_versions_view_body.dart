@@ -4,6 +4,10 @@ import 'package:atm_app/features/admin/materials/presentation/views/widgets/ayna
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/helper/enums.dart';
+import '../../../../../../core/services/isar_storage_service.dart';
+import '../../../../../../core/utils/set_up_service_locator.dart';
+
 class AynaaVersionsViewBody extends StatefulWidget {
   const AynaaVersionsViewBody({super.key});
 
@@ -17,7 +21,13 @@ class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
     // TODO: implement initState
     super.initState();
     //getit.get<HiveCache<AynaaVersionsEntity>>().clear(boxName: kVersionsBox);
-    BlocProvider.of<FetchAynaaVersionsCubit>(context).fetchAynaaVersions();
+    if (0 == 0) {
+      BlocProvider.of<FetchAynaaVersionsCubit>(context).fetchAynaaVersions();
+    } else {
+      getit.get<IsarStorageService>().clear(
+            collentionType: CollentionType.versions,
+          );
+    }
   }
 
   @override

@@ -7,12 +7,12 @@ import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:path/path.dart' as path;
 
-class BackgroundDownloadService<T extends Entity> {
+class BackgroundServices<T extends Entity> {
   final StorageService storageService;
   final FileCacheManager fileSystemCacheManager;
   final Future<void> Function(T entity, PostgressEventType eventType)
       updateLocalDataSource;
-  BackgroundDownloadService({
+  BackgroundServices({
     required this.storageService,
     required this.fileSystemCacheManager,
     required this.updateLocalDataSource,
@@ -38,8 +38,7 @@ class BackgroundDownloadService<T extends Entity> {
       final fileName = item.url!.replaceFirst('${item.versionName}/', '');
       final file = await storageService.downloadFile(
           bucketName: item.versionName, filePath: fileName);
-      final localPath =
-          await FileSystemCacheManager().cacheFile(item.url!, file);
+      final localPath = await fileSystemCacheManager.cacheFile(item.url!, file);
 
       item.localFilePath = localPath;
 
@@ -62,8 +61,8 @@ class BackgroundDownloadService<T extends Entity> {
             fileName: fileName,
           );
 
-          await FileSystemCacheManager()
-              .deleteCachedFile(item.url!, deletedItemType);
+          await fileSystemCacheManager.deleteCachedFile(
+              item.url!, deletedItemType);
 
           //await updateLocalDataSource(lesson, PostgressEventType.delete);
           // _lessonUpdatesController.add(updatedLesson);
@@ -77,9 +76,16 @@ class BackgroundDownloadService<T extends Entity> {
           fileName,
         );
 
-        await FileSystemCacheManager()
-            .deleteCachedFile(item.url!, deletedItemType);
-      default:
+        await fileSystemCacheManager.deleteCachedFile(
+            item.url!, deletedItemType);
+        break;
+      case DeletedItemType.version:
+        await storageService.deleteBucket(
+          item.versionName,
+        );
+
+        await fileSystemCacheManager.deleteCachedFile(
+            item.url!, deletedItemType);
     }
   }
 }

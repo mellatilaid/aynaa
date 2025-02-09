@@ -28,10 +28,13 @@ class FileSystemCacheManager implements FileCacheManager {
     appDocDir = await getApplicationDocumentsDirectory();
     if (filePath != null) {
       List<String> parts = _splitFilePath(filePath);
-      if (parts.length < 3) throw ArgumentError("Invalid file path format");
-
-      _cacheDirectory = Directory(
-          p.join(appDocDir.path, _cacheDirectoryName, parts[0], parts[1]));
+      if (parts.length == 1) {
+        _cacheDirectory =
+            Directory(p.join(appDocDir.path, _cacheDirectoryName, parts[0]));
+      } else {
+        _cacheDirectory = Directory(
+            p.join(appDocDir.path, _cacheDirectoryName, parts[0], parts[1]));
+      }
     } else {
       _cacheDirectory = Directory(p.join(appDocDir.path, _cacheDirectoryName));
     }
@@ -97,6 +100,14 @@ class FileSystemCacheManager implements FileCacheManager {
         }
         break;
       case DeletedItemType.version:
+        await _init(filePath: filePath);
+        final parts = p.split(filePath);
+        final dir =
+            Directory(p.join(appDocDir.path, _cacheDirectoryName, parts[0]));
+        if (await dir.exists()) {
+          await dir.delete(recursive: true);
+        }
+        break;
     }
   }
 

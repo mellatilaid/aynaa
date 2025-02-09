@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/background_download_service.dart';
+import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
@@ -99,7 +99,10 @@ class RealtimeSyncService {
   void _handleVersionChange(PostgresChangePayload payload) {
     if (payload.eventType == PostgresChangeEvent.insert) {
       final entity = AynaaVersionsModel.fromMap(payload.newRecord);
-      getit.get<VersionsLocalDataSource>().handleUpdate(entity);
+      getit.get<VersionsLocalDataSource>().handleUpdate(
+            version: entity,
+            eventType: PostgressEventType.insert,
+          );
     }
     // Add update/delete handling
   }
@@ -113,7 +116,7 @@ class RealtimeSyncService {
         getit.get<SubjectsLocalDataSource>().handleUpdate(
             subject: entity, eventType: PostgressEventType.insert);
         getit
-            .get<BackgroundDownloadService<SubjectsEntity>>()
+            .get<BackgroundServices<SubjectsEntity>>()
             .startBackgroundDownloads([entity]);
         break;
       case PostgresChangeEvent.delete:
@@ -136,7 +139,7 @@ class RealtimeSyncService {
             .get<LessonsLocalDataSource>()
             .handleUpdate(lesson: entity, eventType: PostgressEventType.insert);
         getit
-            .get<BackgroundDownloadService<LessonEntity>>()
+            .get<BackgroundServices<LessonEntity>>()
             .startBackgroundDownloads([entity]);
         break;
       case PostgresChangeEvent.delete:

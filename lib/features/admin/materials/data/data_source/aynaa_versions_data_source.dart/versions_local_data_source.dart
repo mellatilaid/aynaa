@@ -6,7 +6,10 @@ import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_
 
 abstract class VersionsLocalDataSource {
   Future<List<AynaaVersionsEntity>> fetchVersion();
-  Future<void> handleUpdate(AynaaVersionsEntity versions);
+  Future<void> handleUpdate(
+      {AynaaVersionsEntity? version,
+      String? id,
+      required PostgressEventType eventType});
   Stream<List<AynaaVersionsEntity>> get versionsStream;
 }
 
@@ -26,11 +29,37 @@ class VersionsLocalDataSourceImpl implements VersionsLocalDataSource {
   Stream<List<AynaaVersionsEntity>> get versionsStream => _controller.stream;
 
   @override
-  Future<void> handleUpdate(AynaaVersionsEntity versions) async {
-    await isarStorageService.put(
-      item: versions,
-      collentionType: CollentionType.versions,
-    );
+  Future<void> handleUpdate(
+      {AynaaVersionsEntity? version,
+      String? id,
+      required PostgressEventType eventType}) async {
+    switch (eventType) {
+      case PostgressEventType.insert:
+        await isarStorageService.put(
+            item: version, collentionType: CollentionType.versions);
+        /* final newLessons = await isarStorageService.filter(
+          collentionType: CollentionType.lessons,
+          query: {
+            kVersionID: lesson!.aynaaVersionId,
+            kSubjectID: lesson.subjectId
+          },
+        ) as List<LessonEntity>;
+        _controller.add(newLessons);*/
+        break;
+      case PostgressEventType.delete:
+        await isarStorageService.delete(
+            id: id!, collentionType: CollentionType.versions);
+        /*final newLessons = await isarStorageService.filter(
+          collentionType: CollentionType.lessons,
+          query: {
+            kVersionID: lesson!.aynaaVersionId,
+            kSubjectID: lesson.subjectId
+          },
+        ) as List<LessonEntity>;
+        _controller.add(newLessons);*/
+        break;
+      default:
+    }
     /* final newVersions = await hiveCache.getAll(boxName: kVersionsBox)
         as List<AynaaVersionsEntity>;
     _controller.add(newVersions);*/

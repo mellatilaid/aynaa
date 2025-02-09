@@ -17,7 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tus_client_dart/tus_client_dart.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
-import '../../../../../core/services/background_download_service.dart';
+import '../../../../../core/services/background_services.dart';
 import '../../../../../core/services/data_base.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 import '../../domain/repos/lessons_repo.dart';
@@ -73,7 +73,7 @@ class LessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, void>> deleteLesson(
       {required LessonEntity lesson}) async {
     try {
-      getit.get<BackgroundDownloadService<LessonEntity>>().deleteItemFile(
+      getit.get<BackgroundServices<LessonEntity>>().deleteItemFile(
           item: lesson, deletedItemType: DeletedItemType.lesson);
       await dataBase.deleteData(path: DbEnpoints.lessons, uid: lesson.entityID);
       return right(null);

@@ -11,6 +11,8 @@ import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
+import '../../../../../core/helper/enums.dart';
+import '../../../../../core/services/background_services.dart';
 import '../../domain/repos/versions_repo.dart';
 
 class VersionsRepoImpl extends VersionsRepo {
@@ -18,12 +20,13 @@ class VersionsRepoImpl extends VersionsRepo {
   final StorageService storageService;
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
-
+  final BackgroundServices backgroundServices;
   VersionsRepoImpl({
     required this.remoteDataSource,
     required this.dataBase,
     required this.storageService,
     required this.versionsLocalDataSource,
+    required this.backgroundServices,
   });
   @override
   Future<Either<Failures, List<AynaaVersionsEntity>>> fetchVersions() async {
@@ -77,9 +80,13 @@ class VersionsRepoImpl extends VersionsRepo {
     try {
       //await storageService.emptyBucket(aynaaVersion.versionName);
       //await storageService.deleteBucket(aynaaVersion.versionName);
-      await dataBase.callingrpcFuc(
-        functionName: DbEnpoints.deleteVersioAndRelatedData,
-        params: {krpcVersionID: aynaaVersion.entityID},
+      backgroundServices.deleteItemFile(
+        item: aynaaVersion,
+        deletedItemType: DeletedItemType.version,
+      );
+      await dataBase.deleteData(
+        path: DbEnpoints.aynaaVersions,
+        uid: aynaaVersion.entityID,
       );
       return const Right('');
     } on PostgrestException catch (e) {
