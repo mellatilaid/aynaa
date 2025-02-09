@@ -138,6 +138,7 @@ SubjectsEntity _subjectsEntityDeserialize(
     versionName: reader.readString(offsets[7]),
   );
   object.id = id;
+  object.isDeleted = reader.readBool(offsets[1]);
   return object;
 }
 

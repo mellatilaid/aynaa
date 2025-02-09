@@ -111,7 +111,24 @@ class SupaBaseStorage extends StorageService<Bucket> {
     final String res = await _supabase.storage.emptyBucket(id);
     return res;
   }
-}
+
+  @override
+  Future<void> deleteFolder(String bucketName, String folderName) async {
+    final String folderPath = '$folderName/';
+
+    // Get all files inside the folder
+    final response =
+        await _supabase.storage.from(bucketName).list(path: folderName);
+
+    if (response.isNotEmpty) {
+      // Extract file paths
+      List<String> filesToDelete =
+          response.map((file) => '$folderPath${file.name}').toList();
+
+      // Delete all files in the folder
+      await _supabase.storage.from(bucketName).remove(filesToDelete);
+    }
+  }
 
 /*Future<String> createBucket(String bucketName) async {
     final String bucketId = await _supabase.storage.createBucket(bucketName);
@@ -138,3 +155,4 @@ class SupaBaseStorage extends StorageService<Bucket> {
 
     return bucket;
   }*/
+}

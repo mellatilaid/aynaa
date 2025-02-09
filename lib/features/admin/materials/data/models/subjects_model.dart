@@ -46,7 +46,7 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   static SubjectsModel fromMap(Map<String, dynamic> data) {
     return SubjectsModel(
-      data[kID].toString(),
+      data[kUuid].toString(),
       data[kSubjectName],
       data[kVersionID],
       data[kUrl],

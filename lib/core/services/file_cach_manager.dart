@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:crypto/crypto.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -10,20 +11,21 @@ import 'package:path_provider/path_provider.dart';
 abstract class FileCacheManager {
   Future<File?> getCachedFile(String filePath);
   Future<String?> cacheFile(String filePath, Uint8List data);
-  Future<void> deleteCachedFile(String filePath);
+  Future<void> deleteCachedFile(
+      String filePath, DeletedItemType deletedItemType);
   Future<bool> isFileCached(String filePath);
 }
 
 class FileSystemCacheManager implements FileCacheManager {
   static const String _cacheDirectoryName = 'supabase_cache';
   late Directory _cacheDirectory;
-
+  late Directory appDocDir;
   FileSystemCacheManager() {
     _init();
   }
 
   Future<void> _init({String? filePath}) async {
-    final appDocDir = await getApplicationDocumentsDirectory();
+    appDocDir = await getApplicationDocumentsDirectory();
     if (filePath != null) {
       List<String> parts = _splitFilePath(filePath);
       if (parts.length < 3) throw ArgumentError("Invalid file path format");
@@ -72,14 +74,29 @@ class FileSystemCacheManager implements FileCacheManager {
   }
 
   @override
-  Future<void> deleteCachedFile(String filePath) async {
-    await _init(filePath: filePath);
+  Future<void> deleteCachedFile(
+      String filePath, DeletedItemType deletedItemType) async {
+    switch (deletedItemType) {
+      case DeletedItemType.lesson:
+        await _init(filePath: filePath);
 
-    final file =
-        File(p.join(_cacheDirectory.path, _generateFilename(filePath)));
-    log(file.path);
-    if (await file.exists()) {
-      await file.delete();
+        final file =
+            File(p.join(_cacheDirectory.path, _generateFilename(filePath)));
+        log(file.path);
+        if (await file.exists()) {
+          await file.delete();
+        }
+        break;
+      case DeletedItemType.subject:
+        await _init(filePath: filePath);
+        final parts = p.split(filePath);
+        final dir = Directory(
+            p.join(appDocDir.path, _cacheDirectoryName, parts[0], parts[1]));
+        if (await dir.exists()) {
+          await dir.delete(recursive: true);
+        }
+        break;
+      case DeletedItemType.version:
     }
   }
 

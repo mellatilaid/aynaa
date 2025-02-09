@@ -109,6 +109,7 @@ class RealtimeSyncService {
       case PostgresChangeEvent.insert:
         final entity = SubjectsModel.fromMap(payload.newRecord);
         log(payload.toString());
+        log('iserted subject to remote id is ${entity.entityID}');
         getit.get<SubjectsLocalDataSource>().handleUpdate(
             subject: entity, eventType: PostgressEventType.insert);
         getit
@@ -116,7 +117,7 @@ class RealtimeSyncService {
             .startBackgroundDownloads([entity]);
         break;
       case PostgresChangeEvent.delete:
-        getit.get<LessonsLocalDataSource>().handleUpdate(
+        getit.get<SubjectsLocalDataSource>().handleUpdate(
               id: payload.oldRecord[kUuid],
               eventType: PostgressEventType.delete,
             );
@@ -139,6 +140,11 @@ class RealtimeSyncService {
             .startBackgroundDownloads([entity]);
         break;
       case PostgresChangeEvent.delete:
+        getit.get<LessonsLocalDataSource>().handleUpdate(
+              id: payload.oldRecord[kUuid],
+              eventType: PostgressEventType.delete,
+            );
+
         break;
       default:
     }

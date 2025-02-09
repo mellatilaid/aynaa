@@ -23,6 +23,7 @@ abstract class StorageService<T> {
   });
   Future<String> createBucket(String bucketName);
   Future<String> deleteBucket(String id);
+  Future<void> deleteFolder(String bucketName, String folderName);
   Future<T> retreiveBucket(String bucketID);
 
   Future<String> updateBucket(String bucketName);

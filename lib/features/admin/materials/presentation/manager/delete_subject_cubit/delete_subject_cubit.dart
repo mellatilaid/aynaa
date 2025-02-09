@@ -1,18 +1,23 @@
-import 'package:atm_app/core/services/delete_items_service.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/deleted_itmes_entity.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'delete_subject_state.dart';
 
 class DeleteSubjectCubit extends Cubit<DeleteSubjectState> {
-  final DeleteItemsService deleteItemsService;
-  DeleteSubjectCubit({required this.deleteItemsService})
+  final SubjectsRepo subjectsRepo;
+  DeleteSubjectCubit({required this.subjectsRepo})
       : super(DeleteSubjectInitial());
 
-  Future<void> deleteSubject({required String id}) async {
+  Future<void> deleteSubject({required SubjectsEntity subject}) async {
     emit(DeleteSubjectLoading());
-    final deletedItem = DeletedItmesEntity(id, false, false);
-    await deleteItemsService.markItemAsDeleted(item: deletedItem);
+
+    final resault = await subjectsRepo.deleteSubject(subject: subject);
+    resault.fold((failure) {
+      emit(DeleteSubjectFailure(errMessage: failure.errMessage));
+    }, (succuss) {
+      emit(DeleteSubjectSuccess());
+    });
   }
 }

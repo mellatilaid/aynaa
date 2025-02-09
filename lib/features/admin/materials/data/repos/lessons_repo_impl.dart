@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
@@ -72,9 +73,8 @@ class LessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, void>> deleteLesson(
       {required LessonEntity lesson}) async {
     try {
-      getit
-          .get<BackgroundDownloadService<LessonEntity>>()
-          .deleteItemFile(item: lesson);
+      getit.get<BackgroundDownloadService<LessonEntity>>().deleteItemFile(
+          item: lesson, deletedItemType: DeletedItemType.lesson);
       await dataBase.deleteData(path: DbEnpoints.lessons, uid: lesson.entityID);
       return right(null);
     } on PostgrestException catch (e) {

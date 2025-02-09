@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
@@ -46,7 +45,6 @@ class LessonsLocalDataSourceImpl implements LessonsLocalDataSource {
       String? id}) async {
     switch (eventType) {
       case PostgressEventType.insert:
-        log('handle update insert triggered ${lesson!.entityID.toString()}');
         await isarStorageService.put(
             item: lesson, collentionType: CollentionType.lessons);
         /* final newLessons = await isarStorageService.filter(

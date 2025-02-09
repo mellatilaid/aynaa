@@ -81,12 +81,26 @@ setUpServiceLocator() {
       versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
     ),
   );
+  getit.registerSingleton<BackgroundDownloadService<SubjectsEntity>>(
+    BackgroundDownloadService(
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (SubjectsEntity entity, PostgressEventType eventType) =>
+              getit.get<SubjectsLocalDataSource>().handleUpdate(
+                    subject: entity,
+                    eventType: eventType,
+                  ),
+    ),
+  );
   getit.registerSingleton<SubjectsRepo>(
     SubjectsRepoImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
       subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
       subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
+      backgroundDownloadService:
+          getit.get<BackgroundDownloadService<SubjectsEntity>>(),
     ),
   );
   getit.registerSingleton<LessonsRepo>(
@@ -109,29 +123,14 @@ setUpServiceLocator() {
                   ),
     ),
   );
-  getit.registerSingleton<BackgroundDownloadService<SubjectsEntity>>(
-    BackgroundDownloadService(
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (SubjectsEntity entity, PostgressEventType eventType) =>
-              getit.get<SubjectsLocalDataSource>().handleUpdate(
-                    subject: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
+
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
   getit.registerSingleton<DeleteItemsService>(DeleteItemsServiceImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
       isarStorageService: getit.get<IsarStorageService>()));
   getit.registerSingleton<RealtimeSyncService>(RealtimeSyncService());
-  getit.registerSingleton<DeleteItemsService>(DeleteItemsServiceImpl(
-    dataBase: getit.get<DataBase>(),
-    storageService: getit.get<StorageService>(),
-    isarStorageService: getit.get<IsarStorageService>(),
-  ));
+
   /*getit
       .registerSingleton<CachIndexLessonsInBackground>(
           CachIndexLessonsInBackground(

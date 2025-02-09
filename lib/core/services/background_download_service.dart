@@ -5,6 +5,7 @@ import 'package:atm_app/core/entities/entitiy.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/storage_service.dart';
+import 'package:path/path.dart' as path;
 
 class BackgroundDownloadService<T extends Entity> {
   final StorageService storageService;
@@ -23,10 +24,10 @@ class BackgroundDownloadService<T extends Entity> {
     }
   }
 
-  void startBackgroundDelete(List<T> items) {
+  void startBackgroundDelete(List<T> items, DeletedItemType deletedItemType) {
     for (final item in items) {
       if (item.url == null || item.localFilePath != null) continue;
-      unawaited(deleteItemFile(item: item));
+      unawaited(deleteItemFile(item: item, deletedItemType: deletedItemType));
     }
   }
 
@@ -39,13 +40,8 @@ class BackgroundDownloadService<T extends Entity> {
           bucketName: item.versionName, filePath: fileName);
       final localPath =
           await FileSystemCacheManager().cacheFile(item.url!, file);
-      log('Before assignment (SubjectsEntity) - localFilePath: ${item.localFilePath}');
-      log('SubjectsEntity object reference: ${identityHashCode(item)}');
 
       item.localFilePath = localPath;
-
-      log('After assignment (SubjectsEntity) - localFilePath: ${item.localFilePath}');
-      log('SubjectsEntity object reference: ${identityHashCode(item)}');
 
       await updateLocalDataSource(item, PostgressEventType.insert);
       log(localPath.toString());
@@ -55,24 +51,35 @@ class BackgroundDownloadService<T extends Entity> {
     }
   }
 
-  Future<void> deleteItemFile({required T item}) async {
-    try {
-      // Download and cache file
+  Future<void> deleteItemFile(
+      {required T item, required DeletedItemType deletedItemType}) async {
+    switch (deletedItemType) {
+      case DeletedItemType.lesson:
+        if (item.localFilePath != null && item.url != null) {
+          final fileName = item.url!.replaceFirst('${item.versionName}/', '');
+          await storageService.deleteFile(
+            bucketName: item.versionName,
+            fileName: fileName,
+          );
 
-      if (item.localFilePath != null && item.url != null) {
-        final fileName = item.url!.replaceFirst('${item.versionName}/', '');
-        await storageService.deleteFile(
-          bucketName: item.versionName,
-          fileName: fileName,
+          await FileSystemCacheManager()
+              .deleteCachedFile(item.url!, deletedItemType);
+
+          //await updateLocalDataSource(lesson, PostgressEventType.delete);
+          // _lessonUpdatesController.add(updatedLesson);
+        }
+        break;
+      case DeletedItemType.subject:
+        final parts = path.split(item.url!);
+        final fileName = parts[1];
+        await storageService.deleteFolder(
+          item.versionName,
+          fileName,
         );
 
-        await FileSystemCacheManager().deleteCachedFile(item.url!);
-
-        //await updateLocalDataSource(lesson, PostgressEventType.delete);
-        // _lessonUpdatesController.add(updatedLesson);
-      }
-    } catch (e) {
-      log(e.toString());
+        await FileSystemCacheManager()
+            .deleteCachedFile(item.url!, deletedItemType);
+      default:
     }
   }
 }

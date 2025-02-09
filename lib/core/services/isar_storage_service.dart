@@ -52,17 +52,16 @@ class IsarStorageService {
     switch (collentionType) {
       case CollentionType.lessons:
         await _isar.writeTxn(() async {
-          await _isar.lessonEntitys.getByEntityID(id);
+          return await _isar.lessonEntitys.getByEntityID(id);
         });
       case CollentionType.versions:
         await _isar.writeTxn(() async {
-          await _isar.aynaaVersionsEntitys.getByEntityID(id);
+          return await _isar.aynaaVersionsEntitys.getByEntityID(id);
         });
       case CollentionType.subjects:
+        return await _isar.subjectsEntitys.getByEntityID(id);
         await _isar.writeTxn(
-          () async {
-            await _isar.subjectsEntitys.getByEntityID(id);
-          },
+          () async {},
         );
       case CollentionType.deletedItmes:
     }
@@ -151,6 +150,37 @@ class IsarStorageService {
           await _isar.subjectsEntitys.filter().entityIDEqualTo(id).deleteAll();
         });
       case CollentionType.deletedItmes:
+        await _isar.writeTxn(
+          () async {
+            await _isar.deletedItmesEntitys
+                .filter()
+                .itemIDEqualTo(id)
+                .deleteAll();
+          },
+        );
+    }
+  }
+
+  Future<void> deleteAll(
+      {required List<Id> ids, required CollentionType collentionType}) async {
+    await init();
+    switch (collentionType) {
+      case CollentionType.lessons:
+        await _isar.writeTxn(() async {
+          await _isar.lessonEntitys.deleteAll(ids);
+        });
+      case CollentionType.versions:
+        await _isar.writeTxn(() async {
+          await _isar.aynaaVersionsEntitys.deleteAll(ids);
+        });
+      case CollentionType.subjects:
+        await _isar.writeTxn(() async {
+          await _isar.subjectsEntitys.deleteAll(ids);
+        });
+      case CollentionType.deletedItmes:
+        await _isar.writeTxn(() async {
+          await _isar.deletedItmesEntitys.deleteAll(ids);
+        });
     }
   }
 
@@ -234,7 +264,6 @@ class IsarStorageService {
         });
 
       case CollentionType.deletedItmes:
-      default:
     }
   }
 
@@ -264,8 +293,6 @@ class IsarStorageService {
             item: deletedSubject,
             collentionType: CollentionType.subjects,
           );
-          final itemDeleted = DeletedItmesEntity(id, false, false);
-          _isar.deletedItmesEntitys.putByIndex('itemID', itemDeleted);
         }
       case CollentionType.deletedItmes:
     }

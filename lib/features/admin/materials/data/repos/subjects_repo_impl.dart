@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/services/background_download_service.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
@@ -11,6 +12,7 @@ import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
+import '../../../../../core/helper/enums.dart';
 import '../../../../../core/services/data_base.dart';
 import '../../../../../core/services/storage_service.dart';
 import '../../../../../core/utils/db_enpoints.dart';
@@ -20,12 +22,13 @@ class SubjectsRepoImpl extends SubjectsRepo {
   final StorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
-
+  final BackgroundDownloadService backgroundDownloadService;
   SubjectsRepoImpl({
     required this.dataBase,
     required this.storageService,
     required this.subjectsRemoteDataSource,
     required this.subjectsLocalDataSource,
+    required this.backgroundDownloadService,
   });
   @override
   Future<Either<Failures, void>> addSubject(
@@ -61,7 +64,15 @@ class SubjectsRepoImpl extends SubjectsRepo {
   Future<Either<Failures, void>> deleteSubject(
       {required SubjectsEntity subject}) async {
     try {
-      await subjectsLocalDataSource.deleteSubject(subjectID: subject.entityID);
+      backgroundDownloadService.deleteItemFile(
+        item: subject,
+        deletedItemType: DeletedItemType.subject,
+      );
+      await dataBase.deleteData(
+        path: DbEnpoints.subjects,
+        uid: subject.entityID,
+      );
+
       return const Right(null);
     } on PostgrestException catch (e) {
       log(e.toString());

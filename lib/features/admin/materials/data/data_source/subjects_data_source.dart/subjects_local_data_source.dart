@@ -12,7 +12,9 @@ abstract class SubjectsLocalDataSource {
   Future<List<SubjectsEntity>> fetchSubjects({required String versionID});
   Future<void> deleteSubject({required String subjectID});
   Future<void> handleUpdate(
-      {required SubjectsEntity subject, required PostgressEventType eventType});
+      {SubjectsEntity? subject,
+      String? id,
+      required PostgressEventType eventType});
   Stream<List<SubjectsEntity>> get subjectsStream;
 }
 
@@ -39,12 +41,36 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
 
   @override
   Future<void> handleUpdate(
-      {required SubjectsEntity subject,
+      {SubjectsEntity? subject,
+      String? id,
       required PostgressEventType eventType}) async {
-    await isarStorageService.put(
-      item: subject,
-      collentionType: CollentionType.subjects,
-    );
+    switch (eventType) {
+      case PostgressEventType.insert:
+        await isarStorageService.put(
+            item: subject, collentionType: CollentionType.subjects);
+        /* final newLessons = await isarStorageService.filter(
+          collentionType: CollentionType.lessons,
+          query: {
+            kVersionID: lesson!.aynaaVersionId,
+            kSubjectID: lesson.subjectId
+          },
+        ) as List<LessonEntity>;
+        _controller.add(newLessons);*/
+        break;
+      case PostgressEventType.delete:
+        await isarStorageService.delete(
+            id: id!, collentionType: CollentionType.subjects);
+        /*final newLessons = await isarStorageService.filter(
+          collentionType: CollentionType.lessons,
+          query: {
+            kVersionID: lesson!.aynaaVersionId,
+            kSubjectID: lesson.subjectId
+          },
+        ) as List<LessonEntity>;
+        _controller.add(newLessons);*/
+        break;
+      default:
+    }
   }
 
   void dispose() {
@@ -54,6 +80,8 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
   @override
   Future<void> deleteSubject({required String subjectID}) async {
     await isarStorageService.markAsDeleted(
-        id: subjectID, collentionType: CollentionType.subjects);
+      id: subjectID,
+      collentionType: CollentionType.subjects,
+    );
   }
 }

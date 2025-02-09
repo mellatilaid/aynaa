@@ -11,7 +11,7 @@ class SubjectsEntity with Entity {
   final String entityID;
   final String subjectName;
   final String versionID;
-  final bool isDeleted = false;
+  bool isDeleted = false;
   @override
   final String versionName;
   @override
