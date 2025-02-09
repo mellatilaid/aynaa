@@ -16,51 +16,57 @@ class BackgroundDownloadService<T extends Entity> {
     required this.fileSystemCacheManager,
     required this.updateLocalDataSource,
   });
-  void startBackgroundDownloads(List<T> lessons) {
-    for (final lesson in lessons) {
-      if (lesson.url == null || lesson.localFilePath != null) continue;
-      unawaited(_downloadAndUpdateLesson(lesson));
+  void startBackgroundDownloads(List<T> items) {
+    for (final item in items) {
+      if (item.url == null || item.localFilePath != null) continue;
+      unawaited(_downloadAndUpdateLesson(item));
     }
   }
 
-  void startBackgroundDelete(List<T> lessons) {
-    for (final lesson in lessons) {
-      if (lesson.url == null || lesson.localFilePath != null) continue;
-      unawaited(deleteItemFile(lesson: lesson));
+  void startBackgroundDelete(List<T> items) {
+    for (final item in items) {
+      if (item.url == null || item.localFilePath != null) continue;
+      unawaited(deleteItemFile(item: item));
     }
   }
 
-  Future<void> _downloadAndUpdateLesson(T lesson) async {
+  Future<void> _downloadAndUpdateLesson(T item) async {
     try {
       // Download and cache file
 
-      final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
+      final fileName = item.url!.replaceFirst('${item.versionName}/', '');
       final file = await storageService.downloadFile(
-          bucketName: lesson.versionName, filePath: fileName);
+          bucketName: item.versionName, filePath: fileName);
       final localPath =
-          await FileSystemCacheManager().cacheFile(lesson.url!, file);
-      log(fileName);
-      lesson.localFilePath = localPath;
-      await updateLocalDataSource(lesson, PostgressEventType.insert);
+          await FileSystemCacheManager().cacheFile(item.url!, file);
+      log('Before assignment (SubjectsEntity) - localFilePath: ${item.localFilePath}');
+      log('SubjectsEntity object reference: ${identityHashCode(item)}');
 
+      item.localFilePath = localPath;
+
+      log('After assignment (SubjectsEntity) - localFilePath: ${item.localFilePath}');
+      log('SubjectsEntity object reference: ${identityHashCode(item)}');
+
+      await updateLocalDataSource(item, PostgressEventType.insert);
+      log(localPath.toString());
       // _lessonUpdatesController.add(updatedLesson);
     } catch (e) {
       log(e.toString());
     }
   }
 
-  Future<void> deleteItemFile({required T lesson}) async {
+  Future<void> deleteItemFile({required T item}) async {
     try {
       // Download and cache file
 
-      if (lesson.localFilePath != null && lesson.url != null) {
-        final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
+      if (item.localFilePath != null && item.url != null) {
+        final fileName = item.url!.replaceFirst('${item.versionName}/', '');
         await storageService.deleteFile(
-          bucketName: lesson.versionName,
+          bucketName: item.versionName,
           fileName: fileName,
         );
 
-        await FileSystemCacheManager().deleteCachedFile(lesson.url!);
+        await FileSystemCacheManager().deleteCachedFile(item.url!);
 
         //await updateLocalDataSource(lesson, PostgressEventType.delete);
         // _lessonUpdatesController.add(updatedLesson);

@@ -5,7 +5,9 @@ import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/helper/enums.dart';
+import '../../../../../../core/services/background_download_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
+import '../../../../../../core/utils/set_up_service_locator.dart';
 
 abstract class SubjectsRemoteDataSource {
   Future<List<SubjectsEntity>> fetchSubjects({required String versionID});
@@ -29,6 +31,9 @@ class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
       items: subjects,
       collentionType: CollentionType.subjects,
     );
+    getit
+        .get<BackgroundDownloadService<SubjectsEntity>>()
+        .startBackgroundDownloads(subjects);
     return subjects;
   }
 }

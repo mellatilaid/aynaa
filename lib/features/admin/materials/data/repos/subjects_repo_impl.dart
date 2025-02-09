@@ -7,28 +7,43 @@ import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
 import 'package:dartz/dartz.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/services/data_base.dart';
+import '../../../../../core/services/storage_service.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 
 class SubjectsRepoImpl extends SubjectsRepo {
   final DataBase dataBase;
+  final StorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
 
   SubjectsRepoImpl({
     required this.dataBase,
+    required this.storageService,
     required this.subjectsRemoteDataSource,
     required this.subjectsLocalDataSource,
   });
   @override
   Future<Either<Failures, void>> addSubject(
-      {required SubjectsEntity subject}) async {
+      {required SubjectsEntity subject, String? filePath}) async {
     try {
       final SubjectsModel subjectsModel =
           SubjectsModel.fromSubjectEntity(subject);
       final data = subjectsModel.toMap();
+      log(data[kVersionName]);
+      if (filePath != null) {
+        final fileName = path.basename(filePath);
+        final fullPath = await storageService.uploadFile(
+          bucketName: subject.versionName,
+          filePath: filePath,
+          fileName: '${subject.subjectName}/$fileName',
+        );
+        data[kUrl] = fullPath;
+      }
       await dataBase.setDate(path: DbEnpoints.subjects, data: data);
       return const Right(null);
       /*final String bucketId = await storageService.createBucket(versionName);
@@ -37,6 +52,7 @@ class SubjectsRepoImpl extends SubjectsRepo {
       log(e.toString());
       return Left(ServerFailure.fromSupaDataBase(e: e));
     } catch (e) {
+      log(e.toString());
       return Left(ServerFailure(errMessage: e.toString()));
     }
   }

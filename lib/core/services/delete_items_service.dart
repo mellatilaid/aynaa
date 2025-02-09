@@ -16,6 +16,7 @@ abstract class DeleteItemsService<T> {
       {required DeletedItemType deletedItemType});
   Future<void> deleteItemFromRemote();
   Future<void> deleteItemFromLocal();
+  Future<void> markItemAsDeleted({required DeletedItmesEntity item});
 }
 
 class DeleteItemsServiceImpl<T> extends DeleteItemsService {
@@ -31,15 +32,15 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
 
   late Entity _item;
   late DeletedItemType _deletedItemType;
-  late List<DeletedItmesEntity> deletedItemsIds;
+  late List<DeletedItmesEntity> deletedItems;
   @override
   Future<void> deleteItemPermanently(
       {required DeletedItemType deletedItemType}) async {
     _deletedItemType = deletedItemType;
-    deletedItemsIds = await isarStorageService.getAll(
-            collentionType: CollentionType.deletedItmes)
-        as List<DeletedItmesEntity>;
-    for (var item in deletedItemsIds) {
+    deletedItems = await isarStorageService.getAll(
+      collentionType: CollentionType.deletedItmes,
+    ) as List<DeletedItmesEntity>;
+    for (var item in deletedItems) {
       _item = await isarStorageService.get(
         id: item.itemID,
         collentionType: CollentionType.subjects,
@@ -96,5 +97,17 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
         return fileName;
       default:
     }
+  }
+
+  @override
+  Future<void> markItemAsDeleted({required DeletedItmesEntity item}) async {
+    await isarStorageService.markAsDeleted(
+      id: item.itemID,
+      collentionType: CollentionType.subjects,
+    );
+    await isarStorageService.put(
+      item: item,
+      collentionType: CollentionType.deletedItmes,
+    );
   }
 }

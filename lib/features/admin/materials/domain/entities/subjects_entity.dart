@@ -13,22 +13,21 @@ class SubjectsEntity with Entity {
   final String versionID;
   final bool isDeleted = false;
   @override
+  final String versionName;
+  @override
   final String url;
   @override
-  String? localFilePath;
+  late String? localFilePath;
   SubjectsEntity({
     required this.entityID,
     required this.subjectName,
     required this.versionID,
     required this.url,
+    required this.versionName,
     this.localFilePath,
   });
 
   @override
   // TODO: implement name
   String get name => subjectName;
-
-  @override
-  // TODO: implement versionName
-  String get versionName => '';
 }

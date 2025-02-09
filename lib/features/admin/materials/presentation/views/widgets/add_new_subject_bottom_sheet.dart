@@ -33,6 +33,7 @@ class NewSubjectBottomSheet extends StatelessWidget {
         builder: (context, state) {
           if (state is AddNewSubjectSuccuss) {
             final versionID = context.read<AddLessonCubit>().versionID;
+
             BlocProvider.of<FetchSubjectCubit>(context)
                 .fetchSubjects(versionID: versionID!);
             Future.microtask(() {

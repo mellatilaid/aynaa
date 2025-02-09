@@ -4,6 +4,10 @@ import 'package:atm_app/features/admin/materials/presentation/views/widgets/subj
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/helper/enums.dart';
+import '../../../../../../core/services/isar_storage_service.dart';
+import '../../../../../../core/utils/set_up_service_locator.dart';
+
 class SubjectsViewBody extends StatefulWidget {
   final AynaaVersionsEntity versionsEntity;
   const SubjectsViewBody({
@@ -21,8 +25,14 @@ class _SubjectsViewBodyState extends State<SubjectsViewBody> {
     // TODO: implement initState
     super.initState();
     //getit.get<HiveCache<SubjectsEntity>>().clear(boxName: kSubjectsBox);
-    BlocProvider.of<FetchSubjectCubit>(context)
-        .fetchSubjects(versionID: widget.versionsEntity.entityID);
+    if (0 == 0) {
+      BlocProvider.of<FetchSubjectCubit>(context)
+          .fetchSubjects(versionID: widget.versionsEntity.entityID);
+    } else {
+      getit.get<IsarStorageService>().clear(
+            collentionType: CollentionType.subjects,
+          );
+    }
   }
 
   @override

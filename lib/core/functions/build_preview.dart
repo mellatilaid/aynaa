@@ -9,7 +9,7 @@ import 'package:path/path.dart' as path;
 import '../regex/get_base_file_name.dart';
 
 buildPreview({String? filePath}) {
-  log('file path is $filePath');
+  log('file path is $filePath in build preview');
   if (filePath != null) {
     final fileExtension = path.extension(filePath);
     log(fileExtension);

@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     // Subscribe to the channel when the app starts
-    RealtimeSyncService().initialize();
+    getit.get<RealtimeSyncService>().initialize();
   }
 
   @override

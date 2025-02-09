@@ -4,13 +4,15 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 
+import '../../../../../../core/services/background_download_service.dart';
+import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../domain/entities/subjects_entity.dart';
 
 abstract class SubjectsLocalDataSource {
   Future<List<SubjectsEntity>> fetchSubjects({required String versionID});
   Future<void> deleteSubject({required String subjectID});
   Future<void> handleUpdate(
-      {required SubjectsEntity subject, required String versionID});
+      {required SubjectsEntity subject, required PostgressEventType eventType});
   Stream<List<SubjectsEntity>> get subjectsStream;
 }
 
@@ -24,6 +26,9 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
       collentionType: CollentionType.subjects,
       query: {kVersionID: versionID},
     );
+    getit
+        .get<BackgroundDownloadService<SubjectsEntity>>()
+        .startBackgroundDownloads(subjects);
     return subjects as List<SubjectsEntity>;
   }
 
@@ -34,16 +39,12 @@ class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
 
   @override
   Future<void> handleUpdate(
-      {required SubjectsEntity subject, required String versionID}) async {
+      {required SubjectsEntity subject,
+      required PostgressEventType eventType}) async {
     await isarStorageService.put(
       item: subject,
       collentionType: CollentionType.subjects,
     );
-    final subjects = await isarStorageService.filter(
-      collentionType: CollentionType.subjects,
-      query: {kVersionID: subject.versionID},
-    );
-    _controller.add(subjects as List<SubjectsEntity>);
   }
 
   void dispose() {

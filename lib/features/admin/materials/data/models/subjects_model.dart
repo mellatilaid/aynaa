@@ -4,29 +4,21 @@ import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity
 import '../../../../../core/const/remote_db_const.dart';
 
 class SubjectsModel extends SubjectsEntity with Mappable {
-  @override
-  final String entityID;
-
-  @override
-  final String subjectName;
-  @override
-  final String versionID;
-  @override
-  final String url;
-  @override
-  final String? localFilePath;
   SubjectsModel(
-      {required this.entityID,
-      required this.subjectName,
-      required this.versionID,
-      required this.url,
-      this.localFilePath})
-      : super(
-            entityID: entityID,
-            subjectName: subjectName,
-            versionID: versionID,
-            url: url,
-            localFilePath: localFilePath);
+    String entityID,
+    String subjectName,
+    String versionID,
+    String url,
+    String versionName,
+    String? localFilePath,
+  ) : super(
+          entityID: entityID,
+          subjectName: subjectName,
+          versionID: versionID,
+          url: url,
+          versionName: versionName,
+          localFilePath: localFilePath,
+        );
 
   /*factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
     return SubjectsModel(id: data[kID].toString(), subjectName: data[kName]);
@@ -34,24 +26,32 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   factory SubjectsModel.fromSubjectEntity(SubjectsEntity subject) {
     return SubjectsModel(
-        entityID: subject.entityID ?? '0',
-        subjectName: subject.subjectName,
-        versionID: subject.versionID,
-        url: subject.url,
-        localFilePath: subject.localFilePath);
+        subject.entityID,
+        subject.subjectName,
+        subject.versionID,
+        subject.url,
+        subject.versionName,
+        subject.localFilePath);
   }
 
   @override
   toMap() {
-    return {kSubjectName: subjectName, kVersionID: versionID, kUrl: url};
+    return {
+      kUrl: url,
+      kVersionID: versionID,
+      kVersionName: versionName,
+      kSubjectName: subjectName,
+    };
   }
 
   static SubjectsModel fromMap(Map<String, dynamic> data) {
     return SubjectsModel(
-      entityID: data[kID].toString(),
-      subjectName: data[kSubjectName],
-      versionID: data[kVersionID],
-      url: data[kUrl],
+      data[kID].toString(),
+      data[kSubjectName],
+      data[kVersionID],
+      data[kUrl],
+      data[kVersionName],
+      data[kLocalFilePath],
     );
   }
 }

@@ -135,6 +135,7 @@ SubjectsEntity _subjectsEntityDeserialize(
     subjectName: reader.readString(offsets[4]),
     url: reader.readString(offsets[5]),
     versionID: reader.readString(offsets[6]),
+    versionName: reader.readString(offsets[7]),
   );
   object.id = id;
   return object;

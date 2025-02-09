@@ -1,8 +1,8 @@
+import 'package:atm_app/features/admin/materials/presentation/views/subject_image_preview_builder.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/widgets/invisibla_text_field.dart';
 import 'add_new_subject_button_bloc_builder.dart';
-import 'lesson_media_content_builder.dart';
 
 class AddSubjectBottomSheetBody extends StatefulWidget {
   const AddSubjectBottomSheetBody({
@@ -54,7 +54,7 @@ class _AddSubjectBottomSheetBodyState extends State<AddSubjectBottomSheetBody> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      LessonMediaContentBuilder(
+                      SubjectImageContentBuilder(
                         filePath: selectedFile,
                       ),
                       const SizedBox(height: 16),

@@ -5,6 +5,7 @@ import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
@@ -15,6 +16,7 @@ import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_s
 import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/repos/lessons_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
@@ -82,6 +84,7 @@ setUpServiceLocator() {
   getit.registerSingleton<SubjectsRepo>(
     SubjectsRepoImpl(
       dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
       subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
       subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
     ),
@@ -106,11 +109,29 @@ setUpServiceLocator() {
                   ),
     ),
   );
+  getit.registerSingleton<BackgroundDownloadService<SubjectsEntity>>(
+    BackgroundDownloadService(
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (SubjectsEntity entity, PostgressEventType eventType) =>
+              getit.get<SubjectsLocalDataSource>().handleUpdate(
+                    subject: entity,
+                    eventType: eventType,
+                  ),
+    ),
+  );
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
   getit.registerSingleton<DeleteItemsService>(DeleteItemsServiceImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
       isarStorageService: getit.get<IsarStorageService>()));
+  getit.registerSingleton<RealtimeSyncService>(RealtimeSyncService());
+  getit.registerSingleton<DeleteItemsService>(DeleteItemsServiceImpl(
+    dataBase: getit.get<DataBase>(),
+    storageService: getit.get<StorageService>(),
+    isarStorageService: getit.get<IsarStorageService>(),
+  ));
   /*getit
       .registerSingleton<CachIndexLessonsInBackground>(
           CachIndexLessonsInBackground(

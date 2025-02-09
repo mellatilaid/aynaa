@@ -121,6 +121,12 @@ class IsarStorageService {
           },
         );
       case CollentionType.deletedItmes:
+        await _isar.writeTxn(
+          () async {
+            await _isar.deletedItmesEntitys
+                .putByIndex('itemID', item as DeletedItmesEntity);
+          },
+        );
     }
   }
 
@@ -188,7 +194,9 @@ class IsarStorageService {
       case CollentionType.versions:
         await _isar.aynaaVersionsEntitys.clear();
       case CollentionType.subjects:
-        await _isar.subjectsEntitys.clear();
+        await _isar.writeTxn(() async {
+          await _isar.subjectsEntitys.clear();
+        });
       case CollentionType.deletedItmes:
     }
   }
@@ -224,6 +232,7 @@ class IsarStorageService {
               .group((q) => q.isDeletedEqualTo(false))
               .findAll() as List<T>;
         });
+
       case CollentionType.deletedItmes:
       default:
     }

@@ -1,5 +1,5 @@
 import 'package:atm_app/core/entities/entitiy.dart';
-import 'package:atm_app/core/widgets/custom_image_frame.dart';
+import 'package:atm_app/core/functions/build_preview.dart';
 import 'package:flutter/material.dart';
 
 class CustomItemCard extends StatelessWidget {
@@ -27,31 +27,8 @@ class CustomItemCard extends StatelessWidget {
           children: [
             Stack(
               children: [
+                buildPreview(filePath: item.localFilePath),
                 // Background image
-                CustomImageFame(
-                  child: Image.network(
-                    'https://www.bing.com/th?id=OIP.HW9o-gKESImEapaUq7WbIgHaJQ&w=98&h=106&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  (loadingProgress.expectedTotalBytes ?? 1)
-                              : null,
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.broken_image,
-                      size: 80,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
 
                 // Title overlay
                 Positioned(

@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/const/app_const.dart';
 import '../../../../../../core/widgets/custom_action_button_type2.dart';
-import '../../../data/models/subjects_model.dart';
 import '../../../domain/entities/subjects_entity.dart';
 import '../../manager/add_new_subject_cubit/add_new_subject_cubit.dart';
 
@@ -46,19 +47,22 @@ class _AddNewSubjectButtonBlocBuilderState
   }
 
   _getSubjectModel() {
-    final versionID = _getVersionID();
+    final versionInfo = _getVersioninfo();
+    log(versionInfo.$1);
+    log(versionInfo.$2);
 
-    final SubjectsEntity subject = SubjectsModel(
+    return SubjectsEntity(
       entityID: '0',
       subjectName: widget.subjectTitleController.text.trim(),
-      versionID: versionID,
+      versionID: versionInfo.$1,
       url: '',
+      versionName: versionInfo.$2,
     );
-    return subject;
   }
 
-  String _getVersionID() {
+  (String versionID, String versionName) _getVersioninfo() {
     final versionID = context.read<AddLessonCubit>().versionID;
-    return versionID!;
+    final versionName = context.read<AddLessonCubit>().versionName;
+    return (versionID!, versionName!);
   }
 }

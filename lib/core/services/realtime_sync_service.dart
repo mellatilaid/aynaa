@@ -9,6 +9,7 @@ import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions
 import 'package:atm_app/features/admin/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
@@ -104,14 +105,23 @@ class RealtimeSyncService {
   }
 
   void _handleSubjectChange(PostgresChangePayload payload) {
-    if (payload.eventType == PostgresChangeEvent.insert) {
-      final entity = SubjectsModel.fromMap(payload.newRecord);
-
-      log(payload.toString());
-      getit.get<SubjectsLocalDataSource>().handleUpdate(
-            subject: entity,
-            versionID: payload.newRecord[kVersionID],
-          );
+    switch (payload.eventType) {
+      case PostgresChangeEvent.insert:
+        final entity = SubjectsModel.fromMap(payload.newRecord);
+        log(payload.toString());
+        getit.get<SubjectsLocalDataSource>().handleUpdate(
+            subject: entity, eventType: PostgressEventType.insert);
+        getit
+            .get<BackgroundDownloadService<SubjectsEntity>>()
+            .startBackgroundDownloads([entity]);
+        break;
+      case PostgresChangeEvent.delete:
+        getit.get<LessonsLocalDataSource>().handleUpdate(
+              id: payload.oldRecord[kUuid],
+              eventType: PostgressEventType.delete,
+            );
+        break;
+      default:
     }
   }
 
@@ -129,10 +139,6 @@ class RealtimeSyncService {
             .startBackgroundDownloads([entity]);
         break;
       case PostgresChangeEvent.delete:
-        getit.get<LessonsLocalDataSource>().handleUpdate(
-              id: payload.oldRecord[kUuid],
-              eventType: PostgressEventType.delete,
-            );
         break;
       default:
     }

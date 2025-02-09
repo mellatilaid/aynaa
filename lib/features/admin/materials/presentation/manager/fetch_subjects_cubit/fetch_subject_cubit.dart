@@ -30,7 +30,7 @@ class FetchSubjectCubit extends Cubit<FetchSubjectState> {
     result.fold(
         (failure) => emit(FetchSubjectFailure(errMessage: failure.errMessage)),
         (subjects) {
-      emit(FetchSubjectSucuss(subjects: subjects));
+      emit(FetchSubjectSucuss(subjects: subjects.reversed.toList()));
       _stream(id: versionID);
     });
   }
@@ -40,13 +40,13 @@ class FetchSubjectCubit extends Cubit<FetchSubjectState> {
   }) {
     isarStorageService
         .watchAll<SubjectsEntity>(
-            collectionType: CollentionType.lessons, id: id)
+            collectionType: CollentionType.subjects, id: id)
         .listen((items) {
       if (isClosed) return;
+
       emit(
         FetchSubjectSucuss(subjects: items.reversed.toList()),
       );
-      log('lessons upadted'); // Emit updated data
     });
   }
 
