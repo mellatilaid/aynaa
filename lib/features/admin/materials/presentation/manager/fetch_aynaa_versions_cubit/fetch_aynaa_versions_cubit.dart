@@ -59,6 +59,7 @@ class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
     isarStorageService
         .watchAll<AynaaVersionsEntity>(collectionType: CollentionType.versions)
         .listen((versions) {
+      if (isClosed) return;
       emit(
         FetchAynaaVersionsSucuss(aynaaVersions: versions.reversed.toList()),
       ); // Emit updated data

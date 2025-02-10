@@ -28,7 +28,7 @@ class FileSystemCacheManager implements FileCacheManager {
     appDocDir = await getApplicationDocumentsDirectory();
     if (filePath != null) {
       List<String> parts = _splitFilePath(filePath);
-      if (parts.length == 1) {
+      if (parts.length <= 2) {
         _cacheDirectory =
             Directory(p.join(appDocDir.path, _cacheDirectoryName, parts[0]));
       } else {
