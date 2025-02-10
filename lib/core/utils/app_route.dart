@@ -1,6 +1,8 @@
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/lesson_view.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/subjects_view.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/upload_file_test.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
@@ -15,6 +17,7 @@ abstract class AdminAppRouter {
   static const String versionSubjectsView = '/versionSubjects';
   static const String lessonsView = '/lessons';
   static const String uploadPage = '/uploadPage';
+  static const String lessonDetailView = '/lessonDetailView';
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
@@ -37,6 +40,16 @@ abstract class AdminAppRouter {
 
           return SubjectsView(
             aynaaVersionsEntity: data,
+          );
+        },
+      ),
+      GoRoute(
+        path: lessonDetailView,
+        builder: (context, state) {
+          final data = state.extra as LessonEntity;
+
+          return LessonView(
+            lesson: data,
           );
         },
       ),

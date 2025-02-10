@@ -6,9 +6,9 @@ import '../../../../../core/mixins/mappable.dart';
 class LessonModel extends LessonEntity with Mappable {
   LessonModel(
       String id,
-      String? name,
+      String name,
       String? url,
-      String? description,
+      String description,
       String aynaaVersionId,
       String subjectId,
       String versionName,

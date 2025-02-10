@@ -2,11 +2,11 @@ import 'package:atm_app/core/entities/entitiy.dart';
 import 'package:atm_app/core/functions/build_preview.dart';
 import 'package:flutter/material.dart';
 
-class CustomItemCard extends StatelessWidget {
+class CustomSubjectCard extends StatelessWidget {
   final Entity item;
   final VoidCallback? onTap; // Action when the card is tapped
   final VoidCallback? onDelete;
-  const CustomItemCard({
+  const CustomSubjectCard({
     super.key,
     required this.item,
     this.onTap,

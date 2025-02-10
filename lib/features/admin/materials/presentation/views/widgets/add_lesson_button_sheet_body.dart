@@ -17,7 +17,8 @@ class AddLessonBottomSheetBody extends StatefulWidget {
 }
 
 class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
-  final _lessonTitleController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _contentController = TextEditingController();
   String? selectedFile;
   final _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isButtonEnabled = ValueNotifier<bool>(false);
@@ -25,9 +26,18 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _lessonTitleController.addListener(() {
-      final hasText = _lessonTitleController.text.trim().isNotEmpty;
-      _isButtonEnabled.value = hasText; // Enable or disable the button
+    void updateButtonState() {
+      final hasTitle = _titleController.text.trim().isNotEmpty;
+      final hasContent = _contentController.text.trim().isNotEmpty;
+      _isButtonEnabled.value =
+          hasTitle && hasContent; // Enable button only if both fields have text
+    }
+
+    _titleController.addListener(() {
+      updateButtonState(); // Enable or disable the button
+    });
+    _contentController.addListener(() {
+      updateButtonState(); // Enable or disable the button
     });
   }
 
@@ -35,13 +45,14 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _lessonTitleController.dispose();
+    _titleController.dispose();
+    _contentController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.8,
+      heightFactor: 0.9,
       child: Stack(
         children: [
           // Scrollable content
@@ -61,7 +72,17 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
                       ),
                       const SizedBox(height: 16),
                       InvisibleTextField(
-                        controller: _lessonTitleController,
+                        controller: _titleController,
+                        hintText: 'عنوان الدرس',
+                        maxLines: 1,
+                        textStyle: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      InvisibleTextField(
+                        controller: _contentController,
                         hintText: 'محتوى الدرس ',
                       ),
                       const SizedBox(height: 16),
@@ -83,7 +104,8 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
                 builder: (context, value, child) {
                   return UploadLessonButtonBuilder(
                     isButtonEnabled: value,
-                    lessonContent: _lessonTitleController,
+                    lessonTitle: _titleController,
+                    lessonContent: _contentController,
                   );
                 },
                 /*child: UploadLessonButtonBuilder(

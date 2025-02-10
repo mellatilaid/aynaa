@@ -8,11 +8,13 @@ import '../../../domain/entities/lesson_entity.dart';
 import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 
 class UploadLessonButtonBuilder extends StatelessWidget {
+  final TextEditingController lessonTitle;
   final TextEditingController lessonContent;
   final String? filePath;
   final bool isButtonEnabled;
   const UploadLessonButtonBuilder({
     super.key,
+    required this.lessonTitle,
     required this.lessonContent,
     this.filePath,
     required this.isButtonEnabled,
@@ -48,6 +50,7 @@ class UploadLessonButtonBuilder extends StatelessWidget {
   _toLessonEnitiy({required AddLessonCubit addLessonCubit}) {
     return LessonEntity(
       entityID: '',
+      name: lessonTitle.text,
       description: lessonContent.text,
       aynaaVersionId: addLessonCubit.versionID!,
       subjectId: addLessonCubit.subjectID!,

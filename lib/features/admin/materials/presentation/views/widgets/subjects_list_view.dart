@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:atm_app/core/widgets/custom_item_card.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_subject_cubit/delete_subject_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../core/utils/app_route.dart';
 import '../../../domain/entities/subjects_entity.dart';
 import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import 'custom_subject_card.dart';
 
 class SubjectsListView extends StatelessWidget {
   final List<SubjectsEntity> subjects;
@@ -32,7 +32,7 @@ class SubjectsListView extends StatelessWidget {
               subjects[index].name,
             );
           },
-          child: CustomItemCard(
+          child: CustomSubjectCard(
             onDelete: () =>
                 BlocProvider.of<DeleteSubjectCubit>(context).deleteSubject(
               subject: subjects[index],

@@ -1,23 +1,22 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/functions/build_preview.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:flutter/material.dart';
 
-import '../functions/build_preview.dart';
-
-class CustomItemCardType2 extends StatefulWidget {
-  final Entity item;
+class CustomLessonCard extends StatefulWidget {
+  final LessonEntity item;
   final VoidCallback onDelete;
   final VoidCallback onTap;
-  const CustomItemCardType2(
+  const CustomLessonCard(
       {super.key,
       required this.item,
       required this.onDelete,
       required this.onTap});
 
   @override
-  State<CustomItemCardType2> createState() => _CustomItemCardType2State();
+  State<CustomLessonCard> createState() => _CustomLessonCardState();
 }
 
-class _CustomItemCardType2State extends State<CustomItemCardType2> {
+class _CustomLessonCardState extends State<CustomLessonCard> {
   @override
   void initState() {
     super.initState();
@@ -30,7 +29,7 @@ class _CustomItemCardType2State extends State<CustomItemCardType2> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Card(
-          elevation: 2,
+          elevation: 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Stack(
@@ -47,12 +46,14 @@ class _CustomItemCardType2State extends State<CustomItemCardType2> {
                     ),
                     const SizedBox(height: 16),
                     // Display description
-                    if (widget.item.name != null)
-                      Text(
-                        widget.item.name!,
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(fontSize: 14),
+                    Text(
+                      widget.item.name,
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
                       ),
+                    ),
                   ],
                 ),
               ),

@@ -10,10 +10,10 @@ class LessonEntity with Entity {
   @Index(unique: true)
   final String entityID;
   @override
-  final String? name;
+  String name;
   @override
   final String? url;
-  final String? description;
+  String description;
   final String aynaaVersionId;
   final String subjectId;
   @override
@@ -23,9 +23,9 @@ class LessonEntity with Entity {
   String? localFilePath;
   LessonEntity({
     required this.entityID,
-    this.name,
+    required this.name,
     this.url,
-    this.description,
+    required this.description,
     required this.aynaaVersionId,
     required this.subjectId,
     required this.versionName,

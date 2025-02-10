@@ -98,12 +98,7 @@ int _lessonEntityEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.aynaaVersionId.length * 3;
-  {
-    final value = object.description;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.description.length * 3;
   bytesCount += 3 + object.entityID.length * 3;
   {
     final value = object.localFilePath;
@@ -111,12 +106,7 @@ int _lessonEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final value = object.name;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.subjectId.length * 3;
   bytesCount += 3 + object.subjectName.length * 3;
   {
@@ -154,10 +144,10 @@ LessonEntity _lessonEntityDeserialize(
 ) {
   final object = LessonEntity(
     aynaaVersionId: reader.readString(offsets[0]),
-    description: reader.readStringOrNull(offsets[1]),
+    description: reader.readString(offsets[1]),
     entityID: reader.readString(offsets[2]),
     localFilePath: reader.readStringOrNull(offsets[3]),
-    name: reader.readStringOrNull(offsets[4]),
+    name: reader.readString(offsets[4]),
     subjectId: reader.readString(offsets[5]),
     subjectName: reader.readString(offsets[6]),
     url: reader.readStringOrNull(offsets[7]),
@@ -177,13 +167,13 @@ P _lessonEntityDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
@@ -528,26 +518,8 @@ extension LessonEntityQueryFilter
   }
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
-      descriptionIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'description',
-      ));
-    });
-  }
-
-  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
-      descriptionIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'description',
-      ));
-    });
-  }
-
-  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       descriptionEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -561,7 +533,7 @@ extension LessonEntityQueryFilter
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       descriptionGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -577,7 +549,7 @@ extension LessonEntityQueryFilter
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       descriptionLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -593,8 +565,8 @@ extension LessonEntityQueryFilter
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       descriptionBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1024,25 +996,8 @@ extension LessonEntityQueryFilter
     });
   }
 
-  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
-      nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> nameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1056,7 +1011,7 @@ extension LessonEntityQueryFilter
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       nameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1071,7 +1026,7 @@ extension LessonEntityQueryFilter
   }
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> nameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1086,8 +1041,8 @@ extension LessonEntityQueryFilter
   }
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -2068,7 +2023,7 @@ extension LessonEntityQueryProperty
     });
   }
 
-  QueryBuilder<LessonEntity, String?, QQueryOperations> descriptionProperty() {
+  QueryBuilder<LessonEntity, String, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
     });
@@ -2087,7 +2042,7 @@ extension LessonEntityQueryProperty
     });
   }
 
-  QueryBuilder<LessonEntity, String?, QQueryOperations> nameProperty() {
+  QueryBuilder<LessonEntity, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });

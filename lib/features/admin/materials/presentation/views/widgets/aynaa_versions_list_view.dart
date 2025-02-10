@@ -1,7 +1,7 @@
-import 'package:atm_app/core/widgets/custom_item_card.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/custom_version_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +27,7 @@ class AynaaVersionListView extends StatelessWidget {
               BlocProvider.of<AddLessonCubit>(context).setVersionIDAndName(
                   aynaaVersions[index].entityID, aynaaVersions[index].name);
             },
-            child: CustomItemCard(
+            child: CustomVersionCard(
               onDelete: () {
                 BlocProvider.of<DeleteVersionCubit>(context).deleteVersion(
                   aynaaVersion: aynaaVersions[index],

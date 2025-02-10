@@ -8,8 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/const/app_const.dart';
-import '../../../domain/entities/lesson_entity.dart';
-import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 
 class UploadFileLessonButtonBuilder extends StatelessWidget {
   final TextEditingController lessonContent;
@@ -46,17 +44,6 @@ class UploadFileLessonButtonBuilder extends StatelessWidget {
             ),
             title: 'تحميل');
       },
-    );
-  }
-
-  _toLessonEnitiy({required AddLessonCubit addLessonCubit}) {
-    return LessonEntity(
-      entityID: '',
-      description: lessonContent.text,
-      aynaaVersionId: addLessonCubit.versionID!,
-      subjectId: addLessonCubit.subjectID!,
-      subjectName: addLessonCubit.subjectName!,
-      versionName: addLessonCubit.versionName!,
     );
   }
 }
