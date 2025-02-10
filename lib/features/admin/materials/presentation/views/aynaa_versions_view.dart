@@ -5,8 +5,8 @@ import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/materials/domain/repos/versions_repo.dart';
 import '../../../../../core/utils/set_up_service_locator.dart';
-import '../../domain/repos/versions_repo.dart';
 import 'widgets/aynaa_versions_view_body.dart';
 
 class AynaaVersionsView extends StatelessWidget {

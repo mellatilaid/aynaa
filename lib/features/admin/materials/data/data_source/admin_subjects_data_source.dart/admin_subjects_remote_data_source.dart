@@ -1,7 +1,8 @@
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
+import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/helper/enums.dart';
@@ -9,14 +10,10 @@ import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
-abstract class SubjectsRemoteDataSource {
-  Future<List<SubjectsEntity>> fetchSubjects({required String versionID});
-}
-
-class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
+class AdminSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   final DataBase dataBase;
   final IsarStorageService isarStorageService;
-  SubjectsRemoteDataSourceImpl(
+  AdminSubjectsRemoteDataSourceImpl(
       {required this.dataBase, required this.isarStorageService});
 
   @override

@@ -1,7 +1,7 @@
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_subject_cubit/delete_subject_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_subjects_cubit/fetch_subject_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_new_subject_bottom_sheet.dart';

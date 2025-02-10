@@ -1,7 +1,7 @@
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 
-import '../../../../../core/const/remote_db_const.dart';
-import '../../../../../core/mixins/mappable.dart';
+import '../../../../../../core/const/remote_db_const.dart';
+import '../../../../../../core/mixins/mappable.dart';
 
 class LessonModel extends LessonEntity with Mappable {
   LessonModel(

@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/widgets/custom_image_frame.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/lesson_text_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class LessonView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Lesson Title'),
+        title: Text(lesson.name),
       ),
       body: LessonViewBody(
         lesson: lesson,
@@ -39,7 +39,7 @@ class LessonViewBody extends StatelessWidget {
                 File(lesson.localFilePath!),
               ),
             ),
-            LessonTextWidget(lessonText: lesson.description!),
+            LessonTextWidget(lessonText: lesson.description),
           ],
         ),
       ),

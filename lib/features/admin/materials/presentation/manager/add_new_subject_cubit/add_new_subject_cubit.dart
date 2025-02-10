@@ -1,8 +1,7 @@
-import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-
-import '../../../domain/entities/subjects_entity.dart';
 
 part 'add_new_subject_state.dart';
 

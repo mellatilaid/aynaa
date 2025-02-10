@@ -1,5 +1,5 @@
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
 

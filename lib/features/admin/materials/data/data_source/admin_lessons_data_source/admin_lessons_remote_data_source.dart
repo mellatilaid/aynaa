@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
@@ -12,12 +14,6 @@ import '../../../../../../core/functions/map_to_list_of_entity.dart';
 import '../../../../../../core/helper/enums.dart';
 import '../../../../../../core/services/data_base.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
-import '../../../domain/entities/lesson_entity.dart';
-
-abstract class LessonsRemoteDataSource {
-  Future<List<LessonEntity>> fetchLessons(
-      {required String subjectID, required String versionID});
-}
 
 class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;

@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
+import 'package:atm_app/core/materials/data/models/lesson_model.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
@@ -17,18 +17,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tus_client_dart/tus_client_dart.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
+import '../../../../../core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import '../../../../../core/services/background_services.dart';
 import '../../../../../core/services/data_base.dart';
 import '../../../../../core/utils/db_enpoints.dart';
-import '../../domain/repos/lessons_repo.dart';
 
-class LessonsRepoImpl extends LessonsRepo {
+class AdminLessonsRepoImpl extends LessonsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final LessonsRemoteDataSource lessonsRemoteDataSource;
   final LessonsLocalDataSource lessonsLocalDataSource;
 
-  LessonsRepoImpl({
+  AdminLessonsRepoImpl({
     required this.dataBase,
     required this.lessonsRemoteDataSource,
     required this.storageService,

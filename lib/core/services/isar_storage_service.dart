@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/deleted_itmes_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 

@@ -1,21 +1,13 @@
 import 'dart:async';
 
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 
-abstract class VersionsLocalDataSource {
-  Future<List<AynaaVersionsEntity>> fetchVersion();
-  Future<void> handleUpdate(
-      {AynaaVersionsEntity? version,
-      String? id,
-      required PostgressEventType eventType});
-  Stream<List<AynaaVersionsEntity>> get versionsStream;
-}
-
-class VersionsLocalDataSourceImpl implements VersionsLocalDataSource {
+class AdminVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
   final IsarStorageService isarStorageService;
-  VersionsLocalDataSourceImpl({required this.isarStorageService});
+  AdminVersionsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<AynaaVersionsEntity>> fetchVersion() async {
     final versions = await isarStorageService.getAll(

@@ -1,6 +1,7 @@
-import '../../../../../core/const/remote_db_const.dart';
-import '../../../../../core/mixins/mappable.dart';
-import '../../domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+
+import '../../../../../../core/const/remote_db_const.dart';
+import '../../../../../../core/mixins/mappable.dart';
 
 class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
   final String aynaaVersion;

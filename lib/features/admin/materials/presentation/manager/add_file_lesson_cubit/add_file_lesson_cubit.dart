@@ -1,5 +1,5 @@
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:meta/meta.dart';

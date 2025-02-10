@@ -1,6 +1,7 @@
-import '../../features/admin/materials/data/models/aynaa_versions_model.dart';
-import '../../features/admin/materials/data/models/lesson_model.dart';
-import '../../features/admin/materials/data/models/subjects_model.dart';
+import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
+import 'package:atm_app/core/materials/data/models/lesson_model.dart';
+import 'package:atm_app/core/materials/data/models/subjects_model.dart';
+
 import '../helper/enums.dart';
 
 List<T> mapToListOfEntity<T>(List<Map<String, dynamic>> data, Entities value) {

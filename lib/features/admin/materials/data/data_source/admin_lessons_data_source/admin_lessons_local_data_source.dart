@@ -2,23 +2,16 @@ import 'dart:async';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 
+import '../../../../../../core/materials/domain/entities/lesson_entity.dart';
 import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
-import '../../../domain/entities/lesson_entity.dart';
 
-abstract class LessonsLocalDataSource {
-  Future<List<LessonEntity>> fetchLessons(
-      {required String versionID, required String subjectID});
-  Future<void> handleUpdate(
-      {required PostgressEventType eventType, LessonEntity? lesson, String id});
-  Stream<List<LessonEntity>> get lessonsStream;
-}
-
-class LessonsLocalDataSourceImpl implements LessonsLocalDataSource {
+class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
   final IsarStorageService isarStorageService;
-  LessonsLocalDataSourceImpl({required this.isarStorageService});
+  AdminLessonsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<LessonEntity>> fetchLessons(
       {required String versionID, required String subjectID}) async {

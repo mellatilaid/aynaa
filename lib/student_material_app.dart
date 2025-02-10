@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../core/utils/app_route.dart';
+import 'core/utils/app_route.dart';
 
 class AdminMaterialApp extends StatelessWidget {
   const AdminMaterialApp({

@@ -1,5 +1,5 @@
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_lessons_cubit/fetch_lessons_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/lessons_list_view.dart';
 import 'package:flutter/material.dart';

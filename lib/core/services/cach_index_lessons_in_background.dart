@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/materials/data/models/lesson_model.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/services/local_storage_service.dart';
-import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../features/admin/materials/domain/entities/lesson_entity.dart';
 import '../const/local_db_const.dart';
 import '../functions/idexed_cache_helper.dart';
 

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/const/app_const.dart';
+import '../../../../../../core/materials/domain/entities/subjects_entity.dart';
 import '../../../../../../core/widgets/custom_action_button_type2.dart';
-import '../../../domain/entities/subjects_entity.dart';
 import '../../manager/add_new_subject_cubit/add_new_subject_cubit.dart';
 
 class AddNewSubjectButtonBlocBuilder extends StatefulWidget {

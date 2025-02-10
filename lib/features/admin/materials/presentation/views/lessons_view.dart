@@ -1,6 +1,7 @@
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/widgets/floating_optional_speed_dial.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_lessons_cubit/fetch_lessons_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_file_lesson_bottom_sheet.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_text_lesson_bottom_sheet.dart';
@@ -10,7 +11,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../core/utils/set_up_service_locator.dart';
 import '../../../../../core/widgets/custom_speed_dial_child.dart';
-import '../../domain/repos/lessons_repo.dart';
 import '../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 import 'widgets/lessons_view_body.dart';
 

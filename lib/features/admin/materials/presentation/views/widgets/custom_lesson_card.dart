@@ -1,5 +1,5 @@
 import 'package:atm_app/core/functions/build_preview.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:flutter/material.dart';
 
 class CustomLessonCard extends StatefulWidget {

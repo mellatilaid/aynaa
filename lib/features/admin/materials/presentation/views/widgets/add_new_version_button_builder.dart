@@ -1,4 +1,4 @@
-import 'package:atm_app/features/admin/materials/data/models/aynaa_versions_model.dart';
+import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

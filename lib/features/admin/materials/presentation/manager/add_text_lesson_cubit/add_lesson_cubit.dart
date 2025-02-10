@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-
-import '../../../domain/entities/lesson_entity.dart';
 
 part 'add_lesson_state.dart';
 

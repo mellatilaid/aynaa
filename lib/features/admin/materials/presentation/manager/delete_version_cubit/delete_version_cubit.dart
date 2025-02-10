@@ -1,5 +1,5 @@
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart';
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

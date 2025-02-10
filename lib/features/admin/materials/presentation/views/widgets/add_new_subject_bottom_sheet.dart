@@ -1,3 +1,4 @@
+import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/core/widgets/scaffold_message.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/add_new_subject_cubit/add_new_subject_cubit.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/classes/pick_file.dart';
-import '../../../domain/repos/subjects_repo.dart';
 import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 
 class NewSubjectBottomSheet extends StatelessWidget {

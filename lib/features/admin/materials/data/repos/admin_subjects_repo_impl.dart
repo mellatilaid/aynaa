@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
+import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
+import 'package:atm_app/core/materials/data/models/subjects_model.dart';
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/background_services.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/repos/subjects_repo.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -17,13 +17,13 @@ import '../../../../../core/services/data_base.dart';
 import '../../../../../core/services/storage_service.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 
-class SubjectsRepoImpl extends SubjectsRepo {
+class AdminSubjectsRepoImpl extends SubjectsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
   final BackgroundServices backgroundDownloadService;
-  SubjectsRepoImpl({
+  AdminSubjectsRepoImpl({
     required this.dataBase,
     required this.storageService,
     required this.subjectsRemoteDataSource,

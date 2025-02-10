@@ -1,5 +1,17 @@
 import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
+import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
+import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
+import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
+import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
+import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
+import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
+import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/delete_items_service.dart';
@@ -10,25 +22,19 @@ import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/core/services/supabase_storage.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/aynaa_versions_remote_data_sourse.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/repos/lessons_repo_impl.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/repos/lessons_repo.dart';
-import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_local_data_source.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
+import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_remote_data_sourse.dart';
+import 'package:atm_app/features/admin/materials/data/repos/admin_lessons_repo_impl.dart';
+import 'package:atm_app/features/admin/materials/data/repos/admin_subjects_repo_impl.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../features/admin/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
-import '../../features/admin/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
-import '../../features/admin/materials/data/repos/subjects_repo_impl.dart';
-import '../../features/admin/materials/data/repos/versions_repo_impl.dart';
-import '../../features/admin/materials/domain/repos/subjects_repo.dart';
+import '../../features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_remote_data_source.dart';
+import '../../features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_remote_data_source.dart';
+import '../../features/admin/materials/data/repos/admin_versions_repo_impl.dart';
 
 final getit = GetIt.instance;
 
@@ -44,27 +50,27 @@ setUpServiceLocator() {
   getit.registerSingleton<LocalCacheService<LessonEntity>>(BaseHiveCache());*/
   getit.registerSingleton<FileCacheManager>(FileSystemCacheManager());
   getit.registerSingleton<VersionsLocalDataSource>(
-    VersionsLocalDataSourceImpl(
+    AdminVersionsLocalDataSourceImpl(
       isarStorageService: getit.get<IsarStorageService>(),
     ),
   );
   getit.registerSingleton<SubjectsLocalDataSource>(
-    SubjectsLocalDataSourceImpl(
+    AdminSubjectsLocalDataSourceImpl(
       isarStorageService: getit.get<IsarStorageService>(),
     ),
   );
   getit.registerSingleton<LessonsLocalDataSource>(
-    LessonsLocalDataSourceImpl(
+    AdminLessonsLocalDataSourceImpl(
       isarStorageService: getit.get<IsarStorageService>(),
     ),
   );
   getit.registerSingleton<AynaaVersionsRemoteDataSource>(
-      AynaaVersionsRemoteDataSourceImpl(
+      AdminVersionsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
     isarStorageService: getit.get<IsarStorageService>(),
   ));
-  getit
-      .registerSingleton<SubjectsRemoteDataSource>(SubjectsRemoteDataSourceImpl(
+  getit.registerSingleton<SubjectsRemoteDataSource>(
+      AdminSubjectsRemoteDataSourceImpl(
     dataBase: getit.get<DataBase>(),
     isarStorageService: getit.get<IsarStorageService>(),
   ));
@@ -100,7 +106,7 @@ setUpServiceLocator() {
     ),
   );
   getit.registerSingleton<VersionsRepo>(
-    VersionsRepoImpl(
+    AdminVersionsRepoImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
       remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
@@ -109,7 +115,7 @@ setUpServiceLocator() {
     ),
   );
   getit.registerSingleton<SubjectsRepo>(
-    SubjectsRepoImpl(
+    AdminSubjectsRepoImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
       subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
@@ -119,7 +125,7 @@ setUpServiceLocator() {
     ),
   );
   getit.registerSingleton<LessonsRepo>(
-    LessonsRepoImpl(
+    AdminLessonsRepoImpl(
         dataBase: getit.get<DataBase>(),
         storageService: getit.get<StorageService>(),
         lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),

@@ -1,12 +1,12 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_subject_cubit/delete_subject_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/utils/app_route.dart';
-import '../../../domain/entities/subjects_entity.dart';
 import '../../manager/add_text_lesson_cubit/add_lesson_cubit.dart';
 import 'custom_subject_card.dart';
 

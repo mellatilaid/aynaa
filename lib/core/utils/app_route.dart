@@ -1,7 +1,7 @@
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/lesson_view.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/subjects_view.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/upload_file_test.dart';
@@ -9,7 +9,6 @@ import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/admin/materials/presentation/views/lessons_view.dart';
-import '../../features/student/student_view.dart';
 
 abstract class AdminAppRouter {
   static const String adminHomeView = '/home';
@@ -76,10 +75,6 @@ abstract class StudentAppRouter {
       GoRoute(
         path: studentHomeView,
         builder: (context, state) => const SignInView(),
-      ),
-      GoRoute(
-        path: studentHomeView,
-        builder: (context, state) => const StudentView(),
       ),
       GoRoute(
         path: '/',

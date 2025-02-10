@@ -1,22 +1,19 @@
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 
+import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
-abstract class AynaaVersionsRemoteDataSource {
-  Future<List<AynaaVersionsEntity>> fetchAynaaVersions();
-}
-
-class AynaaVersionsRemoteDataSourceImpl
+class AdminVersionsRemoteDataSourceImpl
     implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
   final IsarStorageService isarStorageService;
-  AynaaVersionsRemoteDataSourceImpl({
+  AdminVersionsRemoteDataSourceImpl({
     required this.dataBase,
     required this.isarStorageService,
   });

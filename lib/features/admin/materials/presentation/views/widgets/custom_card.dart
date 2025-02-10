@@ -1,4 +1,4 @@
-import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
@@ -25,7 +25,7 @@ class CustomCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(entity.name.toString()),
-              Text(entity.entityID ?? 'id is null'),
+              Text(entity.entityID),
             ],
           ),
         ),
