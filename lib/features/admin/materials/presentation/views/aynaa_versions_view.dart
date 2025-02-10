@@ -1,7 +1,7 @@
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_aynaa_versions_cubit/fetch_aynaa_versions_cubit.dart';
-import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_new_aynaa_version_dialog.dart';
+import 'package:atm_app/features/admin/materials/presentation/views/widgets/add_new_aynaa_version_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,14 +39,23 @@ class AynaaVersionsView extends StatelessWidget {
             onPressed: () {
               final aynaaVersionCubit =
                   fabContext.read<FetchAynaaVersionsCubit>();
-              showDialog(
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return BlocProvider.value(
+                      value: aynaaVersionCubit,
+                      child: const AddAynaaVersionBottomSheet(),
+                    );
+                  });
+              /*showDialog(
                   context: context,
                   builder: (context) {
                     return BlocProvider.value(
                       value: aynaaVersionCubit,
                       child: const AddAynaaVersionAlertDialog(),
                     );
-                  });
+                  });*/
             },
             child: const Icon(Icons.add),
           );
@@ -73,7 +82,7 @@ class AynaaVersionsView extends StatelessWidget {
                   builder: (context) {
                     return BlocProvider.value(
                       value: aynaaVersionCubit,
-                      child: const AddAynaaVersionAlertDialog(),
+                      child: const AddAynaaVersionBottomSheet(),
                     );
                   });
             },

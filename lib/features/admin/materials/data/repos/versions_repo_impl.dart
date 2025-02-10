@@ -6,8 +6,10 @@ import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/aynaa_versions_remote_data_sourse.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions_data_source.dart/versions_local_data_source.dart';
+import 'package:atm_app/features/admin/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
@@ -48,17 +50,26 @@ class VersionsRepoImpl extends VersionsRepo {
 
   @override
   Future<Either<Failures, String>> setVersion(
-      {required String versionName}) async {
+      {required AynaaVersionsEntity version, required String filePath}) async {
     try {
-      await storageService.createBucket(versionName);
-      await dataBase.setDate(
-          path: DbEnpoints.aynaaVersions, data: {kVersionName: versionName});
+      await storageService.createBucket(version.versionName);
+      final model = AynaaVersionsModel.fromVersionEntity(version);
+      final data = model.toMap();
+      final fileName = path.basename(filePath);
+      final fullPath = await storageService.uploadFile(
+        bucketName: version.versionName,
+        filePath: filePath,
+        fileName: fileName,
+      );
+      data[kUrl] = fullPath;
+      await dataBase.setDate(path: DbEnpoints.aynaaVersions, data: data);
 
       return const Right('');
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {
-      storageService.deleteBucket(versionName);
+      storageService.deleteBucket(version.versionName);
+      log(e.toString());
       return Left(ServerFailure.fromSupaDataBase(e: e));
     } on StorageException catch (e) {
       return Left(ServerFailure.fromStorage(e: e));

@@ -4,7 +4,8 @@ import 'package:dartz/dartz.dart';
 
 abstract class VersionsRepo {
   Future<Either<Failures, List<AynaaVersionsEntity>>> fetchVersions();
-  Future<Either<Failures, String>> setVersion({required String versionName});
+  Future<Either<Failures, String>> setVersion(
+      {required AynaaVersionsEntity version, required String filePath});
   Future<Either<Failures, String>> saveVersion(
       {required AynaaVersionsEntity aynaaVersion});
   Future<Either<Failures, String>> deleteVersion(

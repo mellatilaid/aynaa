@@ -19,7 +19,7 @@ abstract class AdminAppRouter {
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/log',
+        path: '/lll',
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(

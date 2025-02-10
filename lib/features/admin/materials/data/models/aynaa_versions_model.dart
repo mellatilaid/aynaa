@@ -7,14 +7,35 @@ class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
 
   @override
   final String entityID;
+  @override
+  String? localFilePath;
+  @override
+  String url;
 
-  AynaaVersionsModel(this.entityID, {required this.aynaaVersion})
-      : super(versionName: aynaaVersion, entityID: entityID);
+  AynaaVersionsModel(this.entityID,
+      {required this.aynaaVersion, required this.url, this.localFilePath})
+      : super(
+          versionName: aynaaVersion,
+          entityID: entityID,
+          url: url,
+          localFilePath: localFilePath,
+        );
 
   factory AynaaVersionsModel.fromSupabase(Map<String, dynamic> data) {
     return AynaaVersionsModel(
       data[kUuid].toString(),
       aynaaVersion: data[kVersionName],
+      url: data[kUrl],
+      //localFilePath: data[kLocalFilePath],
+    );
+  }
+
+  factory AynaaVersionsModel.fromVersionEntity(AynaaVersionsEntity version) {
+    return AynaaVersionsModel(
+      version.entityID,
+      aynaaVersion: version.versionName,
+      url: version.url,
+      //localFilePath: data[kLocalFilePath],
     );
   }
 
@@ -22,12 +43,16 @@ class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
     return AynaaVersionsModel(
       data[kUuid].toString(),
       aynaaVersion: data[kVersionName],
+      url: data[kUrl],
+      localFilePath: data[kLocalFilePath],
     );
   }
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    return {
+      kVersionName: aynaaVersion,
+      kUrl: url,
+    };
   }
 }

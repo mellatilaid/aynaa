@@ -79,7 +79,12 @@ int _aynaaVersionsEntityEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.entityID.length * 3;
-  bytesCount += 3 + object.localFilePath.length * 3;
+  {
+    final value = object.localFilePath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.url.length * 3;
   bytesCount += 3 + object.versionName.length * 3;
@@ -107,10 +112,11 @@ AynaaVersionsEntity _aynaaVersionsEntityDeserialize(
 ) {
   final object = AynaaVersionsEntity(
     entityID: reader.readString(offsets[0]),
+    localFilePath: reader.readStringOrNull(offsets[1]),
+    url: reader.readString(offsets[3]),
     versionName: reader.readString(offsets[4]),
   );
   object.id = id;
-  object.localFilePath = reader.readString(offsets[1]);
   return object;
 }
 
@@ -124,7 +130,7 @@ P _aynaaVersionsEntityDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
@@ -526,8 +532,26 @@ extension AynaaVersionsEntityQueryFilter on QueryBuilder<AynaaVersionsEntity,
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      localFilePathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'localFilePath',
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      localFilePathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'localFilePath',
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
       localFilePathEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -541,7 +565,7 @@ extension AynaaVersionsEntityQueryFilter on QueryBuilder<AynaaVersionsEntity,
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
       localFilePathGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -557,7 +581,7 @@ extension AynaaVersionsEntityQueryFilter on QueryBuilder<AynaaVersionsEntity,
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
       localFilePathLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -573,8 +597,8 @@ extension AynaaVersionsEntityQueryFilter on QueryBuilder<AynaaVersionsEntity,
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
       localFilePathBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1290,7 +1314,7 @@ extension AynaaVersionsEntityQueryProperty
     });
   }
 
-  QueryBuilder<AynaaVersionsEntity, String, QQueryOperations>
+  QueryBuilder<AynaaVersionsEntity, String?, QQueryOperations>
       localFilePathProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'localFilePath');

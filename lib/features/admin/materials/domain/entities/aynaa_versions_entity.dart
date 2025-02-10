@@ -11,23 +11,17 @@ class AynaaVersionsEntity with Entity {
   final String entityID;
   @override
   final String versionName;
-
-  AynaaVersionsEntity({required this.entityID, required this.versionName});
+  @override
+  String? localFilePath;
+  @override
+  String url;
+  AynaaVersionsEntity(
+      {required this.entityID,
+      required this.versionName,
+      required this.url,
+      this.localFilePath});
 
   @override
   // TODO: implement name
   String get name => versionName;
-
-  @override
-  // TODO: implement localFilePath
-  String get localFilePath => '';
-
-  @override
-  // TODO: implement url
-  String get url => '';
-
-  @override
-  set localFilePath(String? path) {
-    // TODO: implement localFilePath
-  }
 }

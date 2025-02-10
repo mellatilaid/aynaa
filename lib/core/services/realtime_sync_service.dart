@@ -9,6 +9,7 @@ import 'package:atm_app/features/admin/materials/data/data_source/aynaa_versions
 import 'package:atm_app/features/admin/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/features/admin/materials/data/models/lesson_model.dart';
 import 'package:atm_app/features/admin/materials/data/models/subjects_model.dart';
+import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/entities/subjects_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -97,13 +98,26 @@ class RealtimeSyncService {
   }
 
   void _handleVersionChange(PostgresChangePayload payload) {
-    if (payload.eventType == PostgresChangeEvent.insert) {
-      final entity = AynaaVersionsModel.fromMap(payload.newRecord);
-      getit.get<VersionsLocalDataSource>().handleUpdate(
-            version: entity,
-            eventType: PostgressEventType.insert,
-          );
+    switch (payload.eventType) {
+      case PostgresChangeEvent.insert:
+        final entity = AynaaVersionsModel.fromMap(payload.newRecord);
+        log(payload.toString());
+        log('iserted subject to remote id is ${entity.entityID}');
+        getit.get<VersionsLocalDataSource>().handleUpdate(
+            version: entity, eventType: PostgressEventType.insert);
+        getit
+            .get<BackgroundServices<AynaaVersionsEntity>>()
+            .startBackgroundDownloads([entity]);
+        break;
+      case PostgresChangeEvent.delete:
+        getit.get<VersionsLocalDataSource>().handleUpdate(
+              id: payload.oldRecord[kUuid],
+              eventType: PostgressEventType.delete,
+            );
+        break;
+      default:
     }
+
     // Add update/delete handling
   }
 

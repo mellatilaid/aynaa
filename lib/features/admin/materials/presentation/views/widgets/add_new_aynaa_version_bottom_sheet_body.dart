@@ -1,12 +1,101 @@
-import 'package:atm_app/core/widgets/custom_action_button.dart';
-import 'package:atm_app/features/admin/materials/presentation/manager/creata_new_aynaa_version_cubit/create_new_aynaa_version_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../../../core/widgets/dual_text_field.dart';
+import '../../../../../../core/widgets/invisibla_text_field.dart';
+import 'add_new_version_button_builder.dart';
+import 'version_image_content_builder.dart';
 
-class AddAynaaVersionAlertDialogBody extends StatefulWidget {
+class AddVersionBottomSheetBody extends StatefulWidget {
+  const AddVersionBottomSheetBody({
+    super.key,
+  });
+
+  @override
+  State<AddVersionBottomSheetBody> createState() =>
+      _AddVersionBottomSheetBodyState();
+}
+
+class _AddVersionBottomSheetBodyState extends State<AddVersionBottomSheetBody> {
+  final _titleController = TextEditingController();
+  String? selectedFile;
+  final _formKey = GlobalKey<FormState>();
+  final ValueNotifier<bool> _isButtonEnabled = ValueNotifier<bool>(false);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _titleController.addListener(() {
+      final hasText = _titleController.text.trim().isNotEmpty;
+      _isButtonEnabled.value = hasText; // Enable or disable the button
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _titleController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
+      heightFactor: 0.45,
+      child: Stack(
+        children: [
+          // Scrollable content
+          Padding(
+            padding: const EdgeInsets.only(
+                bottom: 60.0), // Leave space for the button
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      VersionImageContentBuilder(
+                        filePath: selectedFile,
+                      ),
+                      const SizedBox(height: 16),
+                      InvisibleTextField(
+                        errMessage: 'يرجى إدخال اسم النسخة',
+                        controller: _titleController,
+                        hintText: 'اسم النسخة',
+                        textStyle: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Fixed button at the bottom
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ValueListenableBuilder(
+                valueListenable: _isButtonEnabled,
+                builder: (context, value, child) {
+                  return AddNewVersionButtonBuilder(
+                    formKey: _formKey, // Pass the form key to the button
+                    subjectTitleController: _titleController,
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/*class AddAynaaVersionAlertDialogBody extends StatefulWidget {
   const AddAynaaVersionAlertDialogBody({super.key});
 
   @override
@@ -118,4 +207,4 @@ class _AddAynaaVersionAlertDialogBodyState
       ),
     );
   }
-}
+}*/

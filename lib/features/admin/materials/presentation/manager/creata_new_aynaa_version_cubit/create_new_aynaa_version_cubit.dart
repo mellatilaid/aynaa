@@ -1,3 +1,4 @@
+import 'package:atm_app/features/admin/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/features/admin/materials/domain/repos/versions_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -8,10 +9,13 @@ class CreateNewAynaaVersionCubit extends Cubit<CreateNewAynaaVersionState> {
   final VersionsRepo versionsRepo;
   CreateNewAynaaVersionCubit(this.versionsRepo)
       : super(CreateNewAynaaVersionInitial());
-
-  Future<void> createNewAynaaVersion({required String versionName}) async {
+  late String _filePath;
+  Future<void> createNewAynaaVersion(
+      {required AynaaVersionsEntity version}) async {
     emit(CreateNewAynaaVersionLoading());
-    final resault = await versionsRepo.setVersion(versionName: versionName);
+
+    final resault =
+        await versionsRepo.setVersion(version: version, filePath: _filePath);
 
     resault.fold((failure) {
       emit(CreateNewAynaaVersionFailure(errMessage: failure.errMessage));
@@ -19,4 +23,6 @@ class CreateNewAynaaVersionCubit extends Cubit<CreateNewAynaaVersionState> {
       emit(CreateNewAynaaVersionSuccess());
     });
   }
+
+  void setFilePath(String filePath) => _filePath = filePath;
 }
