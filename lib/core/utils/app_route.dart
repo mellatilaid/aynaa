@@ -3,6 +3,7 @@ import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
+import 'package:atm_app/features/splash_view/presentation/views/splash_view.dart';
 import 'package:atm_app/features/student/student_bottom_nav_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,11 +20,16 @@ abstract class AppRouter {
   static const String uploadPage = '/uploadPage';
   static const String lessonDetailView = '/lessonDetailView';
   static const String studentBottomNavView = '/studnetNavBarView';
+  static const String signInView = '/signInView';
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/lll',
+        path: '/',
+        builder: (context, state) => const SplashView(),
+      ),
+      GoRoute(
+        path: signInView,
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(
@@ -65,7 +71,7 @@ abstract class AppRouter {
         },
       ),
       GoRoute(
-        path: '/',
+        path: studentBottomNavView,
         builder: (context, state) => const StudentBottomNavView(),
       ),
     ],

@@ -5,9 +5,9 @@ import 'package:atm_app/core/materials/data/data_source/versions_data_source/ver
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 
-class VersionsLocalDataSourceImpl implements VersionsLocalDataSource {
+class StudentVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
   final IsarStorageService isarStorageService;
-  VersionsLocalDataSourceImpl({required this.isarStorageService});
+  StudentVersionsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<AynaaVersionsEntity>> fetchVersion() async {
     final versions = await isarStorageService.getAll(

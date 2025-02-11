@@ -9,10 +9,11 @@ import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
-class VersionsRemoteDataSourceImpl implements AynaaVersionsRemoteDataSource {
+class StudentVersionsRemoteDataSourceImpl
+    implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
   final IsarStorageService isarStorageService;
-  VersionsRemoteDataSourceImpl({
+  StudentVersionsRemoteDataSourceImpl({
     required this.dataBase,
     required this.isarStorageService,
   });

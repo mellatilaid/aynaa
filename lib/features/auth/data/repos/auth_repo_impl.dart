@@ -4,6 +4,7 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/auth_services.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/role_storaga_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/auth/data/models/user_model.dart';
 import 'package:atm_app/features/auth/domain/entities/user_entity.dart';
@@ -14,8 +15,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AuthRepoImpl extends AuthRepo {
   final AuthServices authServices;
   final DataBase dataBase;
-
-  AuthRepoImpl({required this.authServices, required this.dataBase});
+  final ProfileStorage profileStorage;
+  AuthRepoImpl(
+      {required this.authServices,
+      required this.dataBase,
+      required this.profileStorage});
   @override
   Future<Either<Failures, UserEntity>> signInWithEmailAndPassword() {
     // TODO: implement signInWithEmailAndPassword
@@ -51,6 +55,7 @@ class AuthRepoImpl extends AuthRepo {
         userEntity.role = kStudentRole;
         await dataBase.setDate(
             path: DbEnpoints.users, data: userEntity.toMap());
+        profileStorage.cachProfile(userEntity);
         await dataBase.setDate(
             path: 'profiles', data: {'user_id': user.id, 'wallet_balance': 0});
         return right(userEntity);
@@ -59,5 +64,11 @@ class AuthRepoImpl extends AuthRepo {
       log(e.toString());
       return left(ServerFailure(errMessage: e.toString()));
     }
+  }
+
+  @override
+  bool isLoggedIn() {
+    // TODO: implement isLoggedIn
+    return authServices.isLoggedIn();
   }
 }

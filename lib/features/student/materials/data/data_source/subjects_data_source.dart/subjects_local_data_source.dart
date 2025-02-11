@@ -9,9 +9,9 @@ import 'package:atm_app/core/services/isar_storage_service.dart';
 import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
-class SubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
+class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
   final IsarStorageService isarStorageService;
-  SubjectsLocalDataSourceImpl({required this.isarStorageService});
+  StudentSubjectsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
       {required String versionID}) async {

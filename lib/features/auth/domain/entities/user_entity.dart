@@ -4,9 +4,10 @@ class UserEntity {
   final String email;
   String role;
 
-  UserEntity(
-      {required this.uid,
-      required this.name,
-      required this.email,
-      required this.role});
+  UserEntity({
+    required this.uid,
+    required this.name,
+    required this.email,
+    required this.role,
+  });
 }

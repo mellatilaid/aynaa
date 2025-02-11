@@ -10,10 +10,10 @@ import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
-class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
+class StudentSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   final DataBase dataBase;
   final IsarStorageService isarStorageService;
-  SubjectsRemoteDataSourceImpl(
+  StudentSubjectsRemoteDataSourceImpl(
       {required this.dataBase, required this.isarStorageService});
 
   @override

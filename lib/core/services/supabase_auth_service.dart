@@ -57,4 +57,10 @@ class SupabaseAuthService extends AuthServices {
     // TODO: implement signOut
     await _supabase.auth.signOut();
   }
+
+  @override
+  bool isLoggedIn() {
+    // TODO: implement isLoggedIn
+    return _supabase.auth.currentSession != null;
+  }
 }

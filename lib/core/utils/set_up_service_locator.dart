@@ -18,6 +18,7 @@ import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
+import 'package:atm_app/core/services/role_storaga_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
@@ -30,6 +31,15 @@ import 'package:atm_app/features/admin/materials/data/repos/admin_lessons_repo_i
 import 'package:atm_app/features/admin/materials/data/repos/admin_subjects_repo_impl.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
+import 'package:atm_app/features/student/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
+import 'package:atm_app/features/student/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
+import 'package:atm_app/features/student/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
+import 'package:atm_app/features/student/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
+import 'package:atm_app/features/student/materials/data/data_source/versions_data_source.dart/versions_local_data_source.dart';
+import 'package:atm_app/features/student/materials/data/data_source/versions_data_source.dart/versions_remote_data_sourse.dart';
+import 'package:atm_app/features/student/materials/data/repos/student_lessons_repo_impl.dart';
+import 'package:atm_app/features/student/materials/data/repos/student_subjects_repo_impl.dart';
+import 'package:atm_app/features/student/materials/data/repos/student_versions_repo_impl.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_remote_data_source.dart';
@@ -38,48 +48,149 @@ import '../../features/admin/materials/data/repos/admin_versions_repo_impl.dart'
 
 final getit = GetIt.instance;
 
-setUpServiceLocator() {
-  getit.registerSingleton<AuthRepo>(AuthRepoImpl(
-      authServices: SupabaseAuthService(), dataBase: SupabaseDb()));
-  getit.registerSingleton<DataBase>(SupabaseDb());
+setUpCoreServiceLocator() {
   getit.registerSingleton<StorageService>(SupaBaseStorage());
+  getit.registerSingleton<DataBase>(SupabaseDb());
+  getit.registerSingleton<ProfileStorage>(SharedPrefsRoleStorage());
+  getit.registerSingleton<AuthRepo>(
+    AuthRepoImpl(
+        authServices: SupabaseAuthService(),
+        dataBase: SupabaseDb(),
+        profileStorage: getit.get<ProfileStorage>()),
+  );
   getit.registerSingleton<IsarStorageService>(IsarStorageService());
+  getit.registerSingleton<RealtimeSyncService>(RealtimeSyncService());
+}
+
+setUpServiceLocator({required UserRole userRole}) {
   /*getit.registerSingleton<LocalCacheService<AynaaVersionsEntity>>(
       BaseHiveCache());
   getit.registerSingleton<LocalCacheService<SubjectsEntity>>(BaseHiveCache());
   getit.registerSingleton<LocalCacheService<LessonEntity>>(BaseHiveCache());*/
   getit.registerSingleton<FileCacheManager>(FileSystemCacheManager());
-  getit.registerSingleton<VersionsLocalDataSource>(
-    AdminVersionsLocalDataSourceImpl(
-      isarStorageService: getit.get<IsarStorageService>(),
-    ),
-  );
-  getit.registerSingleton<SubjectsLocalDataSource>(
-    AdminSubjectsLocalDataSourceImpl(
-      isarStorageService: getit.get<IsarStorageService>(),
-    ),
-  );
-  getit.registerSingleton<LessonsLocalDataSource>(
-    AdminLessonsLocalDataSourceImpl(
-      isarStorageService: getit.get<IsarStorageService>(),
-    ),
-  );
-  getit.registerSingleton<AynaaVersionsRemoteDataSource>(
-      AdminVersionsRemoteDataSourceImpl(
-    dataBase: getit.get<DataBase>(),
-    isarStorageService: getit.get<IsarStorageService>(),
-  ));
-  getit.registerSingleton<SubjectsRemoteDataSource>(
-      AdminSubjectsRemoteDataSourceImpl(
-    dataBase: getit.get<DataBase>(),
-    isarStorageService: getit.get<IsarStorageService>(),
-  ));
-  getit.registerSingleton<LessonsRemoteDataSource>(LessonsRemoteDataSourceImpl(
-    dataBase: getit.get<DataBase>(),
-    isarStorageService: getit.get<IsarStorageService>(),
-    storageService: getit.get<StorageService>(),
-    fileCacheManager: getit.get<FileCacheManager>(),
-  ));
+  switch (userRole) {
+    case UserRole.admin:
+      getit.registerSingleton<VersionsLocalDataSource>(
+        AdminVersionsLocalDataSourceImpl(
+          isarStorageService: getit.get<IsarStorageService>(),
+        ),
+      );
+      getit.registerSingleton<SubjectsLocalDataSource>(
+        AdminSubjectsLocalDataSourceImpl(
+          isarStorageService: getit.get<IsarStorageService>(),
+        ),
+      );
+      getit.registerSingleton<LessonsLocalDataSource>(
+        AdminLessonsLocalDataSourceImpl(
+          isarStorageService: getit.get<IsarStorageService>(),
+        ),
+      );
+      getit.registerSingleton<AynaaVersionsRemoteDataSource>(
+          AdminVersionsRemoteDataSourceImpl(
+        dataBase: getit.get<DataBase>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+      ));
+      getit.registerSingleton<SubjectsRemoteDataSource>(
+          AdminSubjectsRemoteDataSourceImpl(
+        dataBase: getit.get<DataBase>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+      ));
+      getit.registerSingleton<LessonsRemoteDataSource>(
+          LessonsRemoteDataSourceImpl(
+        dataBase: getit.get<DataBase>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+        storageService: getit.get<StorageService>(),
+        fileCacheManager: getit.get<FileCacheManager>(),
+      ));
+      getit.registerSingleton<VersionsRepo>(
+        AdminVersionsRepoImpl(
+          dataBase: getit.get<DataBase>(),
+          storageService: getit.get<StorageService>(),
+          remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
+          versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
+          backgroundServices:
+              getit.get<BackgroundServices<AynaaVersionsEntity>>(),
+        ),
+      );
+      getit.registerSingleton<SubjectsRepo>(
+        AdminSubjectsRepoImpl(
+          dataBase: getit.get<DataBase>(),
+          storageService: getit.get<StorageService>(),
+          subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
+          subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
+          backgroundDownloadService:
+              getit.get<BackgroundServices<SubjectsEntity>>(),
+        ),
+      );
+      getit.registerSingleton<LessonsRepo>(
+        AdminLessonsRepoImpl(
+            dataBase: getit.get<DataBase>(),
+            storageService: getit.get<StorageService>(),
+            lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
+            lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
+      );
+      break;
+    case UserRole.student:
+      getit.registerSingleton<VersionsLocalDataSource>(
+        StudentVersionsLocalDataSourceImpl(
+          isarStorageService: getit.get<IsarStorageService>(),
+        ),
+      );
+      getit.registerSingleton<SubjectsLocalDataSource>(
+        StudentSubjectsLocalDataSourceImpl(
+          isarStorageService: getit.get<IsarStorageService>(),
+        ),
+      );
+      getit.registerSingleton<LessonsLocalDataSource>(
+        StudentLessonsLocalDataSourceImpl(
+          isarStorageService: getit.get<IsarStorageService>(),
+        ),
+      );
+      getit.registerSingleton<AynaaVersionsRemoteDataSource>(
+          StudentVersionsRemoteDataSourceImpl(
+        dataBase: getit.get<DataBase>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+      ));
+      getit.registerSingleton<SubjectsRemoteDataSource>(
+          StudentSubjectsRemoteDataSourceImpl(
+        dataBase: getit.get<DataBase>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+      ));
+      getit.registerSingleton<LessonsRemoteDataSource>(
+          StudentLessonsRemoteDataSourceImpl(
+        dataBase: getit.get<DataBase>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+        storageService: getit.get<StorageService>(),
+        fileCacheManager: getit.get<FileCacheManager>(),
+      ));
+      getit.registerSingleton<VersionsRepo>(
+        StudentVersionsRepoImpl(
+          dataBase: getit.get<DataBase>(),
+          storageService: getit.get<StorageService>(),
+          remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
+          versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
+          backgroundServices:
+              getit.get<BackgroundServices<AynaaVersionsEntity>>(),
+        ),
+      );
+      getit.registerSingleton<SubjectsRepo>(
+        StudentSubjectsRepoImpl(
+          dataBase: getit.get<DataBase>(),
+          storageService: getit.get<StorageService>(),
+          subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
+          subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
+          backgroundDownloadService:
+              getit.get<BackgroundServices<SubjectsEntity>>(),
+        ),
+      );
+      getit.registerSingleton<LessonsRepo>(
+        StudentLessonsRepoImpl(
+            dataBase: getit.get<DataBase>(),
+            storageService: getit.get<StorageService>(),
+            lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
+            lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
+      );
+  }
 
   getit.registerSingleton<BackgroundServices<SubjectsEntity>>(
     BackgroundServices(
@@ -105,32 +216,6 @@ setUpServiceLocator() {
                   ),
     ),
   );
-  getit.registerSingleton<VersionsRepo>(
-    AdminVersionsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
-      remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
-      versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-      backgroundServices: getit.get<BackgroundServices<AynaaVersionsEntity>>(),
-    ),
-  );
-  getit.registerSingleton<SubjectsRepo>(
-    AdminSubjectsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
-      subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
-      subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-      backgroundDownloadService:
-          getit.get<BackgroundServices<SubjectsEntity>>(),
-    ),
-  );
-  getit.registerSingleton<LessonsRepo>(
-    AdminLessonsRepoImpl(
-        dataBase: getit.get<DataBase>(),
-        storageService: getit.get<StorageService>(),
-        lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
-        lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
-  );
 
   getit.registerSingleton<BackgroundServices<LessonEntity>>(
     BackgroundServices(
@@ -150,7 +235,6 @@ setUpServiceLocator() {
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
       isarStorageService: getit.get<IsarStorageService>()));
-  getit.registerSingleton<RealtimeSyncService>(RealtimeSyncService());
 
   /*getit
       .registerSingleton<CachIndexLessonsInBackground>(

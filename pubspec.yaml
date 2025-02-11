@@ -73,6 +73,7 @@ dependencies:
   isar_flutter_libs: ^3.1.0+1
   webview_flutter: ^4.10.0
   flutter_linkify: ^6.0.0
+  shared_preferences: ^2.5.2
 
 dev_dependencies:
   build_runner: ^2.4.13
