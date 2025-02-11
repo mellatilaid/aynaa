@@ -23,7 +23,7 @@ class _AdminMaterialAppState extends State<AdminMaterialApp>
     return BlocProvider(
       create: (context) => AddLessonCubit(getit.get<LessonsRepo>()),
       child: MaterialApp.router(
-        routerConfig: AdminAppRouter.router,
+        routerConfig: AppRouter.router,
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
