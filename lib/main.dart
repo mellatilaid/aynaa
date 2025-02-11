@@ -1,6 +1,6 @@
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
-import 'package:atm_app/features/admin/admin_material_app.dart';
+import 'package:atm_app/features/student/student_material_app.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -62,6 +62,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return const AdminMaterialApp();
+    return const StudentMaterialApp();
   }
 }

@@ -6,6 +6,7 @@ import 'package:atm_app/features/admin/materials/presentation/views/lesson_view.
 import 'package:atm_app/features/admin/materials/presentation/views/subjects_view.dart';
 import 'package:atm_app/features/admin/materials/presentation/views/upload_file_test.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
+import 'package:atm_app/features/student/student_bottom_nav_view.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/admin/materials/presentation/views/lessons_view.dart';
@@ -17,6 +18,7 @@ abstract class AdminAppRouter {
   static const String lessonsView = '/lessons';
   static const String uploadPage = '/uploadPage';
   static const String lessonDetailView = '/lessonDetailView';
+
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
@@ -68,13 +70,17 @@ abstract class AdminAppRouter {
 
 abstract class StudentAppRouter {
   static const String studentHomeView = '/student';
-
+  static const String studentBottomNavView = '/studnetNavBarView';
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
       GoRoute(
         path: studentHomeView,
         builder: (context, state) => const SignInView(),
+      ),
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const StudentBottomNavView(),
       ),
       GoRoute(
         path: '/',
