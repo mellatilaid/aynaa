@@ -1,6 +1,9 @@
 import 'package:atm_app/core/entities/entitiy.dart';
 import 'package:atm_app/core/functions/build_preview.dart';
+import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../const/remote_db_const.dart';
 
 class CustomSubjectCard extends StatelessWidget {
   final Entity item;
@@ -54,16 +57,18 @@ class CustomSubjectCard extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              child: IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  )),
-            ),
+            (globalUserRole != null && globalUserRole == kAdminRole)
+                ? Positioned(
+                    top: 0,
+                    left: 0,
+                    child: IconButton(
+                        onPressed: onDelete,
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        )),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

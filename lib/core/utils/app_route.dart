@@ -7,7 +7,7 @@ import 'package:atm_app/features/splash_view/presentation/views/splash_view.dart
 import 'package:atm_app/features/student/student_bottom_nav_view.dart';
 import 'package:go_router/go_router.dart';
 
-import '../materials/presentation/views/lesson_view.dart';
+import '../materials/presentation/views/lesson_detail_view.dart';
 import '../materials/presentation/views/lessons_view.dart';
 import '../materials/presentation/views/subjects_view.dart';
 import '../materials/presentation/views/upload_file_test.dart';
@@ -55,7 +55,7 @@ abstract class AppRouter {
         builder: (context, state) {
           final data = state.extra as LessonEntity;
 
-          return LessonView(
+          return LessonDetailView(
             lesson: data,
           );
         },

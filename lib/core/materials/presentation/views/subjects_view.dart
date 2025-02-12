@@ -1,3 +1,4 @@
+import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
@@ -7,6 +8,7 @@ import 'package:atm_app/features/admin/materials/presentation/manager/fetch_subj
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../const/remote_db_const.dart';
 import 'widgets/add_new_subject_bottom_sheet.dart';
 import 'widgets/subject_view_body.dart';
 
@@ -37,26 +39,29 @@ class SubjectsView extends StatelessWidget {
         body: SubjectsViewBody(
           versionsEntity: aynaaVersionsEntity,
         ),
-        floatingActionButton: Builder(builder: (fabContext) {
-          return FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            onPressed: () {
-              final subjectsCubit = fabContext.read<FetchSubjectCubit>();
-              showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: subjectsCubit,
-                      child: const NewSubjectBottomSheet(),
-                    );
-                  });
-            },
-            child: const Icon(Icons.add),
-          );
-        }),
+        floatingActionButton: (globalUserRole != null &&
+                globalUserRole == kAdminRole)
+            ? Builder(builder: (fabContext) {
+                return FloatingActionButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  onPressed: () {
+                    final subjectsCubit = fabContext.read<FetchSubjectCubit>();
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) {
+                          return BlocProvider.value(
+                            value: subjectsCubit,
+                            child: const NewSubjectBottomSheet(),
+                          );
+                        });
+                  },
+                  child: const Icon(Icons.add),
+                );
+              })
+            : null,
       ),
     );
     return BlocProvider(

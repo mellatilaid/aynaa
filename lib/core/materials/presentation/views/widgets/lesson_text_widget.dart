@@ -18,7 +18,7 @@ class LessonTextWidget extends StatelessWidget {
             await launchUrl(uri, mode: LaunchMode.externalApplication);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Could not open ${link.url}")),
+              SnackBar(content: Text("تعذر فتح هذا الرابط ${link.url}")),
             );
           }
         },

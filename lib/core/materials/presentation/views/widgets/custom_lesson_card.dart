@@ -1,6 +1,9 @@
 import 'package:atm_app/core/functions/build_preview.dart';
+import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../const/remote_db_const.dart';
 
 class CustomLessonCard extends StatefulWidget {
   final LessonEntity item;
@@ -57,16 +60,18 @@ class _CustomLessonCardState extends State<CustomLessonCard> {
                   ],
                 ),
               ),
-              Positioned(
-                top: 0,
-                left: 0,
-                child: IconButton(
-                    onPressed: widget.onDelete,
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    )),
-              ),
+              (globalUserRole != null && globalUserRole == kAdminRole)
+                  ? Positioned(
+                      top: 0,
+                      left: 0,
+                      child: IconButton(
+                          onPressed: widget.onDelete,
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          )),
+                    )
+                  : Container(),
             ],
           ),
         ),
