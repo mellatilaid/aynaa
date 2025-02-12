@@ -25,7 +25,7 @@ abstract class AppRouter {
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/',
+        path: '/lll',
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
@@ -71,7 +71,7 @@ abstract class AppRouter {
         },
       ),
       GoRoute(
-        path: studentBottomNavView,
+        path: '/',
         builder: (context, state) => const StudentBottomNavView(),
       ),
     ],

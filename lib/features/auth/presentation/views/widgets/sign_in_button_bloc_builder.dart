@@ -25,9 +25,9 @@ class SignInButtonBlocBuilder extends StatelessWidget {
           if (state.userEntity.role == kAdminRole) {
             setUpServiceLocator(userRole: UserRole.admin);
             context.pushReplacement(AppRouter.adminNavBarView);
-          } else if (state.userEntity.role == kUserRole) {
+          } else if (state.userEntity.role == kStudentRole) {
             setUpServiceLocator(userRole: UserRole.student);
-            context.pushReplacement(AppRouter.adminHomeView);
+            context.pushReplacement(AppRouter.studentBottomNavView);
           }
         }
       },

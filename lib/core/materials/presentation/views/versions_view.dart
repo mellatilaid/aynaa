@@ -1,4 +1,7 @@
+import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/add_new_aynaa_version_bottom_sheet.dart';
+import 'package:atm_app/core/materials/presentation/views/widgets/sign_out_button_bloc_builder.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_aynaa_versions_cubit/fetch_aynaa_versions_cubit.dart';
@@ -31,28 +34,30 @@ class VersionsView extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
-          leading:
-              IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+          leading: const SignOutButtonBlocBuilder(),
         ),
         body: const AynaaVersionsViewBody(),
-        floatingActionButton: Builder(builder: (fabContext) {
-          return FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            onPressed: () {
-              final aynaaVersionCubit =
-                  fabContext.read<FetchAynaaVersionsCubit>();
-              showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: aynaaVersionCubit,
-                      child: const AddAynaaVersionBottomSheet(),
-                    );
-                  });
-              /*showDialog(
+        floatingActionButton:
+            (globalUserRole != null && globalUserRole == kAdminRole)
+                ? Builder(
+                    builder: (fabContext) {
+                      return FloatingActionButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        onPressed: () {
+                          final aynaaVersionCubit =
+                              fabContext.read<FetchAynaaVersionsCubit>();
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return BlocProvider.value(
+                                  value: aynaaVersionCubit,
+                                  child: const AddAynaaVersionBottomSheet(),
+                                );
+                              });
+                          /*showDialog(
                   context: context,
                   builder: (context) {
                     return BlocProvider.value(
@@ -60,10 +65,12 @@ class VersionsView extends StatelessWidget {
                       child: const AddAynaaVersionAlertDialog(),
                     );
                   });*/
-            },
-            child: const Icon(Icons.add),
-          );
-        }),
+                        },
+                        child: const Icon(Icons.add),
+                      );
+                    },
+                  )
+                : null,
       ),
     );
     return BlocProvider(

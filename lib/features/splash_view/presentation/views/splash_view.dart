@@ -1,6 +1,6 @@
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/role_storaga_service.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
@@ -39,7 +39,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
       child: Text(
         'Hello Aynaa Brothers',
         style: TextStyle(
-          fontSize: 60,
+          fontSize: 50,
           color: Colors.red,
         ),
       ),

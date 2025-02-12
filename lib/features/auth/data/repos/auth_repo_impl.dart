@@ -4,7 +4,7 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/auth_services.dart';
 import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/services/role_storaga_service.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/auth/data/models/user_model.dart';
 import 'package:atm_app/features/auth/domain/entities/user_entity.dart';
@@ -78,6 +78,8 @@ class AuthRepoImpl extends AuthRepo {
   Future<Either<Failures, void>> signOut() async {
     try {
       await authServices.signOut();
+      profileStorage.clearCacheProfile();
+
       return right(null);
     } catch (e) {
       log(e.toString());

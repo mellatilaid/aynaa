@@ -1,9 +1,12 @@
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/admin_material_app.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
+import 'package:atm_app/features/auth/presentation/manager/sign_out_cubit/sign_out_cubit.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,9 +24,9 @@ void main() async {
 
   //await initializeCache();
   setUpCoreServiceLocator();
-  //setUpServiceLocator(userRole: UserRole.admin);
+  setUpServiceLocator(userRole: UserRole.student);
   //await Firebase.initializeApp();
-  if (0 == 10) {
+  if (0 == 0) {
     runApp(DevicePreview(
       enabled: true, // Set to `true` to enable DevicePreview
       builder: (context) => const MyApp(), // Your app entry point
@@ -68,6 +71,34 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AddLessonCubit(getit.get<LessonsRepo>()),
+        ),
+        BlocProvider(
+          create: (context) => SignOutCubit(authRepo: getit.get<AuthRepo>()),
+        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: AppRouter.router,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ar', 'DZ'),
+          Locale('en', 'US'),
+        ],
+        locale: const Locale('ar', 'DZ'),
+      ),
+    );
     return BlocProvider(
       create: (context) => AddLessonCubit(getit.get<LessonsRepo>()),
       child: MaterialApp.router(

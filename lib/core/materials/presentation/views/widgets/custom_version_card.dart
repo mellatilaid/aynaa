@@ -1,9 +1,12 @@
 import 'package:atm_app/core/entities/entitiy.dart';
 import 'package:atm_app/core/functions/build_preview.dart';
+import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../const/remote_db_const.dart';
 
 class CustomVersionCard extends StatelessWidget {
   final Entity item;
@@ -57,11 +60,13 @@ class CustomVersionCard extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              child: DeleteVersionBuilder(onDelete: onDelete),
-            ),
+            (globalUserRole != null && globalUserRole! == kAdminRole)
+                ? Positioned(
+                    top: 0,
+                    left: 0,
+                    child: DeleteVersionBuilder(onDelete: onDelete),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),
