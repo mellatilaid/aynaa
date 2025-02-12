@@ -73,4 +73,15 @@ class AuthRepoImpl extends AuthRepo {
     // TODO: implement isLoggedIn
     return authServices.isLoggedIn();
   }
+
+  @override
+  Future<Either<Failures, void>> signOut() async {
+    try {
+      await authServices.signOut();
+      return right(null);
+    } catch (e) {
+      log(e.toString());
+      return left(ServerFailure(errMessage: e.toString()));
+    }
+  }
 }
