@@ -21,8 +21,9 @@ void main() async {
 
   //await initializeCache();
   setUpCoreServiceLocator();
+  //setUpServiceLocator(userRole: UserRole.admin);
   //await Firebase.initializeApp();
-  if (0 == 0) {
+  if (0 == 10) {
     runApp(DevicePreview(
       enabled: true, // Set to `true` to enable DevicePreview
       builder: (context) => const MyApp(), // Your app entry point

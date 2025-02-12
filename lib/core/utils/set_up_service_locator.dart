@@ -68,6 +68,42 @@ setUpServiceLocator({required UserRole userRole}) {
   getit.registerSingleton<LocalCacheService<SubjectsEntity>>(BaseHiveCache());
   getit.registerSingleton<LocalCacheService<LessonEntity>>(BaseHiveCache());*/
   getit.registerSingleton<FileCacheManager>(FileSystemCacheManager());
+  getit.registerSingleton<BackgroundServices<LessonEntity>>(
+    BackgroundServices(
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (LessonEntity entity, PostgressEventType eventType) =>
+              getit.get<LessonsLocalDataSource>().handleUpdate(
+                    lesson: entity,
+                    eventType: eventType,
+                  ),
+    ),
+  );
+  getit.registerSingleton<BackgroundServices<SubjectsEntity>>(
+    BackgroundServices(
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (SubjectsEntity entity, PostgressEventType eventType) =>
+              getit.get<SubjectsLocalDataSource>().handleUpdate(
+                    subject: entity,
+                    eventType: eventType,
+                  ),
+    ),
+  );
+  getit.registerSingleton<BackgroundServices<AynaaVersionsEntity>>(
+    BackgroundServices(
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (AynaaVersionsEntity entity, PostgressEventType eventType) =>
+              getit.get<VersionsLocalDataSource>().handleUpdate(
+                    version: entity,
+                    eventType: eventType,
+                  ),
+    ),
+  );
   switch (userRole) {
     case UserRole.admin:
       getit.registerSingleton<VersionsLocalDataSource>(
@@ -191,44 +227,6 @@ setUpServiceLocator({required UserRole userRole}) {
             lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
       );
   }
-
-  getit.registerSingleton<BackgroundServices<SubjectsEntity>>(
-    BackgroundServices(
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (SubjectsEntity entity, PostgressEventType eventType) =>
-              getit.get<SubjectsLocalDataSource>().handleUpdate(
-                    subject: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-  getit.registerSingleton<BackgroundServices<AynaaVersionsEntity>>(
-    BackgroundServices(
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (AynaaVersionsEntity entity, PostgressEventType eventType) =>
-              getit.get<VersionsLocalDataSource>().handleUpdate(
-                    version: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-
-  getit.registerSingleton<BackgroundServices<LessonEntity>>(
-    BackgroundServices(
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (LessonEntity entity, PostgressEventType eventType) =>
-              getit.get<LessonsLocalDataSource>().handleUpdate(
-                    lesson: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
 
   getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
   getit.registerSingleton<DeleteItemsService>(DeleteItemsServiceImpl(

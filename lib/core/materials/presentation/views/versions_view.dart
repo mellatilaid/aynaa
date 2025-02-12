@@ -30,6 +30,10 @@ class VersionsView extends StatelessWidget {
         ),
       ],
       child: Scaffold(
+        appBar: AppBar(
+          leading:
+              IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+        ),
         body: const AynaaVersionsViewBody(),
         floatingActionButton: Builder(builder: (fabContext) {
           return FloatingActionButton(

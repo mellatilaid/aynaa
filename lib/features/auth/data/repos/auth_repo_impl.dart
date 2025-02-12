@@ -50,6 +50,8 @@ class AuthRepoImpl extends AuthRepo {
         );
 
         userEntity = UserModel.fromJson(userData);
+        profileStorage.cachProfile(userEntity);
+        profileStorage.cacheRole(userEntity.role);
         return right(userEntity);
       } else {
         userEntity.role = kStudentRole;

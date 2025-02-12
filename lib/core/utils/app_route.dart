@@ -33,7 +33,7 @@ abstract class AppRouter {
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(
-        path: '/kkk',
+        path: adminNavBarView,
         builder: (context, state) => const AdminBottomNavView(),
       ),
       GoRoute(
