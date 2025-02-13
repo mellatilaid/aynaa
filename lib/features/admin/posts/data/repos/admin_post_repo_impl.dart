@@ -2,16 +2,17 @@ import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/posts/domain/entities/post_entity.dart';
+import 'package:atm_app/core/posts/domain/repos/posts_repo.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
-import 'package:atm_app/features/admin/posts/data/models/post_model.dart';
-import 'package:atm_app/features/admin/posts/domain/entities/post_entity.dart';
-import 'package:atm_app/features/admin/posts/domain/repos/posts_repo.dart';
 import 'package:dartz/dartz.dart';
 
-class PostRepoImpl extends PostsRepo {
+import '../../../../../core/posts/data/models/post_model.dart';
+
+class AdminPostRepoImpl extends PostsRepo {
   final DataBase dataBase;
 
-  PostRepoImpl({required this.dataBase});
+  AdminPostRepoImpl({required this.dataBase});
   @override
   Future<Either<Failures, void>> addPost({required PostEntity post}) async {
     try {

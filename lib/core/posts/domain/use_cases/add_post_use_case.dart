@@ -1,7 +1,7 @@
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/use_cases/use_case.dart';
-import 'package:atm_app/features/admin/posts/domain/entities/post_entity.dart';
-import 'package:atm_app/features/admin/posts/domain/repos/posts_repo.dart';
+import 'package:atm_app/core/posts/domain/entities/post_entity.dart';
+import 'package:atm_app/core/posts/domain/repos/posts_repo.dart';
 import 'package:dartz/dartz.dart';
 
 class AddPostUseCase extends UseCase<void, PostEntity> {

@@ -1,11 +1,8 @@
 import 'package:atm_app/core/posts/domain/use_cases/add_post_use_case.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
-import '../../../../../../core/posts/domain/entities/post_entity.dart';
-
-part 'add_post_state.dart';
+import '../../../../../features/admin/posts/presentation/manager/add_post_cubit/add_post_cubit.dart';
+import '../../../domain/entities/post_entity.dart';
 
 class AddPostCubit extends Cubit<AddPostState> {
   final AddPostUseCase addPostUseCase;
