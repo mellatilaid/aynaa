@@ -2,12 +2,12 @@ import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/posts/domain/entities/post_entity.dart';
-import 'package:atm_app/core/posts/domain/repos/posts_repo.dart';
+import 'package:atm_app/core/shared_features/posts/domain/entities/post_entity.dart';
+import 'package:atm_app/core/shared_features/posts/domain/repos/posts_repo.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../../../../core/posts/data/models/post_model.dart';
+import '../../../../../core/shared_features/posts/data/models/post_model.dart';
 
 class AdminPostRepoImpl extends PostsRepo {
   final DataBase dataBase;
