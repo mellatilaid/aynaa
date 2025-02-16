@@ -6,6 +6,7 @@ class ExamModel extends ExamEntity with Mappable {
   ExamModel(
       {required super.uuid,
       required super.title,
+      required super.versionName,
       required super.image,
       required super.localFilePath});
 
@@ -23,6 +24,7 @@ class ExamModel extends ExamEntity with Mappable {
     return ExamModel(
       uuid: map[kUuid],
       title: map[kName],
+      versionName: map[kVersionName],
       image: map[kUrl],
       localFilePath: map[kLocalFilePath],
     );
@@ -32,6 +34,7 @@ class ExamModel extends ExamEntity with Mappable {
     return ExamModel(
       uuid: exam.uuid,
       title: exam.title,
+      versionName: exam.versionName,
       image: exam.image,
       localFilePath: exam.localFilePath,
     );

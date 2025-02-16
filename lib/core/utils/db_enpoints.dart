@@ -6,4 +6,5 @@ abstract class DbEnpoints {
   static const String lessons = 'lessons';
   static const String deleteVersioAndRelatedData =
       'delete_version_and_related_data';
+  static const String exams = 'exams';
 }
