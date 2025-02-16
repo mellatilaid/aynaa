@@ -3,7 +3,7 @@ import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.d
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:dartz/dartz.dart';
 
-abstract class ExamsRepo {
+abstract class ExamSectionsRepo {
   Future<Either<Failures, String>> saveExam({required ExamEntity examSection});
 
   Future<Either<Failures, List<ExamSectionsEntity>>> fetchExamSections(

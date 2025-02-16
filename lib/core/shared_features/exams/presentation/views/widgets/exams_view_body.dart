@@ -1,4 +1,4 @@
-import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/fetch_exams_cubit/fetch_exams_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exams_list_view.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:flutter/widgets.dart';

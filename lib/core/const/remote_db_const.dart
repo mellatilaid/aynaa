@@ -25,3 +25,4 @@ const String kLocalFilePath = 'localFilePath';
 const String krpcVersionID = 'p_version_id';
 const String kTitle = 'title';
 const String kExamID = 'exam-id';
+const String kExamTitle = 'exam-title';
