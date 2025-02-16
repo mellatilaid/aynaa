@@ -23,12 +23,18 @@ import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/core/services/supabase_storage.dart';
+import 'package:atm_app/core/shared_features/exams/data/data_source%20copy/exam_sections_data_source/exam_sections_remote_data_source.dart';
+import 'package:atm_app/core/shared_features/exams/data/data_source/exam_sections_data_source/exam_sections_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_remote_data_source.dart';
+import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
+import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_local_data_source_impl.dart';
+import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/repos/admin_exam_repo_impl.dart';
+import 'package:atm_app/features/admin/exams/data/repos/admin_exam_sections_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
@@ -137,6 +143,9 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<ExamsLocalDataSource>(
         AdminExamsLocalDataSourceImpl(),
       );
+      registerIfNotExists<ExamSectionsLocalDataSource>(
+        AdminExamSectionsLocalDataSourceImpl(),
+      );
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
         AdminVersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
@@ -163,6 +172,10 @@ setUpServiceLocator({required UserRole userRole}) {
           isarStorageService: getit.get<IsarStorageService>(),
         ),
       );
+      registerIfNotExists<ExamSectionsRemoteDataSource>(
+        AdminExamSectionsRemoteDataSourceImpl(),
+      );
+
       registerIfNotExists<VersionsRepo>(
         AdminVersionsRepoImpl(
           dataBase: getit.get<DataBase>(),
@@ -196,6 +209,13 @@ setUpServiceLocator({required UserRole userRole}) {
             storageService: getit.get<StorageService>(),
             examsRemoteDataSource: getit.get<ExamsRemoteDataSource>(),
             examsLocalDataSource: getit.get<ExamsLocalDataSource>()),
+      );
+      registerIfNotExists<ExamSectionsRepo>(
+        AdminExamSectionsRepoImpl(
+            dataBase: getit.get<DataBase>(),
+            storageService: getit.get<StorageService>(),
+            remoteDataSource: getit.get<ExamSectionsRemoteDataSource>(),
+            localDataSource: getit.get<ExamSectionsLocalDataSource>()),
       );
 
       break;
