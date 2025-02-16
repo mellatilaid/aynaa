@@ -24,7 +24,7 @@ void main() async {
 
   //await initializeCache();
   setUpCoreServiceLocator();
-  setUpServiceLocator(userRole: UserRole.student);
+  setUpServiceLocator(userRole: UserRole.admin);
   //await Firebase.initializeApp();
   if (0 == 0) {
     runApp(DevicePreview(

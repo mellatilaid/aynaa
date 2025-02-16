@@ -14,12 +14,12 @@ import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ExamRepoImpl extends ExamsRepo {
+class AdminExamRepoImpl extends ExamsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final ExamsLocalDataSource examsLocalDataSource;
   final ExamsRemoteDataSource examsRemoteDataSource;
-  ExamRepoImpl({
+  AdminExamRepoImpl({
     required this.dataBase,
     required this.storageService,
     required this.examsLocalDataSource,
@@ -41,7 +41,7 @@ class ExamRepoImpl extends ExamsRepo {
         data[kUrl] = fullPath;
       }
 
-      await dataBase.setDate(path: DbEnpoints.aynaaVersions, data: data);
+      await dataBase.setDate(path: DbEnpoints.exams, data: data);
 
       return const Right('');
       /*final String bucketId = await storageService.createBucket(versionName);

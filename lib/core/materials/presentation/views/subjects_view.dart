@@ -3,6 +3,7 @@ import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_bottom_sheet.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/core/widgets/custom_speed_dial_child.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_subject_cubit/delete_subject_cubit.dart';
@@ -81,7 +82,19 @@ class SubjectsView extends StatelessWidget {
                             label: 'أضف مادة',
                           ),
                           customSpeedDialChild(
-                            onTap: () {},
+                            onTap: () {
+                              final subjectsCubit =
+                                  fabContext.read<FetchSubjectCubit>();
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return BlocProvider.value(
+                                      value: subjectsCubit,
+                                      child: const AddExamBottomSheet(),
+                                    );
+                                  });
+                            },
                             icon: const FaIcon(FontAwesomeIcons.tents),
                             label: 'أضف إمتحان',
                           ),

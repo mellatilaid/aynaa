@@ -23,3 +23,4 @@ const String kVersionName = 'version-name';
 const String kSubjectName = 'subject-name';
 const String kLocalFilePath = 'localFilePath';
 const String krpcVersionID = 'p_version_id';
+const String kTitle = 'title';

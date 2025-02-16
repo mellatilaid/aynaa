@@ -13,10 +13,8 @@ class ExamModel extends ExamEntity with Mappable {
   @override
   Map<String, dynamic> toMap() {
     return {
-      kUuid: uuid,
-      kName: title,
+      kTitle: title,
       kUrl: image,
-      kLocalFilePath: localFilePath,
     };
   }
 
