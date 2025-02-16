@@ -1,3 +1,4 @@
+import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exams_list_view.dart';
 import 'package:flutter/widgets.dart';
 
 class ExamsViewBody extends StatelessWidget {
@@ -5,8 +6,6 @@ class ExamsViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('hello this is exams'),
-    );
+    return const ExamsListView(exams: []);
   }
 }

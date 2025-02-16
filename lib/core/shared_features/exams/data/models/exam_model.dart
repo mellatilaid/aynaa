@@ -4,36 +4,36 @@ import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.d
 
 class ExamModel extends ExamEntity with Mappable {
   ExamModel(
-      {required super.uuid,
+      {required super.entityID,
       required super.title,
       required super.versionName,
-      required super.image,
+      required super.url,
       required super.localFilePath});
 
   @override
   Map<String, dynamic> toMap() {
     return {
       kTitle: title,
-      kUrl: image,
+      kUrl: url,
     };
   }
 
   static ExamModel fromMap(Map<String, dynamic> map) {
     return ExamModel(
-      uuid: map[kUuid],
+      entityID: map[kUuid],
       title: map[kName],
       versionName: map[kVersionName],
-      image: map[kUrl],
+      url: map[kUrl],
       localFilePath: map[kLocalFilePath],
     );
   }
 
   factory ExamModel.fromExamEntity(ExamEntity exam) {
     return ExamModel(
-      uuid: exam.uuid,
+      entityID: exam.entityID,
       title: exam.title,
       versionName: exam.versionName,
-      image: exam.image,
+      url: exam.url,
       localFilePath: exam.localFilePath,
     );
   }

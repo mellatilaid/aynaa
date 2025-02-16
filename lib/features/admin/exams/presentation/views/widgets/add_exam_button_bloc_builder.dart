@@ -30,7 +30,7 @@ class _AddExamButtonBlocBuilderState extends State<AddExamButtonBlocBuilder> {
       builder: (context, state) {
         return CustomActionButtonType2(
           isLoading: state is AddExamLoading ? true : false,
-          title: 'حفظ',
+          title: 'create subject',
           onPressed: () {
             if (widget.formKey.currentState!.validate()) {
               final ExamEntity exam = _getExamModel();
