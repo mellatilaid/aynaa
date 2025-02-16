@@ -1,14 +1,19 @@
+import 'package:atm_app/core/const/app_const.dart';
 import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/core/widgets/custom_speed_dial_child.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_subject_cubit/delete_subject_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_subjects_cubit/fetch_subject_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../const/remote_db_const.dart';
+import '../../../shared_features/exams/presentation/views/widgets/exams_view_body.dart';
+import '../../../widgets/floating_optional_speed_dial.dart';
 import 'widgets/add_new_subject_bottom_sheet.dart';
 import 'widgets/subject_view_body.dart';
 
@@ -31,37 +36,60 @@ class SubjectsView extends StatelessWidget {
               DeleteSubjectCubit(subjectsRepo: getit.get<SubjectsRepo>()),
         ),
       ],
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(aynaaVersionsEntity.versionName.toString()),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text(aynaaVersionsEntity.versionName.toString()),
+            bottom: const TabBar(
+              labelColor: kPrimaryColor,
+              tabs: [
+                Tab(text: "المواد"),
+                Tab(text: "الامتحانات"),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              SubjectsViewBody(
+                versionsEntity: aynaaVersionsEntity,
+              ),
+              const ExamsViewBody(),
+            ],
+          ),
+          floatingActionButton:
+              (globalUserRole != null && globalUserRole == kAdminRole)
+                  ? Builder(builder: (fabContext) {
+                      return FloatingAddOptionsSpeedDial(
+                        speedDials: [
+                          customSpeedDialChild(
+                            onTap: () {
+                              final subjectsCubit =
+                                  fabContext.read<FetchSubjectCubit>();
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return BlocProvider.value(
+                                      value: subjectsCubit,
+                                      child: const NewSubjectBottomSheet(),
+                                    );
+                                  });
+                            },
+                            icon: const Icon(Icons.text_fields),
+                            label: 'أضف مادة',
+                          ),
+                          customSpeedDialChild(
+                            onTap: () {},
+                            icon: const FaIcon(FontAwesomeIcons.tents),
+                            label: 'أضف إمتحان',
+                          ),
+                        ],
+                      );
+                    })
+                  : null,
         ),
-        body: SubjectsViewBody(
-          versionsEntity: aynaaVersionsEntity,
-        ),
-        floatingActionButton: (globalUserRole != null &&
-                globalUserRole == kAdminRole)
-            ? Builder(builder: (fabContext) {
-                return FloatingActionButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  onPressed: () {
-                    final subjectsCubit = fabContext.read<FetchSubjectCubit>();
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context) {
-                          return BlocProvider.value(
-                            value: subjectsCubit,
-                            child: const NewSubjectBottomSheet(),
-                          );
-                        });
-                  },
-                  child: const Icon(Icons.add),
-                );
-              })
-            : null,
       ),
     );
     return BlocProvider(
@@ -101,3 +129,23 @@ class SubjectsView extends StatelessWidget {
     );
   }
 }
+
+/*  return FloatingActionButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        onPressed: () {
+                          final subjectsCubit =
+                              fabContext.read<FetchSubjectCubit>();
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return BlocProvider.value(
+                                  value: subjectsCubit,
+                                  child: const NewSubjectBottomSheet(),
+                                );
+                              });
+                        },
+                        child: const Icon(Icons.add),
+                      );*/
