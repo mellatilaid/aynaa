@@ -66,17 +66,18 @@ class AdminExamRepoImpl extends ExamsRepo {
   @override
   Future<Either<Failures, List<ExamEntity>>> fetchExams() async {
     try {
-      final List<ExamEntity> localVersions =
+      final List<ExamEntity> items;
+      /*final List<ExamEntity> localVersions =
           await examsLocalDataSource.fetchExams();
       log(localVersions.length.toString());
       if (localVersions.isNotEmpty) {
         return right(localVersions);
-      }
-      final List<ExamEntity> remoteVersions =
-          await examsRemoteDataSource.fetchAynaaVersions();
-      log('remote version ${remoteVersions.length}');
-      return right(remoteVersions);
+      }*/
+      items = await examsRemoteDataSource.fetchExams();
+
+      return right(items);
     } catch (e) {
+      log(e.toString());
       return left(ServerFailure(errMessage: e.toString()));
     }
   }

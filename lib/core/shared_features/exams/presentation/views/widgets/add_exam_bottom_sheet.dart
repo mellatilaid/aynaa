@@ -1,5 +1,6 @@
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/add_exam_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_bottom_sheet_body.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/core/widgets/scaffold_message.dart';
@@ -29,6 +30,7 @@ class AddExamBottomSheet extends StatelessWidget {
       child: BlocBuilder<AddExamCubit, AddExamState>(
         builder: (context, state) {
           if (state is AddExamSuccuss) {
+            BlocProvider.of<FetchExamsCubit>(context).fetchExams();
             Future.microtask(() {
               if (!context.mounted) return;
               context.pop();

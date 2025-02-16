@@ -8,23 +8,23 @@ class ExamModel extends ExamEntity with Mappable {
       required super.title,
       required super.versionName,
       required super.url,
-      required super.localFilePath});
+      super.localFilePath});
 
   @override
   Map<String, dynamic> toMap() {
     return {
       kTitle: title,
       kUrl: url,
+      kVersionName: versionName,
     };
   }
 
   static ExamModel fromMap(Map<String, dynamic> map) {
     return ExamModel(
       entityID: map[kUuid],
-      title: map[kName],
+      title: map[kTitle],
       versionName: map[kVersionName],
       url: map[kUrl],
-      localFilePath: map[kLocalFilePath],
     );
   }
 

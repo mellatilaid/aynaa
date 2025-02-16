@@ -1,6 +1,7 @@
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
+import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
 
 import '../helper/enums.dart';
 
@@ -21,6 +22,11 @@ List<T> mapToListOfEntity<T>(List<Map<String, dynamic>> data, Entities value) {
     case Entities.lesson:
       resault = data.map((item) {
         return LessonModel.fromMap(item);
+      }).toList() as List<T>;
+      return resault;
+    case Entities.exams:
+      resault = data.map((item) {
+        return ExamModel.fromMap(item);
       }).toList() as List<T>;
       return resault;
   }

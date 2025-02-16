@@ -158,7 +158,10 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<ExamsRemoteDataSource>(
-        AdminExamsRemoteDataSourceImpl(),
+        AdminExamsRemoteDataSourceImpl(
+          dataBase: getit.get<DataBase>(),
+          isarStorageService: getit.get<IsarStorageService>(),
+        ),
       );
       registerIfNotExists<VersionsRepo>(
         AdminVersionsRepoImpl(

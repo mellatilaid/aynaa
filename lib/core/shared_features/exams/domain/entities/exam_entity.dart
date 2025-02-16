@@ -15,7 +15,7 @@ class ExamEntity with Entity {
     required this.title,
     required this.versionName,
     required this.url,
-    required this.localFilePath,
+    this.localFilePath,
   });
 
   @override
