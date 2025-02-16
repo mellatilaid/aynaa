@@ -1,5 +1,7 @@
 import 'package:atm_app/core/materials/presentation/views/widgets/custom_subject_card.dart';
+import 'package:atm_app/core/utils/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../domain/entities/exam_entity.dart';
 
@@ -12,7 +14,12 @@ class ExamsListView extends StatelessWidget {
     return ListView.builder(
         itemCount: exams.length,
         itemBuilder: (context, index) {
-          return CustomSubjectCard(item: exams[index]);
+          return CustomSubjectCard(
+            onTap: () => context.push(
+              AppRouter.examSectionsView,
+            ),
+            item: exams[index],
+          );
         });
   }
 }
