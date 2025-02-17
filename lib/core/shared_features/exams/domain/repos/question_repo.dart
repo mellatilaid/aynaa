@@ -7,7 +7,7 @@ abstract class QuestionRepo {
   Future<Either<Failures, String>> saveExam({required QuestionEntity question});
 
   Future<Either<Failures, List<ExamEntity>>> fetchQuestions();
-  Future<Either<Failures, void>> addQuestion(
+  Future<Either<Failures, String>> addQuestion(
       {required QuestionEntity question});
   Future<Either<Failures, void>> deleteQuestion(
       {required QuestionEntity question});

@@ -8,4 +8,5 @@ abstract class DbEnpoints {
       'delete_version_and_related_data';
   static const String exams = 'exams';
   static const String examSections = 'examSections';
+  static const String questions = 'questions';
 }
