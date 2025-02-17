@@ -1,4 +1,4 @@
-enum Entities { lesson, version, subject, exams }
+enum Entities { lesson, version, subject, exams, examSections }
 
 enum CollentionType { versions, subjects, lessons, deletedItmes }
 

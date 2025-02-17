@@ -70,9 +70,22 @@ class AdminExamSectionsRepoImpl extends ExamSectionsRepo {
 
   @override
   Future<Either<Failures, List<ExamSectionsEntity>>> fetchExamSections(
-      {required String examID}) {
-    // TODO: implement fetchExamSections
-    throw UnimplementedError();
+      {required String examID}) async {
+    try {
+      final List<ExamSectionsEntity> items;
+      /*final List<ExamEntity> localVersions =
+          await examsLocalDataSource.fetchExams();
+      log(localVersions.length.toString());
+      if (localVersions.isNotEmpty) {
+        return right(localVersions);
+      }*/
+      items = await remoteDataSource.fetchExamSections(examID: examID);
+
+      return right(items);
+    } catch (e) {
+      log(e.toString());
+      return left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override

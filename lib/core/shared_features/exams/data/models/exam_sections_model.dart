@@ -28,7 +28,7 @@ class ExamSectionsModel extends ExamSectionsEntity with Mappable {
     return ExamSectionsModel(
       entityID: map[kUuid],
       title: map[kTitle],
-      examID: map[kVersionName],
+      examID: map[kExamID],
       url: map[kUrl],
       examTitle: map[kExamTitle],
       versionName: map[kVersionName],
