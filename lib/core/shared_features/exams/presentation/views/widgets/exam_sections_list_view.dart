@@ -1,6 +1,8 @@
 import 'package:atm_app/core/materials/presentation/views/widgets/exam_section_card.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/utils/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ExamSectionsListView extends StatelessWidget {
   final List<ExamSectionsEntity> sections;
@@ -12,6 +14,9 @@ class ExamSectionsListView extends StatelessWidget {
         itemCount: sections.length,
         itemBuilder: (context, index) {
           return ExamSectionCard(
+            onTap: () => context.push(
+              AppRouter.testView,
+            ),
             item: sections[index],
           );
         });

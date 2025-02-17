@@ -3,6 +3,7 @@ import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/exam_sections_view.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/views/test_view.dart';
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
 import 'package:atm_app/features/splash_view/presentation/views/splash_view.dart';
@@ -24,6 +25,7 @@ abstract class AppRouter {
   static const String studentBottomNavView = '/studnetNavBarView';
   static const String signInView = '/signInView';
   static const String examSectionsView = '/examSectionsView';
+  static const String testView = '/testView';
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
@@ -84,6 +86,11 @@ abstract class AppRouter {
             return ExamSectionsView(
               examEntity: data,
             );
+          }),
+      GoRoute(
+          path: testView,
+          builder: (context, state) {
+            return const TestView();
           }),
     ],
   );

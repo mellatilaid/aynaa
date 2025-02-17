@@ -64,22 +64,3 @@ class ExamSectionsView extends StatelessWidget {
     );
   }
 }
-
-
-/* showGeneralDialog(
-                context: context,
-                barrierDismissible: true,
-                barrierLabel: "Full Screen Dialog",
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return const FullScreenDialog();
-                },
-                transitionBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return SlideTransition(
-                    position: Tween<Offset>(
-                            begin: const Offset(0, 1), end: const Offset(0, 0))
-                        .animate(animation),
-                    child: child,
-                  );
-                },
-              );*/

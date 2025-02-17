@@ -6,12 +6,14 @@ class CustomTextButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double? width;
   final Color? textColor;
+  final bool isLoading;
   const CustomTextButton({
     super.key,
     required this.title,
     required this.onPressed,
     this.width = double.infinity,
     this.textColor = kPrimaryColor,
+    this.isLoading = false,
   });
 
   @override
@@ -20,10 +22,12 @@ class CustomTextButton extends StatelessWidget {
       width: width,
       child: TextButton(
         onPressed: onPressed,
-        child: Text(
-          title,
-          style: TextStyle(color: textColor),
-        ),
+        child: (isLoading)
+            ? const CircularProgressIndicator()
+            : Text(
+                title,
+                style: TextStyle(color: textColor),
+              ),
       ),
     );
   }
