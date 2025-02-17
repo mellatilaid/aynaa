@@ -4,5 +4,9 @@ class QuestionEntity {
   final String answer;
   final List<String> options;
 
-  QuestionEntity(this.entityID, this.question, this.answer, this.options);
+  QuestionEntity(
+      {required this.entityID,
+      required this.question,
+      required this.answer,
+      required this.options});
 }

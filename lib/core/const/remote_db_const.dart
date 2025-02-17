@@ -26,3 +26,6 @@ const String krpcVersionID = 'p_version_id';
 const String kTitle = 'title';
 const String kExamID = 'exam-id';
 const String kExamTitle = 'exam-title';
+const String kQuestion = 'question';
+const String kAnswer = 'answer';
+const String kOptions = 'questions';

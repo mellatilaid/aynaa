@@ -1,0 +1,39 @@
+import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/mixins/mappable.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
+
+class QuestionModel extends QuestionEntity with Mappable {
+  QuestionModel({
+    required super.entityID,
+    required super.question,
+    required super.answer,
+    required super.options,
+  });
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      kQuestion: question,
+      kAnswer: answer,
+      kOptions: options,
+    };
+  }
+
+  static QuestionModel fromMap(Map<String, dynamic> map) {
+    return QuestionModel(
+      entityID: map[kUuid],
+      question: map[kQuestion],
+      answer: map[kAnswer],
+      options: map[kOptions],
+    );
+  }
+
+  factory QuestionModel.fromEntity(QuestionEntity question) {
+    return QuestionModel(
+      entityID: question.entityID,
+      question: question.question,
+      answer: question.answer,
+      options: question.options,
+    );
+  }
+}
