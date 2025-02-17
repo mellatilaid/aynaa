@@ -5,6 +5,7 @@ import 'package:atm_app/core/shared_features/exams/domain/entities/question_enti
 class QuestionModel extends QuestionEntity with Mappable {
   QuestionModel({
     required super.entityID,
+    required super.sectionID,
     required super.question,
     required super.answer,
     required super.options,
@@ -13,6 +14,7 @@ class QuestionModel extends QuestionEntity with Mappable {
   @override
   Map<String, dynamic> toMap() {
     return {
+      kSectionID: sectionID,
       kQuestion: question,
       kAnswer: answer,
       kOptions: options,
@@ -22,6 +24,7 @@ class QuestionModel extends QuestionEntity with Mappable {
   static QuestionModel fromMap(Map<String, dynamic> map) {
     return QuestionModel(
       entityID: map[kUuid],
+      sectionID: map[kSectionID],
       question: map[kQuestion],
       answer: map[kAnswer],
       options: map[kOptions],
@@ -31,6 +34,7 @@ class QuestionModel extends QuestionEntity with Mappable {
   factory QuestionModel.fromEntity(QuestionEntity question) {
     return QuestionModel(
       entityID: question.entityID,
+      sectionID: question.sectionID,
       question: question.question,
       answer: question.answer,
       options: question.options,
