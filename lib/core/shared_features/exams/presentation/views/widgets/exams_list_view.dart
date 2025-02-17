@@ -16,6 +16,7 @@ class ExamsListView extends StatelessWidget {
         itemBuilder: (context, index) {
           return CustomSubjectCard(
             onTap: () => context.push(
+              extra: exams[index],
               AppRouter.examSectionsView,
             ),
             item: exams[index],

@@ -10,7 +10,7 @@ class AddExamSectionCubit extends Cubit<AddExamSectionState> {
   AddExamSectionCubit({required this.examSectionsRepo})
       : super(AddExamSectionInitial());
   late String _filePath;
-  Future<void> addExam({required ExamSectionsEntity examSection}) async {
+  Future<void> addExamSection({required ExamSectionsEntity examSection}) async {
     emit(AddExamSectionLoading());
 
     final resault = await examSectionsRepo.addExamSection(

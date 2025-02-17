@@ -53,6 +53,7 @@ class AdminExamSectionsRepoImpl extends ExamSectionsRepo {
       log(e.toString());
       return Left(ServerFailure.fromSupaDataBase(e: e));
     } on StorageException catch (e) {
+      log(e.toString());
       return Left(ServerFailure.fromStorage(e: e));
     } catch (e) {
       log(e.toString());

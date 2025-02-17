@@ -1,9 +1,12 @@
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_section_bottom_sheet.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exam_sections_view_body.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExamSectionsView extends StatelessWidget {
-  const ExamSectionsView({super.key});
+  final ExamEntity examEntity;
+  const ExamSectionsView({super.key, required this.examEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,10 @@ class ExamSectionsView extends StatelessWidget {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
+                    return Provider<ExamEntity>(
+                      create: (context) => examEntity,
+                      child: const AddExamSectionBottomSheet(),
+                    );
                     return const AddExamSectionBottomSheet();
                   });
               /*showDialog(

@@ -1,6 +1,7 @@
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/exam_sections_view.dart';
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
@@ -77,9 +78,13 @@ abstract class AppRouter {
         builder: (context, state) => const StudentBottomNavView(),
       ),
       GoRoute(
-        path: examSectionsView,
-        builder: (context, state) => const ExamSectionsView(),
-      ),
+          path: examSectionsView,
+          builder: (context, state) {
+            final data = state.extra as ExamEntity;
+            return ExamSectionsView(
+              examEntity: data,
+            );
+          }),
     ],
   );
 }
