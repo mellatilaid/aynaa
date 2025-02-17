@@ -16,6 +16,7 @@ class ExamSectionsListView extends StatelessWidget {
           return ExamSectionCard(
             onTap: () => context.push(
               AppRouter.testView,
+              extra: sections[index],
             ),
             item: sections[index],
           );

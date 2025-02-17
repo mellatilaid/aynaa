@@ -1,10 +1,16 @@
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/add_questions_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_question_dialog.dart';
+import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/test_view_body.dart';
 
 class TestView extends StatelessWidget {
-  const TestView({super.key});
+  final ExamSectionsEntity examSectionsEntity;
+  const TestView({super.key, required this.examSectionsEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,13 @@ class TestView extends StatelessWidget {
                 barrierDismissible: true,
                 barrierLabel: "Full Screen Dialog",
                 pageBuilder: (context, animation, secondaryAnimation) {
-                  return const AddQuestionsDialog();
+                  return Provider<AddQuestionsCubit>(
+                    create: (context) => AddQuestionsCubit(
+                        questionRepo: getit.get<QuestionRepo>()),
+                    child: AddQuestionsDialog(
+                      examSectionsEntity: examSectionsEntity,
+                    ),
+                  );
                 },
                 transitionBuilder:
                     (context, animation, secondaryAnimation, child) {
@@ -38,13 +50,13 @@ class TestView extends StatelessWidget {
                 },
               );
               /*showDialog(
-                      context: context,
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: aynaaVersionCubit,
-                          child: const AddAynaaVersionAlertDialog(),
-                        );
-                      });*/
+                                context: context,
+                                builder: (context) {
+                                  return BlocProvider.value(
+                                    value: aynaaVersionCubit,
+                                    child: const AddAynaaVersionAlertDialog(),
+                                  );
+                                });*/
             },
             child: const Icon(Icons.add),
           );
