@@ -1,7 +1,12 @@
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exam_sections_cubit/fetch_exam_sections_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_section_bottom_sheet.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exam_sections_view_body.dart';
+import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class ExamSectionsView extends StatelessWidget {
@@ -10,40 +15,51 @@ class ExamSectionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const BackButton(),
-      ),
-      body: const ExamSectionsViewBody(),
-      floatingActionButton: Builder(
-        builder: (fabContext) {
-          return FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return Provider<ExamEntity>(
-                      create: (context) => examEntity,
-                      child: const AddExamSectionBottomSheet(),
-                    );
-                    return const AddExamSectionBottomSheet();
-                  });
-              /*showDialog(
-                  context: context,
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: aynaaVersionCubit,
-                      child: const AddAynaaVersionAlertDialog(),
-                    );
-                  });*/
-            },
-            child: const Icon(Icons.add),
-          );
-        },
+    return BlocProvider(
+      create: (context) => FetchExamSectionsCubit(
+        examSectionsRepo: getit.get<ExamSectionsRepo>(),
+        isarStorageService: getit.get<IsarStorageService>(),
+      )..fetchExams(
+          id: examEntity.entityID,
+        ),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: const BackButton(),
+        ),
+        body: const ExamSectionsViewBody(),
+        floatingActionButton: Builder(
+          builder: (fabContext) {
+            return FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      final fetchSectionsCubit =
+                          fabContext.read<FetchExamSectionsCubit>();
+                      return Provider<ExamEntity>(
+                        create: (context) => examEntity,
+                        child: Provider.value(
+                            value: fetchSectionsCubit,
+                            child: const AddExamSectionBottomSheet()),
+                      );
+                    });
+                /*showDialog(
+                      context: context,
+                      builder: (context) {
+                        return BlocProvider.value(
+                          value: aynaaVersionCubit,
+                          child: const AddAynaaVersionAlertDialog(),
+                        );
+                      });*/
+              },
+              child: const Icon(Icons.add),
+            );
+          },
+        ),
       ),
     );
   }

@@ -29,7 +29,7 @@ class AdminExamSectionsRepoImpl extends ExamSectionsRepo {
     required this.remoteDataSource,
   });
   @override
-  Future<Either<Failures, void>> addExamSection(
+  Future<Either<Failures, String>> addExamSection(
       {required ExamSectionsEntity examSection, String? filePath}) async {
     try {
       final model = ExamSectionsModel.fromEntity(examSection);
@@ -46,7 +46,7 @@ class AdminExamSectionsRepoImpl extends ExamSectionsRepo {
 
       await dataBase.setDate(path: DbEnpoints.examSections, data: data);
 
-      return const Right('');
+      return Right(examSection.examID.toString());
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {

@@ -20,8 +20,8 @@ class AddExamSectionCubit extends Cubit<AddExamSectionState> {
 
     resault.fold((failure) {
       emit(AddExamSectionFailure(errMessage: failure.errMessage));
-    }, (succuss) {
-      emit(AddExamSectionSuccess());
+    }, (examID) {
+      emit(AddExamSectionSuccess(id: examID));
     });
   }
 

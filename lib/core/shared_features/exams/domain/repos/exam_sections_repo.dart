@@ -8,7 +8,7 @@ abstract class ExamSectionsRepo {
 
   Future<Either<Failures, List<ExamSectionsEntity>>> fetchExamSections(
       {required String examID});
-  Future<Either<Failures, void>> addExamSection(
+  Future<Either<Failures, String>> addExamSection(
       {required ExamSectionsEntity examSection, String? filePath});
   Future<Either<Failures, void>> deleteExamSection(
       {required ExamEntity examSection});

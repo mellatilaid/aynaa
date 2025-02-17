@@ -2,6 +2,7 @@ import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/add_exam_section_bottom_sheet_body.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_section_cubit/add_exam_section_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exam_sections_cubit/fetch_exam_sections_cubit.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/core/widgets/scaffold_message.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
@@ -29,8 +30,8 @@ class AddExamSectionBottomSheet extends StatelessWidget {
       child: BlocListener<AddExamSectionCubit, AddExamSectionState>(
         listener: (context, state) {
           if (state is AddExamSectionSuccess) {
-            /* BlocProvider.of<FetchAynaaVersionsCubit>(context)
-                .fetchAynaaVersions();*/
+            BlocProvider.of<FetchExamSectionsCubit>(context)
+                .fetchExams(id: state.id);
             Future.microtask(() {
               if (!context.mounted) return;
               context.pop();
