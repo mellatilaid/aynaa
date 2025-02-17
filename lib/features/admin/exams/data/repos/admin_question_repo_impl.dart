@@ -3,8 +3,9 @@ import 'dart:developer';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
+import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/models/question_model.dart';
-import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
@@ -14,8 +15,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AdminQuestionRepoImpl extends QuestionRepo {
   final DataBase dataBase;
   final StorageService storageService;
-
-  AdminQuestionRepoImpl({required this.dataBase, required this.storageService});
+  final QuestionsRemoteDataSource remoteDataSource;
+  final QuestionsLocalDataSource localDataSource;
+  AdminQuestionRepoImpl({
+    required this.dataBase,
+    required this.storageService,
+    required this.localDataSource,
+    required this.remoteDataSource,
+  });
   @override
   Future<Either<Failures, String>> addQuestion(
       {required List<QuestionEntity> questions}) async {
@@ -49,9 +56,23 @@ class AdminQuestionRepoImpl extends QuestionRepo {
   }
 
   @override
-  Future<Either<Failures, List<ExamEntity>>> fetchQuestions() {
-    // TODO: implement fetchQuestions
-    throw UnimplementedError();
+  Future<Either<Failures, List<QuestionEntity>>> fetchQuestions(
+      {required String sectionID}) async {
+    try {
+      final List<QuestionEntity> items;
+      /*final List<ExamEntity> localVersions =
+          await examsLocalDataSource.fetchExams();
+      log(localVersions.length.toString());
+      if (localVersions.isNotEmpty) {
+        return right(localVersions);
+      }*/
+      items = await remoteDataSource.fetchQuestions(sectionID: sectionID);
+
+      return right(items);
+    } catch (e) {
+      log(e.toString());
+      return left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override

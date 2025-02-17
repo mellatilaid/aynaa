@@ -3,6 +3,7 @@ import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
 import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
 import 'package:atm_app/core/shared_features/exams/data/models/exam_sections_model.dart';
+import 'package:atm_app/core/shared_features/exams/data/models/question_model.dart';
 
 import '../helper/enums.dart';
 
@@ -33,6 +34,11 @@ List<T> mapToListOfEntity<T>(List<Map<String, dynamic>> data, Entities value) {
     case Entities.examSections:
       resault = data.map((item) {
         return ExamSectionsModel.fromMap(item);
+      }).toList() as List<T>;
+      return resault;
+    case Entities.questions:
+      resault = data.map((item) {
+        return QuestionModel.fromMap(item);
       }).toList() as List<T>;
       return resault;
   }
