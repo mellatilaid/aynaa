@@ -11,21 +11,22 @@ import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class QuestionRepoImpl extends QuestionRepo {
+class AdminQuestionRepoImpl extends QuestionRepo {
   final DataBase dataBase;
   final StorageService storageService;
 
-  QuestionRepoImpl({required this.dataBase, required this.storageService});
+  AdminQuestionRepoImpl({required this.dataBase, required this.storageService});
   @override
   Future<Either<Failures, String>> addQuestion(
-      {required QuestionEntity question}) async {
+      {required List<QuestionEntity> questions}) async {
     try {
-      final model = QuestionModel.fromEntity(question);
-      final data = model.toMap();
+      for (var question in questions) {
+        final model = QuestionModel.fromEntity(question);
+        final data = model.toMap();
 
-      await dataBase.setDate(path: DbEnpoints.questions, data: data);
-
-      return Right(question.entityID.toString());
+        await dataBase.setDate(path: DbEnpoints.questions, data: data);
+      }
+      return Right(questions.first.entityID.toString());
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {

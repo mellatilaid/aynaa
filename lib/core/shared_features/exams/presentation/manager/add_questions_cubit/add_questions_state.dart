@@ -7,7 +7,10 @@ final class AddQuestionsInitial extends AddQuestionsState {}
 
 final class AddQuestionsLoading extends AddQuestionsState {}
 
-final class AddQuestionsSuccuss extends AddQuestionsState {}
+final class AddQuestionsSuccuss extends AddQuestionsState {
+  final String questionID;
+  AddQuestionsSuccuss({required this.questionID});
+}
 
 final class AddQuestionsFailure extends AddQuestionsState {
   final String errMessage;
