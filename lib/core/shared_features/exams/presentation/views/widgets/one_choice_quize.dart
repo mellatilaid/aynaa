@@ -1,7 +1,11 @@
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/custom_progress_indicator.dart';
 import 'package:atm_app/core/widgets/custom_action_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../../const/remote_db_const.dart';
 
 class OneChoiceQuize extends StatefulWidget {
   final List<QuestionEntity> questions;
@@ -25,7 +29,8 @@ class _OneChoiceQuizeState extends State<OneChoiceQuize> {
       );
     } else {
       // Quiz completed
-      _showResults();
+
+      _calculateSectionScore();
     }
   }
 
@@ -38,24 +43,12 @@ class _OneChoiceQuizeState extends State<OneChoiceQuize> {
     }
   }
 
-  void _showResults() {
+  void _calculateSectionScore() {
     int correctAnswers = _selectedAnswers.entries
         .where((entry) => entry.value == widget.questions[entry.key].answer)
         .length;
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("نتيجتك"),
-        content: Text(
-            "لقد أجبت على $correctAnswers من ${widget.questions.length} بشكل صحيح!"),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("موافق")),
-        ],
-      ),
-    );
+    context.pop(correctAnswers);
   }
 
   @override
@@ -96,7 +89,10 @@ class _OneChoiceQuizeState extends State<OneChoiceQuize> {
                     ...question.options.map((option) => RadioListTile<String>(
                           title: Text(option),
                           value: option,
-                          groupValue: _selectedAnswers[index],
+                          groupValue:
+                              (ProfileStorageImpl.userRole == kAdminRole)
+                                  ? question.answer
+                                  : _selectedAnswers[index],
                           onChanged: (value) {
                             setState(
                               () {

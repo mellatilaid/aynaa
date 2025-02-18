@@ -1,6 +1,7 @@
 // lib/core/local_storage/role_storage.dart
 import 'dart:convert';
 
+import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/features/auth/data/models/user_model.dart';
 import 'package:atm_app/features/auth/domain/entities/user_entity.dart';
@@ -19,7 +20,7 @@ class ProfileStorageImpl implements ProfileStorage {
   static const _userProfile = 'user_profile';
   static const _userRole = 'user_role';
   UserEntity? _user;
-
+  static String userRole = kStudentRole;
   @override
   UserEntity? get userProfile => _user;
 
@@ -57,6 +58,7 @@ class ProfileStorageImpl implements ProfileStorage {
     final prefs = await SharedPreferences.getInstance();
     String userJson = jsonEncode(UserModel.toMapStatic(userEntity: user));
     _user = user;
+    userRole = user.role;
     globalUserRole = user.role;
 
     await prefs.setString(_userProfile, userJson);

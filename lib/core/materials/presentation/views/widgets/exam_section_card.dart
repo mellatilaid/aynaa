@@ -1,6 +1,6 @@
-import 'package:atm_app/core/functions/build_preview.dart';
-import 'package:atm_app/core/helper/user_profile.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/widgets/custom_image_frame.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../const/remote_db_const.dart';
@@ -19,7 +19,7 @@ class ExamSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: (item.isLocked) ? null : onTap,
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(
@@ -30,9 +30,18 @@ class ExamSectionCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                buildPreview(filePath: item.localFilePath),
+                CustomImageFame(
+                    child: Image.network(
+                        'https://th.bing.com/th/id/OIF.pcNaAfX3KRzgW75SU51big?w=289&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7')),
+                // buildPreview(filePath: item.localFilePath),
                 // Background image
-
+                if (item.isLocked && ProfileStorageImpl.userRole != kAdminRole)
+                  Container(
+                    color: Colors.black.withValues(alpha: .5), // Dark overlay
+                    child: const Center(
+                      child: Icon(Icons.lock, size: 40, color: Colors.white),
+                    ),
+                  ),
                 // Title overlay
                 Positioned(
                   bottom: 0,
@@ -57,7 +66,7 @@ class ExamSectionCard extends StatelessWidget {
                 ),
               ],
             ),
-            (globalUserRole != null && globalUserRole == kAdminRole)
+            (ProfileStorageImpl.userRole == kAdminRole)
                 ? Positioned(
                     top: 0,
                     left: 0,

@@ -7,7 +7,7 @@ class ExamSectionsEntity {
   String? url;
   final String examID;
   String? localFilePath;
-
+  bool isLocked;
   ExamSectionsEntity({
     required this.entityID,
     required this.title,
@@ -16,5 +16,6 @@ class ExamSectionsEntity {
     this.url,
     required this.examID,
     this.localFilePath,
+    this.isLocked = true,
   });
 }
