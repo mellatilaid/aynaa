@@ -5,20 +5,12 @@ import '../../../../../../core/const/remote_db_const.dart';
 
 class SubjectsModel extends SubjectsEntity with Mappable {
   SubjectsModel(
-    String entityID,
-    String subjectName,
-    String versionID,
-    String url,
-    String versionName,
-    String? localFilePath,
-  ) : super(
-          entityID: entityID,
-          subjectName: subjectName,
-          versionID: versionID,
-          url: url,
-          versionName: versionName,
-          localFilePath: localFilePath,
-        );
+      {required super.entityID,
+      required super.subjectName,
+      required super.versionName,
+      required super.url,
+      required super.versionID,
+      required super.localFilePath});
 
   /*factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
     return SubjectsModel(id: data[kID].toString(), subjectName: data[kName]);
@@ -26,12 +18,12 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   factory SubjectsModel.fromSubjectEntity(SubjectsEntity subject) {
     return SubjectsModel(
-        subject.entityID,
-        subject.subjectName,
-        subject.versionID,
-        subject.url,
-        subject.versionName,
-        subject.localFilePath);
+        entityID: subject.entityID,
+        subjectName: subject.subjectName,
+        versionName: subject.versionName,
+        url: subject.url,
+        versionID: subject.versionID,
+        localFilePath: subject.localFilePath);
   }
 
   @override
@@ -46,12 +38,12 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   static SubjectsModel fromMap(Map<String, dynamic> data) {
     return SubjectsModel(
-      data[kUuid].toString(),
-      data[kSubjectName],
-      data[kVersionID],
-      data[kUrl],
-      data[kVersionName],
-      data[kLocalFilePath],
+      entityID: data[kUuid].toString(),
+      subjectName: data[kSubjectName],
+      versionID: data[kVersionID],
+      url: data[kUrl],
+      versionName: data[kVersionName],
+      localFilePath: data[kLocalFilePath],
     );
   }
 }

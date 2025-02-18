@@ -18,7 +18,9 @@ class _ExamSectionsListViewState extends State<ExamSectionsListView> {
   @override
   void initState() {
     super.initState();
-    widget.sections.first.isLocked = false; // Unlock first section
+    if (widget.sections.isNotEmpty) {
+      widget.sections[0].isLocked = false;
+    }
   }
 
   void _unlockNextSection(int completedIndex, int score) {

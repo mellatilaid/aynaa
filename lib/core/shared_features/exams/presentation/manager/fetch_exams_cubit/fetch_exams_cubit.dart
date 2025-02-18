@@ -18,13 +18,14 @@ class FetchExamsCubit extends Cubit<FetchExamsState> {
   @override
   bool isClosed = false;
 
-  Future<void> fetchExams() async {
+  Future<void> fetchExams({required String versionID}) async {
     emit(FetchExamsLoading());
-    final result = await examsRepo.fetchExams();
+    final result = await examsRepo.fetchExams(versionID: versionID);
     result.fold(
         (failure) => emit(FetchExamsFailure(errMessage: failure.errMessage)),
         (exams) {
       emit(FetchExamsSuccuss(exams: exams.reversed.toList()));
+      _stream(id: versionID);
     });
   }
 
@@ -32,12 +33,12 @@ class FetchExamsCubit extends Cubit<FetchExamsState> {
     required String id,
   }) {
     isarStorageService
-        .watchAll<ExamEntity>(collectionType: CollentionType.subjects, id: id)
+        .watchAll<ExamEntity>(collectionType: CollentionType.exam, id: id)
         .listen((items) {
       if (isClosed) return;
 
       emit(
-        FetchExamsSuccuss(exams: items.reversed.toList()),
+        FetchExamsSuccuss(exams: items),
       );
     });
   }

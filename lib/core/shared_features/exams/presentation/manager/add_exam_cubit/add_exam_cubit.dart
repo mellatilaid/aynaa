@@ -18,7 +18,7 @@ class AddExamCubit extends Cubit<AddExamState> {
     resault.fold((failure) {
       emit(AddExamFailure(errMessage: failure.errMessage));
     }, (succuss) {
-      emit(AddExamSuccuss());
+      emit(AddExamSuccuss(id: succuss));
     });
   }
 

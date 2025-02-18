@@ -51,7 +51,7 @@ class BaseHiveCache<T> implements LocalCacheService<T> {
   dynamic propertyAccessor<T>(T item, String propertyName) {
     switch (item) {
       case SubjectsEntity():
-        return item.versionID;
+        return item.versionName;
       case LessonEntity():
         switch (propertyName) {
           case kSubjectID:

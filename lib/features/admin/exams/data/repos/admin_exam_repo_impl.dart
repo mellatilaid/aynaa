@@ -26,7 +26,7 @@ class AdminExamRepoImpl extends ExamsRepo {
     required this.examsRemoteDataSource,
   });
   @override
-  Future<Either<Failures, void>> addExam(
+  Future<Either<Failures, String>> addExam(
       {required ExamEntity exam, String? filePath}) async {
     try {
       final model = ExamModel.fromExamEntity(exam);
@@ -43,7 +43,7 @@ class AdminExamRepoImpl extends ExamsRepo {
 
       await dataBase.setDate(path: DbEnpoints.exams, data: data);
 
-      return const Right('');
+      return Right(exam.versionID);
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {
@@ -64,16 +64,16 @@ class AdminExamRepoImpl extends ExamsRepo {
   }
 
   @override
-  Future<Either<Failures, List<ExamEntity>>> fetchExams() async {
+  Future<Either<Failures, List<ExamEntity>>> fetchExams(
+      {required String versionID}) async {
     try {
-      final List<ExamEntity> items;
-      /*final List<ExamEntity> localVersions =
-          await examsLocalDataSource.fetchExams();
-      log(localVersions.length.toString());
-      if (localVersions.isNotEmpty) {
-        return right(localVersions);
-      }*/
-      items = await examsRemoteDataSource.fetchExams();
+      List<ExamEntity> items;
+      items = await examsLocalDataSource.fetchExams(versionID: versionID);
+      log(items.length.toString());
+      if (items.isNotEmpty) {
+        return right(items);
+      }
+      items = await examsRemoteDataSource.fetchExams(versionID: versionID);
 
       return right(items);
     } catch (e) {

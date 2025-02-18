@@ -29,6 +29,7 @@ import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_s
 import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_remote_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
@@ -129,6 +130,19 @@ setUpServiceLocator({required UserRole userRole}) {
     ),
   );
 
+  registerIfNotExists<BackgroundServices<ExamEntity>>(
+    BackgroundServices(
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (ExamEntity entity, PostgressEventType eventType) =>
+              getit.get<ExamsLocalDataSource>().handleUpdate(
+                    exam: entity,
+                    eventType: eventType,
+                  ),
+    ),
+  );
+
   switch (userRole) {
     case UserRole.admin:
       registerIfNotExists<VersionsLocalDataSource>(
@@ -147,7 +161,8 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<ExamsLocalDataSource>(
-        AdminExamsLocalDataSourceImpl(),
+        AdminExamsLocalDataSourceImpl(
+            isarStorageService: getit.get<IsarStorageService>()),
       );
       registerIfNotExists<ExamSectionsLocalDataSource>(
         AdminExamSectionsLocalDataSourceImpl(),

@@ -52,7 +52,7 @@ class _AddExamSectionButtonBuilderState
       title: widget.titleController.text,
       url: '',
       examID: entity.entityID,
-      versionName: entity.versionName,
+      versionName: entity.versionID,
       examTitle: entity.title,
     );
   }

@@ -10,10 +10,11 @@ class SubjectsEntity with Entity {
   @Index(unique: true)
   final String entityID;
   final String subjectName;
-  final String versionID;
-  bool isDeleted = false;
   @override
   final String versionName;
+  bool isDeleted = false;
+
+  final String versionID;
   @override
   final String url;
   @override
@@ -21,9 +22,9 @@ class SubjectsEntity with Entity {
   SubjectsEntity({
     required this.entityID,
     required this.subjectName,
-    required this.versionID,
-    required this.url,
     required this.versionName,
+    required this.url,
+    required this.versionID,
     this.localFilePath,
   });
 

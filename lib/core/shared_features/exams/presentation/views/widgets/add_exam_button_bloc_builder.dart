@@ -54,6 +54,7 @@ class _AddExamButtonBlocBuilderState extends State<AddExamButtonBlocBuilder> {
       title: widget.subjectTitleController.text.trim(),
       url: '',
       versionName: versionInfo.$2,
+      versionID: versionInfo.$1,
       localFilePath: null,
     );
   }

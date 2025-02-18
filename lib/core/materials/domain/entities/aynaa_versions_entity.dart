@@ -11,6 +11,7 @@ class AynaaVersionsEntity with Entity {
   final String entityID;
   @override
   final String versionName;
+
   @override
   String? localFilePath;
   @override

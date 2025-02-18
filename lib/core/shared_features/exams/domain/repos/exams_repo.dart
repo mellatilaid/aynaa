@@ -5,8 +5,9 @@ import 'package:dartz/dartz.dart';
 abstract class ExamsRepo {
   Future<Either<Failures, String>> saveExam({required ExamEntity exam});
 
-  Future<Either<Failures, List<ExamEntity>>> fetchExams();
-  Future<Either<Failures, void>> addExam(
+  Future<Either<Failures, List<ExamEntity>>> fetchExams(
+      {required String versionID});
+  Future<Either<Failures, String>> addExam(
       {required ExamEntity exam, String? filePath});
   Future<Either<Failures, void>> deleteExam({required ExamEntity exam});
   Future<Either<Failures, void>> updateExam(

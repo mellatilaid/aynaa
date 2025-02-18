@@ -64,7 +64,9 @@ class SubjectsView extends StatelessWidget {
               SubjectsViewBody(
                 versionsEntity: aynaaVersionsEntity,
               ),
-              const ExamsViewBody(),
+              ExamsViewBody(
+                versionsEntity: aynaaVersionsEntity,
+              ),
             ],
           ),
           floatingActionButton: (globalUserRole != null &&

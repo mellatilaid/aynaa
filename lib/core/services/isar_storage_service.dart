@@ -5,6 +5,7 @@ import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dar
 import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -21,6 +22,7 @@ class IsarStorageService {
           LessonEntitySchema,
           SubjectsEntitySchema,
           DeletedItmesEntitySchema,
+          ExamEntitySchema,
         ],
         directory: dir.path,
       );
@@ -41,6 +43,8 @@ class IsarStorageService {
         return _isar.subjectsEntitys.where().findAll();
       case CollentionType.deletedItmes:
         return _isar.deletedItmesEntitys.where().findAll();
+      case CollentionType.exam:
+        return _isar.examEntitys.where().findAll();
     }
   }
 
@@ -64,6 +68,8 @@ class IsarStorageService {
           () async {},
         );
       case CollentionType.deletedItmes:
+      case CollentionType.exam:
+        return await _isar.examEntitys.getByEntityID(id);
     }
   }
 
@@ -89,6 +95,12 @@ class IsarStorageService {
           () async {
             await _isar.subjectsEntitys
                 .putAllByEntityID(items as List<SubjectsEntity>);
+          },
+        );
+      case CollentionType.exam:
+        await _isar.writeTxn(
+          () async {
+            await _isar.examEntitys.putAllByEntityID(items as List<ExamEntity>);
           },
         );
       case CollentionType.deletedItmes:
@@ -126,6 +138,12 @@ class IsarStorageService {
                 .putByIndex('itemID', item as DeletedItmesEntity);
           },
         );
+      case CollentionType.exam:
+        await _isar.writeTxn(
+          () async {
+            await _isar.examEntitys.putByIndex('entityID', item as ExamEntity);
+          },
+        );
     }
   }
 
@@ -158,6 +176,12 @@ class IsarStorageService {
                 .deleteAll();
           },
         );
+      case CollentionType.exam:
+        await _isar.writeTxn(
+          () async {
+            await _isar.examEntitys.filter().entityIDEqualTo(id).deleteAll();
+          },
+        );
     }
   }
 
@@ -180,6 +204,10 @@ class IsarStorageService {
       case CollentionType.deletedItmes:
         await _isar.writeTxn(() async {
           await _isar.deletedItmesEntitys.deleteAll(ids);
+        });
+      case CollentionType.exam:
+        await _isar.writeTxn(() async {
+          await _isar.examEntitys.deleteAll(ids);
         });
     }
   }
@@ -208,6 +236,12 @@ class IsarStorageService {
             .group((q) => q.isDeletedEqualTo(false))
             .findAll();
         return result;
+      case CollentionType.exam:
+        final result = await _isar.examEntitys
+            .filter()
+            .versionIDEqualTo(query[kVersionID])
+            .findAll();
+        return result;
       case CollentionType.deletedItmes:
     }
   }
@@ -229,6 +263,10 @@ class IsarStorageService {
       case CollentionType.subjects:
         await _isar.writeTxn(() async {
           await _isar.subjectsEntitys.clear();
+        });
+      case CollentionType.exam:
+        await _isar.writeTxn(() async {
+          await _isar.examEntitys.clear();
         });
       case CollentionType.deletedItmes:
     }
@@ -265,6 +303,15 @@ class IsarStorageService {
               .group((q) => q.isDeletedEqualTo(false))
               .findAll() as List<T>;
         });
+      case CollentionType.exam:
+        Stream<void> subjectsStream = _isar.examEntitys.watchLazy();
+        yield* subjectsStream.asyncMap((_) async {
+          return await _isar.examEntitys
+              .where()
+              .filter()
+              .versionIDEqualTo(id!)
+              .findAll() as List<T>;
+        });
 
       case CollentionType.deletedItmes:
     }
@@ -295,6 +342,16 @@ class IsarStorageService {
           await put(
             item: deletedSubject,
             collentionType: CollentionType.subjects,
+          );
+        }
+      case CollentionType.exam:
+        final deletedSubject =
+            await get(id: id, collentionType: CollentionType.exam);
+        if (deletedSubject != null) {
+          deletedSubject.isDeleted = true;
+          await put(
+            item: deletedSubject,
+            collentionType: CollentionType.exam,
           );
         }
       case CollentionType.deletedItmes:
