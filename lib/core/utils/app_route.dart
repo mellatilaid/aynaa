@@ -4,7 +4,7 @@ import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/exam_sections_view.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/views/test_view.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/views/quiz_view.dart';
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
 import 'package:atm_app/features/splash_view/presentation/views/splash_view.dart';
@@ -92,7 +92,7 @@ abstract class AppRouter {
           path: testView,
           builder: (context, state) {
             final data = state.extra as ExamSectionsEntity;
-            return TestView(
+            return QuizView(
               examSectionsEntity: data,
             );
           }),

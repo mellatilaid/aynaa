@@ -27,7 +27,7 @@ class QuestionModel extends QuestionEntity with Mappable {
       sectionID: map[kSectionID],
       question: map[kQuestion],
       answer: map[kAnswer],
-      options: map[kOptions],
+      options: List<String>.from(map[kOptions]),
     );
   }
 
