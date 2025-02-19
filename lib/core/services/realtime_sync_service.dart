@@ -12,6 +12,9 @@ import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dar
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/background_services.dart';
+import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
+import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -74,6 +77,10 @@ class RealtimeSyncService {
     _subscribeToTable(
       table: DbEnpoints.lessons,
       handler: _handleLessonChange,
+    );
+    _subscribeToTable(
+      table: DbEnpoints.exams,
+      handler: _handleExamsChange,
     );
   }
 
@@ -161,6 +168,29 @@ class RealtimeSyncService {
               eventType: PostgressEventType.delete,
             );
 
+        break;
+      default:
+    }
+  }
+
+  void _handleExamsChange(PostgresChangePayload payload) {
+    switch (payload.eventType) {
+      case PostgresChangeEvent.insert:
+        final entity = ExamModel.fromMap(payload.newRecord);
+        log(payload.toString());
+        log('iserted subject to remote id is ${entity.entityID}');
+        getit
+            .get<ExamsLocalDataSource>()
+            .handleUpdate(exam: entity, eventType: PostgressEventType.insert);
+        getit
+            .get<BackgroundServices<ExamEntity>>()
+            .startBackgroundDownloads([entity]);
+        break;
+      case PostgresChangeEvent.delete:
+        getit.get<ExamsLocalDataSource>().handleUpdate(
+              id: payload.oldRecord[kUuid],
+              eventType: PostgressEventType.delete,
+            );
         break;
       default:
     }
