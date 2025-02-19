@@ -1,6 +1,8 @@
 import 'package:atm_app/core/widgets/custom_text_button.dart';
 import 'package:flutter/material.dart';
 
+import 'save_questions_button_builder.dart';
+
 class AddQuestionDialogBottomNavBar extends StatelessWidget {
   final VoidCallback onAddQuestion;
   final VoidCallback onSave;
@@ -22,10 +24,7 @@ class AddQuestionDialogBottomNavBar extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: CustomTextButton(
-            title: 'حفظ',
-            onPressed: onSave,
-          ),
+          child: SaveQuestionsButtonBuilder(onSave: onSave),
         ),
       ]),
     );

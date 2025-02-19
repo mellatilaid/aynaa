@@ -25,6 +25,11 @@ class _QuizViewBodyState extends State<QuizViewBody> {
     return BlocBuilder<FetchQuestionsCubit, FetchQuestionsState>(
       builder: (context, state) {
         if (state is FetchQuestionsSuccuss) {
+          if (state.questions.isEmpty) {
+            return const Center(
+              child: Text('No Questions Found'),
+            );
+          }
           return OneChoiceQuize(questions: state.questions);
         } else if (state is FetchQuestionsLoading) {
           return const LoadingWidget();

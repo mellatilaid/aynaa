@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exams_list_view.dart';
+import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/core/widgets/failure_message_widget.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:flutter/widgets.dart';
@@ -22,8 +25,14 @@ class _ExamsViewBodyState extends State<ExamsViewBody> {
     // TODO: implement initState
     super.initState();
     log('version id is ${widget.versionsEntity.entityID}');
-    BlocProvider.of<FetchExamsCubit>(context)
-        .fetchExams(versionID: widget.versionsEntity.entityID);
+    if (0 == 0) {
+      BlocProvider.of<FetchExamsCubit>(context)
+          .fetchExams(versionID: widget.versionsEntity.entityID);
+    } else {
+      getit.get<IsarStorageService>().clear(
+            collentionType: CollentionType.exam,
+          );
+    }
   }
 
   @override

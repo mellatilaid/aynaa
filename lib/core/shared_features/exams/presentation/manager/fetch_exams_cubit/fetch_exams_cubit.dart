@@ -24,7 +24,7 @@ class FetchExamsCubit extends Cubit<FetchExamsState> {
     result.fold(
         (failure) => emit(FetchExamsFailure(errMessage: failure.errMessage)),
         (exams) {
-      emit(FetchExamsSuccuss(exams: exams.reversed.toList()));
+      emit(FetchExamsSuccuss(exams: exams));
       _stream(id: versionID);
     });
   }
