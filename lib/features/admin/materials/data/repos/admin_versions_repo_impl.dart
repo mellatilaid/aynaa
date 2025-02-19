@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/functions/check_internet.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
@@ -33,16 +34,18 @@ class AdminVersionsRepoImpl extends VersionsRepo {
   @override
   Future<Either<Failures, List<AynaaVersionsEntity>>> fetchVersions() async {
     try {
-      final List<AynaaVersionsEntity> localVersions =
-          await versionsLocalDataSource.fetchVersion();
-      log(localVersions.length.toString());
-      if (localVersions.isNotEmpty) {
-        return right(localVersions);
+      List<AynaaVersionsEntity> versions;
+      if ((await hasInternetConnection())) {
+        versions = await remoteDataSource.fetchAynaaVersions();
       }
-      final List<AynaaVersionsEntity> remoteVersions =
-          await remoteDataSource.fetchAynaaVersions();
-      log('remote version ${remoteVersions.length}');
-      return right(remoteVersions);
+      versions = await versionsLocalDataSource.fetchVersion();
+      log(versions.length.toString());
+      if (versions.isNotEmpty) {
+        return right(versions);
+      }
+      versions = await remoteDataSource.fetchAynaaVersions();
+      log('remote version ${versions.length}');
+      return right(versions);
     } catch (e) {
       return left(ServerFailure(errMessage: e.toString()));
     }

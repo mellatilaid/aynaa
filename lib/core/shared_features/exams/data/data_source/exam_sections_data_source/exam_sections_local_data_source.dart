@@ -5,7 +5,7 @@ import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections
 abstract class ExamSectionsLocalDataSource {
   Future<List<ExamEntity>> fetchExamSections({required String examID});
   Future<void> handleUpdate(
-      {ExamSectionsEntity? examSectionsEntity,
+      {ExamSectionsEntity? item,
       String? id,
       required PostgressEventType eventType});
 }
