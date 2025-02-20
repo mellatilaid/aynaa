@@ -3,6 +3,7 @@ import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dar
 
 abstract class VersionsLocalDataSource {
   Future<List<AynaaVersionsEntity>> fetchVersion();
+
   Future<void> handleUpdate(
       {AynaaVersionsEntity? version,
       String? id,

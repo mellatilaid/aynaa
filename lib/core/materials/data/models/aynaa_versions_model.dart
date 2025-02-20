@@ -22,7 +22,7 @@ class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
           localFilePath: localFilePath,
         );
 
-  factory AynaaVersionsModel.fromSupabase(Map<String, dynamic> data) {
+  factory AynaaVersionsModel.fromJson(Map<String, dynamic> data) {
     return AynaaVersionsModel(
       data[kUuid].toString(),
       aynaaVersion: data[kVersionName],

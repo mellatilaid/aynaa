@@ -24,10 +24,13 @@ class SupabaseDb extends DataBase {
 
   @override
   Future getData(
-      {required String path, String? uID, Map<String, dynamic>? query}) async {
+      {required String path,
+      String? uID,
+      Map<String, dynamic>? query,
+      String? columns}) async {
     if (uID == null && query == null) {
       final List<Map<String, dynamic>> data =
-          await _supabase.from(path).select();
+          await _supabase.from(path).select(columns ?? '*');
       return data;
     }
     if (query != null) {

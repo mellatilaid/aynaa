@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/core/functions/check_internet.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
@@ -35,10 +34,8 @@ class AdminVersionsRepoImpl extends VersionsRepo {
   Future<Either<Failures, List<AynaaVersionsEntity>>> fetchVersions() async {
     try {
       List<AynaaVersionsEntity> versions;
-      if ((await hasInternetConnection())) {
-        versions = await remoteDataSource.fetchAynaaVersions();
-      }
       versions = await versionsLocalDataSource.fetchVersion();
+
       log(versions.length.toString());
       if (versions.isNotEmpty) {
         return right(versions);

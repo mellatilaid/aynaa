@@ -31,4 +31,10 @@ class StudentVersionsRemoteDataSourceImpl
         .startBackgroundDownloads(versions);
     return versions;
   }
+
+  @override
+  Future<void> syncVersions() {
+    // TODO: implement syncVersions
+    throw UnimplementedError();
+  }
 }

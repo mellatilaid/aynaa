@@ -73,6 +73,11 @@ class IsarStorageService {
     }
   }
 
+  Future<String> getIsarPath() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return dir.path;
+  }
+
   Future<void> putAll({
     required List<dynamic> items,
     required CollentionType collentionType,

@@ -2,4 +2,5 @@ import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dar
 
 abstract class AynaaVersionsRemoteDataSource {
   Future<List<AynaaVersionsEntity>> fetchAynaaVersions();
+  Future<void> syncVersions();
 }
