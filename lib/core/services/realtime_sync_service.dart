@@ -106,7 +106,7 @@ class RealtimeSyncService {
   void _handleVersionChange(PostgresChangePayload payload) {
     switch (payload.eventType) {
       case PostgresChangeEvent.insert:
-        final entity = AynaaVersionsModel.fromMap(payload.newRecord);
+        final entity = AynaaVersionsModel.fromJson(payload.newRecord);
         log(payload.toString());
         log('iserted subject to remote id is ${entity.entityID}');
         getit.get<VersionsLocalDataSource>().handleUpdate(

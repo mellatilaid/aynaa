@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/storage_service.dart';

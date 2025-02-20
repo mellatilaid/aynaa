@@ -2,7 +2,7 @@ import 'package:atm_app/core/const/app_const.dart';
 import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_bottom_sheet.dart';
@@ -31,13 +31,13 @@ class SubjectsView extends StatelessWidget {
         BlocProvider(
           create: (context) => FetchSubjectCubit(
             getit.get<SubjectsRepo>(),
-            getit.get<IsarStorageService>(),
+            getit.get<LocalDBService>(),
           ),
         ),
         BlocProvider(
           create: (context) => FetchExamsCubit(
             examsRepo: getit.get<ExamsRepo>(),
-            isarStorageService: getit.get<IsarStorageService>(),
+            isarStorageService: getit.get<LocalDBService>(),
           ),
         ),
         BlocProvider(
@@ -117,7 +117,7 @@ class SubjectsView extends StatelessWidget {
     return BlocProvider(
       create: (context) => FetchSubjectCubit(
         getit.get<SubjectsRepo>(),
-        getit.get<IsarStorageService>(),
+        getit.get<LocalDBService>(),
       ),
       child: Scaffold(
         appBar: AppBar(

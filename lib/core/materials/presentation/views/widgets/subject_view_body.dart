@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/helper/enums.dart';
-import '../../../../../../core/services/isar_storage_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
+import '../../../../services/local_d_b_service.dart';
 import 'subjects_list_view.dart';
 
 class SubjectsViewBody extends StatefulWidget {
@@ -29,7 +29,7 @@ class _SubjectsViewBodyState extends State<SubjectsViewBody> {
       BlocProvider.of<FetchSubjectCubit>(context)
           .fetchSubjects(versionID: widget.versionsEntity.entityID);
     } else {
-      getit.get<IsarStorageService>().clear(
+      getit.get<LocalDBService>().clear(
             collentionType: CollentionType.subjects,
           );
     }

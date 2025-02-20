@@ -5,7 +5,7 @@ import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_background_sync.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 
 import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import '../../../../../../core/services/background_services.dart';
@@ -15,7 +15,7 @@ import '../../../../../../core/utils/set_up_service_locator.dart';
 class AdminVersionsRemoteDataSourceImpl
     implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
-  final IsarStorageService isarStorageService;
+  final LocalDBService isarStorageService;
   AdminVersionsRemoteDataSourceImpl({
     required this.dataBase,
     required this.isarStorageService,
@@ -27,7 +27,7 @@ class AdminVersionsRemoteDataSourceImpl
 
     List<AynaaVersionsEntity> versions =
         mapToListOfEntity(aynaaVersions, Entities.version);
-    isarStorageService.putAll(
+    isarStorageService.putAll<AynaaVersionsEntity>(
         items: versions, collentionType: CollentionType.versions);
     getit
         .get<BackgroundServices<AynaaVersionsEntity>>()

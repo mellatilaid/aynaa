@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/helper/enums.dart';
-import '../../../../../../core/services/isar_storage_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
+import '../../../../services/local_d_b_service.dart';
 import 'aynaa_versions_list_view.dart';
 
 class AynaaVersionsViewBody extends StatefulWidget {
@@ -24,7 +24,7 @@ class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
     if (0 == 0) {
       BlocProvider.of<FetchAynaaVersionsCubit>(context).fetchAynaaVersions();
     } else {
-      getit.get<IsarStorageService>().clear(
+      getit.get<LocalDBService>().clear(
             collentionType: CollentionType.versions,
           );
     }

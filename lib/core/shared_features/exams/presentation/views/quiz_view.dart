@@ -1,4 +1,4 @@
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/add_questions_cubit.dart';
@@ -19,7 +19,7 @@ class QuizView extends StatelessWidget {
     return BlocProvider(
       create: (context) => FetchQuestionsCubit(
         questionsRepo: getit.get<QuestionRepo>(),
-        isarStorageService: getit.get<IsarStorageService>(),
+        isarStorageService: getit.get<LocalDBService>(),
       )..fetchQuestions(id: examSectionsEntity.entityID),
       child: Scaffold(
         appBar: AppBar(

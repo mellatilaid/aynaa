@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/helper/enums.dart';
-import '../../../../../../core/services/isar_storage_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import '../../../../services/local_d_b_service.dart';
 import 'lessons_list_view.dart';
 
 class LessonsViewBody extends StatefulWidget {
@@ -28,9 +28,7 @@ class _LessonsViewBodyState extends State<LessonsViewBody> {
       BlocProvider.of<FetchLessonsCubit>(context).fetchLessons(
           subjectID: widget.subjectsEntity.entityID, versionID: versionID);
     } else {
-      getit
-          .get<IsarStorageService>()
-          .clear(collentionType: CollentionType.lessons);
+      getit.get<LocalDBService>().clear(collentionType: CollentionType.lessons);
     }
     /* */
   }

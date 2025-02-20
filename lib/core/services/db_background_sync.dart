@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,14 +40,14 @@ Future<void> syncDataInBackground(IsolateSyncParams params) async {
 }
 
 void _syncIsolate(String params) async {
-  final IsarStorageService isar0 = IsarStorageService();
+  // final IsarStorageService isar0 = IsarStorageService();
   final isar = await Isar.open(
     [AynaaVersionsEntitySchema], // Replace with your schemas
     directory: params,
   );
   BackgroundIsolateBinaryMessenger.ensureInitialized;
-  final String isarPath = await isar0.getIsarPath();
-  log(isarPath);
+  //final String isarPath = await isar0.getIsarPath();
+  // log(isarPath);
   //final lastSyncTime = await getLastSyncTime(isar, params.tableName);
 
   /*final updatedResponse = await params.fetchRemoteData();

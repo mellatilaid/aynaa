@@ -1,4 +1,4 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/functions/build_preview.dart';
 import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';

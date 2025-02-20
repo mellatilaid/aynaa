@@ -1,4 +1,4 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:isar/isar.dart';
 
 part 'aynaa_versions_entity.g.dart';
@@ -14,13 +14,16 @@ class AynaaVersionsEntity with Entity {
 
   @override
   String? localFilePath;
+  String updatedAt;
   @override
   String url;
-  AynaaVersionsEntity(
-      {required this.entityID,
-      required this.versionName,
-      required this.url,
-      this.localFilePath});
+  AynaaVersionsEntity({
+    required this.entityID,
+    required this.versionName,
+    required this.url,
+    required this.updatedAt,
+    this.localFilePath,
+  });
 
   @override
   // TODO: implement name

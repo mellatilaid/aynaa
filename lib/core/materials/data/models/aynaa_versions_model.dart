@@ -4,56 +4,48 @@ import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/mixins/mappable.dart';
 
 class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
-  final String aynaaVersion;
-
-  @override
-  final String entityID;
-  @override
-  String? localFilePath;
-  @override
-  String url;
-
-  AynaaVersionsModel(this.entityID,
-      {required this.aynaaVersion, required this.url, this.localFilePath})
-      : super(
-          versionName: aynaaVersion,
-          entityID: entityID,
-          url: url,
-          localFilePath: localFilePath,
-        );
-
+  AynaaVersionsModel({
+    required super.entityID,
+    required super.versionName,
+    required super.url,
+    required super.updatedAt,
+    super.localFilePath,
+  });
   factory AynaaVersionsModel.fromJson(Map<String, dynamic> data) {
     return AynaaVersionsModel(
-      data[kUuid].toString(),
-      aynaaVersion: data[kVersionName],
+      entityID: data[kUuid].toString(),
+      versionName: data[kVersionName],
       url: data[kUrl],
+      updatedAt: data[kUpdatedAt],
       //localFilePath: data[kLocalFilePath],
     );
   }
 
   factory AynaaVersionsModel.fromVersionEntity(AynaaVersionsEntity version) {
     return AynaaVersionsModel(
-      version.entityID,
-      aynaaVersion: version.versionName,
+      entityID: version.entityID,
+      versionName: version.versionName,
       url: version.url,
+      updatedAt: version.updatedAt,
       //localFilePath: data[kLocalFilePath],
     );
   }
 
-  static AynaaVersionsModel fromMap(Map<String, dynamic> data) {
+  /* static AynaaVersionsModel fromMap(Map<String, dynamic> data) {
     return AynaaVersionsModel(
       data[kUuid].toString(),
       aynaaVersion: data[kVersionName],
       url: data[kUrl],
       localFilePath: data[kLocalFilePath],
     );
-  }
+  }*/
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      kVersionName: aynaaVersion,
+      kVersionName: versionName,
       kUrl: url,
+      kUpdatedAt: updatedAt,
     };
   }
 }

@@ -1,7 +1,7 @@
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/add_text_lesson_bottom_sheet.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 import 'package:atm_app/core/widgets/floating_optional_speed_dial.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_lessons_cubit/fetch_lessons_cubit.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class LessonsView extends StatelessWidget {
     return BlocProvider(
       create: (context) => FetchLessonsCubit(
         lessonsRepo: getit.get<LessonsRepo>(),
-        isarStorageService: getit.get<IsarStorageService>(),
+        isarStorageService: getit.get<LocalDBService>(),
       ),
       child: Scaffold(
         appBar: AppBar(

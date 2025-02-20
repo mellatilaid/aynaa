@@ -1,4 +1,4 @@
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exam_sections_cubit/fetch_exam_sections_cubit.dart';
@@ -18,7 +18,7 @@ class ExamSectionsView extends StatelessWidget {
     return BlocProvider(
       create: (context) => FetchExamSectionsCubit(
         examSectionsRepo: getit.get<ExamSectionsRepo>(),
-        isarStorageService: getit.get<IsarStorageService>(),
+        isarStorageService: getit.get<LocalDBService>(),
       )..fetchExams(
           id: examEntity.entityID,
         ),

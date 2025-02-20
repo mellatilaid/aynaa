@@ -4,13 +4,13 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 
 import '../../../../../../core/services/background_services.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
-  final IsarStorageService isarStorageService;
+  final LocalDBService isarStorageService;
   StudentSubjectsLocalDataSourceImpl({required this.isarStorageService});
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
@@ -37,8 +37,7 @@ class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
       required PostgressEventType eventType}) async {
     switch (eventType) {
       case PostgressEventType.insert:
-        await isarStorageService.put(
-            item: subject, collentionType: CollentionType.subjects);
+        await isarStorageService.put(item: subject);
         /* final newLessons = await isarStorageService.filter(
           collentionType: CollentionType.lessons,
           query: {

@@ -1,7 +1,7 @@
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/background_services.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
@@ -9,7 +9,7 @@ import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import '../../../../../../core/shared_features/exams/data/data_source/exam_sections_data_source/exam_sections_local_data_source.dart';
 
 class AdminExamSectionsLocalDataSourceImpl extends ExamSectionsLocalDataSource {
-  final IsarStorageService isarStorageService;
+  final LocalDBService isarStorageService;
 
   AdminExamSectionsLocalDataSourceImpl({required this.isarStorageService});
 
@@ -30,8 +30,7 @@ class AdminExamSectionsLocalDataSourceImpl extends ExamSectionsLocalDataSource {
       required PostgressEventType eventType}) async {
     switch (eventType) {
       case PostgressEventType.insert:
-        await isarStorageService.put(
-            item: item, collentionType: CollentionType.exam);
+        await isarStorageService.put<ExamSectionsEntity>(item: item);
 
         break;
       case PostgressEventType.delete:

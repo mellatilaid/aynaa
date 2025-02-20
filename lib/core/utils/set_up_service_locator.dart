@@ -1,4 +1,5 @@
 import 'package:atm_app/core/classes/pick_file.dart';
+import 'package:atm_app/core/common/settings_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
@@ -7,6 +8,7 @@ import 'package:atm_app/core/materials/data/data_source/subjects_data_source/sub
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
@@ -16,7 +18,7 @@ import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
@@ -59,6 +61,8 @@ import 'package:atm_app/features/student/materials/data/data_source/subjects_dat
 import 'package:atm_app/features/student/materials/data/data_source/versions_data_source.dart/versions_local_data_source.dart';
 import 'package:atm_app/features/student/materials/data/data_source/versions_data_source.dart/versions_remote_data_sourse.dart';
 import 'package:get_it/get_it.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_remote_data_source.dart';
 import '../../features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_remote_data_source.dart';
@@ -67,26 +71,28 @@ import '../../features/student/materials/data/repos/student_subjects_repo_impl.d
 import '../../features/student/materials/data/repos/student_versions_repo_impl.dart';
 
 final getit = GetIt.instance;
-setUpCoreServiceLocator() {
-  getit.registerSingleton<StorageService>(SupaBaseStorage());
-  getit.registerSingleton<DataBase>(SupabaseDb());
+setUpCoreServiceLocator() async {
   getit
-      .registerSingleton<ProfileStorage>(ProfileStorageImpl())
-      .loadUserProfile();
-  getit.registerSingleton<AuthRepo>(
-    AuthRepoImpl(
+    ..registerSingleton<StorageService>(SupaBaseStorage())
+    ..registerSingleton<DataBase>(SupabaseDb())
+    ..registerSingleton<ProfileStorage>(ProfileStorageImpl()).loadUserProfile()
+    ..registerSingletonAsync<Isar>(() async => await _isarInit())
+    ..registerSingleton<AuthRepo>(AuthRepoImpl(
         authServices: SupabaseAuthService(),
         dataBase: SupabaseDb(),
-        profileStorage: getit.get<ProfileStorage>()),
-  );
-  getit.registerSingleton<IsarStorageService>(IsarStorageService());
-  getit.registerSingleton<RealtimeSyncService>(RealtimeSyncService());
+        profileStorage: getit.get<ProfileStorage>()));
+
+  await getit.allReady();
+  getit
+    ..registerFactory<LocalDBService>(() => LocalDBService(getit()))
+    ..registerSingleton<RealtimeSyncService>(RealtimeSyncService());
+  //..registerSingletonAsync<Isar>(() async => _isarInit());
 }
 
 setUpServiceLocator({required UserRole userRole}) {
   void registerIfNotExists<T extends Object>(T instance) {
     if (!getit.isRegistered<T>()) {
-      getit.registerSingleton<T>(instance);
+      getit.registerLazySingleton<T>(() => instance);
     }
   }
 
@@ -160,26 +166,26 @@ setUpServiceLocator({required UserRole userRole}) {
     case UserRole.admin:
       registerIfNotExists<VersionsLocalDataSource>(
         AdminVersionsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<SubjectsLocalDataSource>(
         AdminSubjectsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
         AdminLessonsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<ExamsLocalDataSource>(
         AdminExamsLocalDataSourceImpl(
-            isarStorageService: getit.get<IsarStorageService>()),
+            isarStorageService: getit.get<LocalDBService>()),
       );
       registerIfNotExists<ExamSectionsLocalDataSource>(
         AdminExamSectionsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<QuestionsLocalDataSource>(
@@ -188,19 +194,19 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
         AdminVersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(
         AdminSubjectsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<LessonsRemoteDataSource>(
         LessonsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
           storageService: getit.get<StorageService>(),
           fileCacheManager: getit.get<FileCacheManager>(),
         ),
@@ -208,19 +214,19 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<ExamsRemoteDataSource>(
         AdminExamsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<ExamSectionsRemoteDataSource>(
         AdminExamSectionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<QuestionsRemoteDataSource>(
         AdminQuestionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
 
@@ -277,35 +283,35 @@ setUpServiceLocator({required UserRole userRole}) {
     case UserRole.student:
       registerIfNotExists<VersionsLocalDataSource>(
         StudentVersionsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<SubjectsLocalDataSource>(
         StudentSubjectsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
         StudentLessonsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
         StudentVersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(
         StudentSubjectsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<LessonsRemoteDataSource>(
         StudentLessonsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<IsarStorageService>(),
+          isarStorageService: getit.get<LocalDBService>(),
           storageService: getit.get<StorageService>(),
           fileCacheManager: getit.get<FileCacheManager>(),
         ),
@@ -346,9 +352,26 @@ setUpServiceLocator({required UserRole userRole}) {
     DeleteItemsServiceImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
-      isarStorageService: getit.get<IsarStorageService>(),
+      isarStorageService: getit.get<LocalDBService>(),
     ),
   );
+}
+
+Future<Isar> _isarInit() async {
+  final dir = await getApplicationDocumentsDirectory();
+  final isar = await Isar.open(
+    [
+      AynaaVersionsEntitySchema,
+      LessonEntitySchema,
+      SubjectsEntitySchema,
+      DeletedItmesEntitySchema,
+      ExamEntitySchema,
+      SettingsEntitySchema,
+    ],
+    directory: dir.path,
+  );
+
+  return isar;
 }
 
 /*setUpServiceLocator({required UserRole userRole}) {

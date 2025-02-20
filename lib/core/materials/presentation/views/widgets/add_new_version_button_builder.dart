@@ -43,9 +43,10 @@ class _AddNewVersionButtonBuilderState
 
   _toVersionEntity() {
     return AynaaVersionsModel(
-      '0',
-      aynaaVersion: widget.subjectTitleController.text,
+      entityID: '0',
+      versionName: widget.subjectTitleController.text,
       url: '',
+      updatedAt: DateTime.now().toUtc().toIso8601String(),
     );
   }
 }

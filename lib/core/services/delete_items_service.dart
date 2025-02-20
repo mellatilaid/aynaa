@@ -1,9 +1,9 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_d_b_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:path/path.dart' as path;
@@ -24,7 +24,7 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   final DataBase dataBase;
   final StorageService storageService;
 
-  final IsarStorageService isarStorageService;
+  final LocalDBService isarStorageService;
   DeleteItemsServiceImpl({
     required this.dataBase,
     required this.storageService,
@@ -38,9 +38,7 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   Future<void> deleteItemPermanently(
       {required DeletedItemType deletedItemType}) async {
     _deletedItemType = deletedItemType;
-    deletedItems = await isarStorageService.getAll(
-      collentionType: CollentionType.deletedItmes,
-    ) as List<DeletedItmesEntity>;
+    deletedItems = await isarStorageService.getAll<DeletedItmesEntity>();
     for (var item in deletedItems) {
       _item = await isarStorageService.get(
         id: item.itemID,

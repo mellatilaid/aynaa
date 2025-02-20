@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
@@ -11,10 +12,12 @@ import 'package:path_provider/path_provider.dart';
 
 import '../helper/enums.dart';
 
-class IsarStorageService {
-  late Isar _isar;
+class LocalDBService {
+  final Isar _isar;
+
+  LocalDBService(this._isar);
   Future<void> init() async {
-    if (Isar.instanceNames.isEmpty) {
+    /* if (Isar.instanceNames.isEmpty) {
       final dir = await getApplicationDocumentsDirectory();
       _isar = await Isar.open(
         [
@@ -23,37 +26,37 @@ class IsarStorageService {
           SubjectsEntitySchema,
           DeletedItmesEntitySchema,
           ExamEntitySchema,
+          SettingsEntitySchema,
         ],
         directory: dir.path,
       );
-    }
+    }*/
   }
 
   /// Get all cached items
-  Future<List<dynamic>> getAll({
-    required CollentionType collentionType,
-  }) async {
+  Future<List<E>> getAll<E>() async {
     await init();
-    switch (collentionType) {
-      case CollentionType.lessons:
-        return _isar.aynaaVersionsEntitys.where().findAll();
-      case CollentionType.versions:
-        return _isar.aynaaVersionsEntitys.where().findAll();
-      case CollentionType.subjects:
-        return _isar.subjectsEntitys.where().findAll();
-      case CollentionType.deletedItmes:
-        return _isar.deletedItmesEntitys.where().findAll();
-      case CollentionType.exam:
-        return _isar.examEntitys.where().findAll();
+    try {
+      final collection = _isar.collection<E>();
+      final items = await collection.where().findAll();
+      return items;
+    } catch (e) {
+      rethrow;
     }
   }
 
   /// Get a single item by ID
-  Future<dynamic> get(
+  Future<E?> get<E>(
       {required String id, required CollentionType collentionType}) async {
     await init();
-
-    switch (collentionType) {
+    try {
+      final collection = _isar.collection<E>();
+      final item = await collection.getByIndex(kIndexBy, [id]);
+      return item;
+    } catch (e) {
+      rethrow;
+    }
+    /*switch (collentionType) {
       case CollentionType.lessons:
         await _isar.writeTxn(() async {
           return await _isar.lessonEntitys.getByEntityID(id);
@@ -70,7 +73,7 @@ class IsarStorageService {
       case CollentionType.deletedItmes:
       case CollentionType.exam:
         return await _isar.examEntitys.getByEntityID(id);
-    }
+    }*/
   }
 
   Future<String> getIsarPath() async {
@@ -78,142 +81,57 @@ class IsarStorageService {
     return dir.path;
   }
 
-  Future<void> putAll({
+  Future<void> putAll<E>({
     required List<dynamic> items,
     required CollentionType collentionType,
   }) async {
     await init();
-
-    switch (collentionType) {
-      case CollentionType.lessons:
-        await _isar.writeTxn(() async {
-          await _isar.lessonEntitys
-              .putAllByEntityID(items as List<LessonEntity>);
-        });
-      case CollentionType.versions:
-        await _isar.writeTxn(() async {
-          await _isar.aynaaVersionsEntitys
-              .putAllByEntityID(items as List<AynaaVersionsEntity>);
-        });
-      case CollentionType.subjects:
-        await _isar.writeTxn(
-          () async {
-            await _isar.subjectsEntitys
-                .putAllByEntityID(items as List<SubjectsEntity>);
-          },
-        );
-      case CollentionType.exam:
-        await _isar.writeTxn(
-          () async {
-            await _isar.examEntitys.putAllByEntityID(items as List<ExamEntity>);
-          },
-        );
-      case CollentionType.deletedItmes:
+    try {
+      final collection = _isar.collection<E>();
+      await _isar.writeTxn(() async {
+        await collection.putAllByIndex(kIndexBy, items as List<E>);
+      });
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> put(
-      {required dynamic item, required CollentionType collentionType}) async {
+  Future<void> put<E>({required dynamic item}) async {
     await init();
-    switch (collentionType) {
-      case CollentionType.lessons:
-        log('i am trigrred again ${_isar.lessonEntitys.count().toString()}');
-        await _isar.writeTxn(() async {
-          await _isar.lessonEntitys
-              .putByIndex('entityID', item as LessonEntity);
-        });
-        log(_isar.lessonEntitys.count().toString());
-        log('item added to isar');
-      case CollentionType.versions:
-        await _isar.writeTxn(() async {
-          await _isar.aynaaVersionsEntitys
-              .putByIndex('entityID', item as AynaaVersionsEntity);
-        });
-      case CollentionType.subjects:
-        await _isar.writeTxn(
-          () async {
-            await _isar.subjectsEntitys
-                .putByIndex('entityID', item as SubjectsEntity);
-          },
-        );
-      case CollentionType.deletedItmes:
-        await _isar.writeTxn(
-          () async {
-            await _isar.deletedItmesEntitys
-                .putByIndex('itemID', item as DeletedItmesEntity);
-          },
-        );
-      case CollentionType.exam:
-        await _isar.writeTxn(
-          () async {
-            await _isar.examEntitys.putByIndex('entityID', item as ExamEntity);
-          },
-        );
+    try {
+      final collection = _isar.collection<E>();
+      await _isar.writeTxn(() async {
+        await collection.putByIndex(kIndexBy, item as E);
+      });
+    } catch (e) {
+      rethrow;
     }
   }
 
   /// Delete items by IDs
-  Future<void> delete(
+  Future<void> delete<E>(
       {required String id, required CollentionType collentionType}) async {
     await init();
-    switch (collentionType) {
-      case CollentionType.lessons:
-        await _isar.writeTxn(() async {
-          await _isar.lessonEntitys.filter().entityIDEqualTo(id).deleteAll();
-        });
-      case CollentionType.versions:
-        await _isar.writeTxn(() async {
-          await _isar.aynaaVersionsEntitys
-              .filter()
-              .entityIDEqualTo(id)
-              .deleteAll();
-        });
-      case CollentionType.subjects:
-        await _isar.writeTxn(() async {
-          await _isar.subjectsEntitys.filter().entityIDEqualTo(id).deleteAll();
-        });
-      case CollentionType.deletedItmes:
-        await _isar.writeTxn(
-          () async {
-            await _isar.deletedItmesEntitys
-                .filter()
-                .itemIDEqualTo(id)
-                .deleteAll();
-          },
-        );
-      case CollentionType.exam:
-        await _isar.writeTxn(
-          () async {
-            await _isar.examEntitys.filter().entityIDEqualTo(id).deleteAll();
-          },
-        );
+    try {
+      final collection = _isar.collection<E>();
+      await _isar.writeTxn(() async {
+        await collection.deleteByIndex(kIndexBy, [id]);
+      });
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> deleteAll(
+  Future<void> deleteAll<E>(
       {required List<Id> ids, required CollentionType collentionType}) async {
     await init();
-    switch (collentionType) {
-      case CollentionType.lessons:
-        await _isar.writeTxn(() async {
-          await _isar.lessonEntitys.deleteAll(ids);
-        });
-      case CollentionType.versions:
-        await _isar.writeTxn(() async {
-          await _isar.aynaaVersionsEntitys.deleteAll(ids);
-        });
-      case CollentionType.subjects:
-        await _isar.writeTxn(() async {
-          await _isar.subjectsEntitys.deleteAll(ids);
-        });
-      case CollentionType.deletedItmes:
-        await _isar.writeTxn(() async {
-          await _isar.deletedItmesEntitys.deleteAll(ids);
-        });
-      case CollentionType.exam:
-        await _isar.writeTxn(() async {
-          await _isar.examEntitys.deleteAll(ids);
-        });
+    try {
+      final collection = _isar.collection<E>();
+      await _isar.writeTxn(() async {
+        await collection.deleteAll(ids);
+      });
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -221,6 +139,7 @@ class IsarStorageService {
       {required Map<String, dynamic> query,
       required CollentionType collentionType}) async {
     await init();
+
     switch (collentionType) {
       case CollentionType.lessons:
         final result = await _isar.lessonEntitys
@@ -252,28 +171,15 @@ class IsarStorageService {
   }
 
   /// Clear entire cache
-  Future<void> clear({required CollentionType collentionType}) async {
+  Future<void> clear<E>({required CollentionType collentionType}) async {
     await init();
-    switch (collentionType) {
-      case CollentionType.lessons:
-        await _isar.writeTxn(() async {
-          await _isar.lessonEntitys.clear();
-        });
-
-      case CollentionType.versions:
-        await _isar.writeTxn(() async {
-          await _isar.aynaaVersionsEntitys.clear();
-        });
-
-      case CollentionType.subjects:
-        await _isar.writeTxn(() async {
-          await _isar.subjectsEntitys.clear();
-        });
-      case CollentionType.exam:
-        await _isar.writeTxn(() async {
-          await _isar.examEntitys.clear();
-        });
-      case CollentionType.deletedItmes:
+    try {
+      final collection = _isar.collection<E>();
+      await _isar.writeTxn(() async {
+        await collection.clear();
+      });
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -284,6 +190,7 @@ class IsarStorageService {
     switch (collectionType) {
       case CollentionType.lessons:
         Stream<void> lessonStream = _isar.lessonEntitys.watchLazy();
+
         yield* lessonStream.asyncMap((_) async {
           return await _isar.lessonEntitys
               .where()
@@ -334,7 +241,7 @@ class IsarStorageService {
           deletedVersion.isDeleted = true;
           await put(
             item: deletedVersion,
-            collentionType: CollentionType.versions,
+            //collentionType: CollentionType.versions,
           );
         }
         final itemDeleted = DeletedItmesEntity(id, true, false);
@@ -346,7 +253,7 @@ class IsarStorageService {
           deletedSubject.isDeleted = true;
           await put(
             item: deletedSubject,
-            collentionType: CollentionType.subjects,
+            // collentionType: CollentionType.subjects,
           );
         }
       case CollentionType.exam:
@@ -356,21 +263,10 @@ class IsarStorageService {
           deletedSubject.isDeleted = true;
           await put(
             item: deletedSubject,
-            collentionType: CollentionType.exam,
+            //collentionType: CollentionType.exam,
           );
         }
       case CollentionType.deletedItmes:
     }
   }
-
-  /// Watch for changes in the cache
-  //Stream<BoxEvent> watch(String? id) {}
-
-  /// Watch all items in cache
-
-  /// Get cached items with pagination
-  //Future<List> paginate({int page = 1, int limit = 20}) {}
-
-  /// Check if item exists in cache
-  //Future<bool> exists(String id) {}
 }

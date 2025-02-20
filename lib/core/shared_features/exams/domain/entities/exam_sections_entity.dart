@@ -1,4 +1,4 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 
 class ExamSectionsEntity with Entity {
   @override

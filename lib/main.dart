@@ -23,7 +23,7 @@ void main() async {
   );
 
   //await initializeCache();
-  setUpCoreServiceLocator();
+  await setUpCoreServiceLocator();
   setUpServiceLocator(userRole: UserRole.admin);
   //await Firebase.initializeApp();
   if (0 == 0) {

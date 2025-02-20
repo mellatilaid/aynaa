@@ -1,4 +1,4 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:isar/isar.dart';
 
 part 'lesson_entity.g.dart';

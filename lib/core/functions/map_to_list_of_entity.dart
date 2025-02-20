@@ -12,7 +12,7 @@ List<T> mapToListOfEntity<T>(List<Map<String, dynamic>> data, Entities value) {
   switch (value) {
     case Entities.version:
       resault = data.map((item) {
-        return AynaaVersionsModel.fromMap(item);
+        return AynaaVersionsModel.fromJson(item);
       }).toList() as List<T>;
       return resault;
 
