@@ -13,3 +13,5 @@ enum PostgressEventType { insert, delete, update }
 enum DeletedItemType { lesson, subject, version }
 
 enum UserRole { admin, student }
+
+enum FilterComparison { equal, greaterThan }

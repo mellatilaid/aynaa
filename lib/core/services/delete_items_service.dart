@@ -42,7 +42,6 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
     for (var item in deletedItems) {
       _item = await isarStorageService.get(
         id: item.itemID,
-        collentionType: CollentionType.subjects,
       );
       await Future.wait([
         deleteItemFromRemote(),

@@ -31,3 +31,4 @@ const String kQuestion = 'question';
 const String kAnswer = 'answer';
 const String kOptions = 'options';
 const String kSectionID = 'section-id';
+const String kIsDeleted = 'is_deleted';

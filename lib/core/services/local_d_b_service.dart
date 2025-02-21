@@ -46,9 +46,7 @@ class LocalDBService {
   }
 
   /// Get a single item by ID
-  Future<E?> get<E>(
-      {required String id, required CollentionType collentionType}) async {
-    await init();
+  Future<E?> get<E>({required String id}) async {
     try {
       final collection = _isar.collection<E>();
       final item = await collection.getByIndex(kIndexBy, [id]);
@@ -235,8 +233,7 @@ class LocalDBService {
     switch (collentionType) {
       case CollentionType.lessons:
       case CollentionType.versions:
-        final deletedVersion =
-            await get(id: id, collentionType: CollentionType.versions);
+        final deletedVersion = await get(id: id);
         if (deletedVersion != null) {
           deletedVersion.isDeleted = true;
           await put(
@@ -247,8 +244,7 @@ class LocalDBService {
         final itemDeleted = DeletedItmesEntity(id, true, false);
         _isar.deletedItmesEntitys.putByIndex('itemID', itemDeleted);
       case CollentionType.subjects:
-        final deletedSubject =
-            await get(id: id, collentionType: CollentionType.subjects);
+        final deletedSubject = await get(id: id);
         if (deletedSubject != null) {
           deletedSubject.isDeleted = true;
           await put(
@@ -257,8 +253,7 @@ class LocalDBService {
           );
         }
       case CollentionType.exam:
-        final deletedSubject =
-            await get(id: id, collentionType: CollentionType.exam);
+        final deletedSubject = await get(id: id);
         if (deletedSubject != null) {
           deletedSubject.isDeleted = true;
           await put(

@@ -2,36 +2,42 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:atm_app/core/common/entitiy.dart';
+import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/storage_sync_service/I_storage_sync_service.dart';
 import 'package:path/path.dart' as path;
 
-class BackgroundServices<T extends Entity> {
+class StorageSyncService<T extends Entity> extends IStorageSyncService {
   final StorageService storageService;
   final FileCacheManager fileSystemCacheManager;
   final Future<void> Function(T entity, PostgressEventType eventType)
       updateLocalDataSource;
-  BackgroundServices({
+  StorageSyncService({
     required this.storageService,
     required this.fileSystemCacheManager,
     required this.updateLocalDataSource,
   });
-  void startBackgroundDownloads(List<T> items) {
+  @override
+  void donwloadInBauckground(List<Entity> items) {
     for (final item in items) {
       if (item.url == null || item.localFilePath != null) continue;
-      unawaited(_downloadAndUpdateLesson(item));
+      unawaited(_downloadAndUpdateItem(item as T));
     }
   }
 
-  void startBackgroundDelete(List<T> items, DeletedItemType deletedItemType) {
+  @override
+  void deleteInBauckground(
+      List<Entity> items, DeletedItemType deletedItemType) {
     for (final item in items) {
       if (item.url == null || item.localFilePath != null) continue;
       unawaited(deleteItemFile(item: item, deletedItemType: deletedItemType));
     }
   }
 
-  Future<void> _downloadAndUpdateLesson(T item) async {
+  Future<void> _downloadAndUpdateItem(T item) async {
     try {
       // Download and cache file
 
@@ -51,15 +57,17 @@ class BackgroundServices<T extends Entity> {
   }
 
   Future<void> deleteItemFile(
-      {required T item, required DeletedItemType deletedItemType}) async {
+      {required Entity item, required DeletedItemType deletedItemType}) async {
     switch (deletedItemType) {
       case DeletedItemType.lesson:
         if (item.localFilePath != null && item.url != null) {
           final fileName = item.url!.replaceFirst('${item.versionName}/', '');
-          await storageService.deleteFile(
-            bucketName: item.versionName,
-            fileName: fileName,
-          );
+          if (ProfileStorageImpl.userRole == kAdminRole) {
+            await storageService.deleteFile(
+              bucketName: item.versionName,
+              fileName: fileName,
+            );
+          }
 
           await fileSystemCacheManager.deleteCachedFile(
               item.url!, deletedItemType);
@@ -71,18 +79,22 @@ class BackgroundServices<T extends Entity> {
       case DeletedItemType.subject:
         final parts = path.split(item.url!);
         final fileName = parts[1];
-        await storageService.deleteFolder(
-          item.versionName,
-          fileName,
-        );
+        if (ProfileStorageImpl.userRole == kAdminRole) {
+          await storageService.deleteFolder(
+            item.versionName,
+            fileName,
+          );
+        }
 
         await fileSystemCacheManager.deleteCachedFile(
             item.url!, deletedItemType);
         break;
       case DeletedItemType.version:
-        await storageService.deleteBucket(
-          item.versionName,
-        );
+        if (ProfileStorageImpl.userRole == kAdminRole) {
+          await storageService.deleteBucket(
+            item.versionName,
+          );
+        }
 
         await fileSystemCacheManager.deleteCachedFile(
             item.url!, deletedItemType);

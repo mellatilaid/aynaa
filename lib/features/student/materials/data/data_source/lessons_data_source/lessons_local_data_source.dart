@@ -6,7 +6,7 @@ import 'package:atm_app/core/materials/data/data_source/lessons_data_source/less
 import 'package:atm_app/core/services/local_d_b_service.dart';
 
 import '../../../../../../core/materials/domain/entities/lesson_entity.dart';
-import '../../../../../../core/services/background_services.dart';
+import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class StudentLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
@@ -21,8 +21,8 @@ class StudentLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
     ) as List<LessonEntity>;
 
     getit
-        .get<BackgroundServices<LessonEntity>>()
-        .startBackgroundDownloads(lessons);
+        .get<StorageSyncService<LessonEntity>>()
+        .donwloadInBauckground(lessons);
     return lessons;
   }
 

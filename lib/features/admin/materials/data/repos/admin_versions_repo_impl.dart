@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/functions/check_internet.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
@@ -15,14 +16,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/helper/enums.dart';
 import '../../../../../core/materials/domain/repos/versions_repo.dart';
-import '../../../../../core/services/background_services.dart';
+import '../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 
 class AdminVersionsRepoImpl extends VersionsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
-  final BackgroundServices backgroundServices;
+  final StorageSyncService backgroundServices;
   AdminVersionsRepoImpl({
     required this.remoteDataSource,
     required this.dataBase,
@@ -36,8 +37,10 @@ class AdminVersionsRepoImpl extends VersionsRepo {
       List<AynaaVersionsEntity> versions;
       versions = await versionsLocalDataSource.fetchVersion();
 
-      log(versions.length.toString());
-      if (versions.isNotEmpty) {
+      if (versions.isNotEmpty && await hasInternetConnection()) {
+        remoteDataSource.syncVersions();
+        return right(versions);
+      } else if (versions.isNotEmpty) {
         return right(versions);
       }
       versions = await remoteDataSource.fetchAynaaVersions();
@@ -95,9 +98,10 @@ class AdminVersionsRepoImpl extends VersionsRepo {
         item: aynaaVersion,
         deletedItemType: DeletedItemType.version,
       );
-      await dataBase.deleteData(
+      await dataBase.updateData(
         path: DbEnpoints.aynaaVersions,
         uid: aynaaVersion.entityID,
+        data: {kIsDeleted: true},
       );
       return const Right('');
     } on PostgrestException catch (e) {

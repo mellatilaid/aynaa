@@ -1,7 +1,7 @@
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
@@ -16,7 +16,7 @@ class AdminExamsLocalDataSourceImpl extends ExamsLocalDataSource {
       collentionType: CollentionType.exam,
       query: {kVersionID: versionID},
     );
-    getit.get<BackgroundServices<ExamEntity>>().startBackgroundDownloads(items);
+    getit.get<StorageSyncService<ExamEntity>>().donwloadInBauckground(items);
     return items as List<ExamEntity>;
   }
 

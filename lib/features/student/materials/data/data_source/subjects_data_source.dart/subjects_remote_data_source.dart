@@ -6,7 +6,7 @@ import 'package:atm_app/core/services/local_d_b_service.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/helper/enums.dart';
-import '../../../../../../core/services/background_services.dart';
+import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
@@ -29,8 +29,8 @@ class StudentSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
       collentionType: CollentionType.subjects,
     );
     getit
-        .get<BackgroundServices<SubjectsEntity>>()
-        .startBackgroundDownloads(subjects);
+        .get<StorageSyncService<SubjectsEntity>>()
+        .donwloadInBauckground(subjects);
     return subjects;
   }
 }

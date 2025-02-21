@@ -6,7 +6,7 @@ import 'package:atm_app/core/materials/data/data_source/subjects_data_source/sub
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_d_b_service.dart';
 
-import '../../../../../../core/services/background_services.dart';
+import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
@@ -20,8 +20,8 @@ class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
       query: {kVersionID: versionID},
     );
     getit
-        .get<BackgroundServices<SubjectsEntity>>()
-        .startBackgroundDownloads(subjects);
+        .get<StorageSyncService<SubjectsEntity>>()
+        .donwloadInBauckground(subjects);
     return subjects as List<SubjectsEntity>;
   }
 

@@ -5,7 +5,7 @@ import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/local_d_b_service.dart';
 
 import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
-import '../../../../../../core/services/background_services.dart';
+import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
@@ -27,8 +27,8 @@ class StudentVersionsRemoteDataSourceImpl
     isarStorageService.putAll(
         items: versions, collentionType: CollentionType.versions);
     getit
-        .get<BackgroundServices<AynaaVersionsEntity>>()
-        .startBackgroundDownloads(versions);
+        .get<StorageSyncService<AynaaVersionsEntity>>()
+        .donwloadInBauckground(versions);
     return versions;
   }
 

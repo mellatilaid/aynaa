@@ -1,3 +1,4 @@
+import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_aynaa_versions_cubit/fetch_aynaa_versions_cubit.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,10 @@ class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
     if (0 == 0) {
       BlocProvider.of<FetchAynaaVersionsCubit>(context).fetchAynaaVersions();
     } else {
-      getit.get<LocalDBService>().clear(
+      getit.get<LocalDBService>().clear<AynaaVersionsEntity>(
             collentionType: CollentionType.versions,
           );
+      //..clear<SettingsEntity>(collentionType: CollentionType.versions);
     }
   }
 

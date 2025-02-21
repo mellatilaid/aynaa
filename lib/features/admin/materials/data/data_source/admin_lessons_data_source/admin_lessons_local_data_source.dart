@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/core/services/local_d_b_service.dart';
 
 import '../../../../../../core/materials/domain/entities/lesson_entity.dart';
-import '../../../../../../core/services/background_services.dart';
+import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
@@ -21,8 +22,8 @@ class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
     ) as List<LessonEntity>;
 
     getit
-        .get<BackgroundServices<LessonEntity>>()
-        .startBackgroundDownloads(lessons);
+        .get<StorageSyncService<LessonEntity>>()
+        .donwloadInBauckground(lessons);
     return lessons;
   }
 
@@ -34,7 +35,7 @@ class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
   @override
   Future<void> handleUpdate(
       {required PostgressEventType eventType,
-      LessonEntity? lesson,
+      Entity? lesson,
       String? id}) async {
     switch (eventType) {
       case PostgressEventType.insert:

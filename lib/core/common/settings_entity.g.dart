@@ -33,7 +33,21 @@ const SettingsEntitySchema = CollectionSchema(
   deserialize: _settingsEntityDeserialize,
   deserializeProp: _settingsEntityDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'entityID': IndexSchema(
+      id: -7245804469100520399,
+      name: r'entityID',
+      unique: true,
+      replace: true,
+      properties: [
+        IndexPropertySchema(
+          name: r'entityID',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _settingsEntityGetId,
@@ -49,7 +63,12 @@ int _settingsEntityEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.entityID.length * 3;
-  bytesCount += 3 + object.lastTimeVersionsFetched.length * 3;
+  {
+    final value = object.lastTimeVersionsFetched;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -70,7 +89,8 @@ SettingsEntity _settingsEntityDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SettingsEntity(
-    lastTimeVersionsFetched: reader.readString(offsets[1]),
+    entityID: reader.readString(offsets[0]),
+    lastTimeVersionsFetched: reader.readStringOrNull(offsets[1]),
   );
   object.id = id;
   return object;
@@ -86,7 +106,7 @@ P _settingsEntityDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -103,6 +123,61 @@ List<IsarLinkBase<dynamic>> _settingsEntityGetLinks(SettingsEntity object) {
 void _settingsEntityAttach(
     IsarCollection<dynamic> col, Id id, SettingsEntity object) {
   object.id = id;
+}
+
+extension SettingsEntityByIndex on IsarCollection<SettingsEntity> {
+  Future<SettingsEntity?> getByEntityID(String entityID) {
+    return getByIndex(r'entityID', [entityID]);
+  }
+
+  SettingsEntity? getByEntityIDSync(String entityID) {
+    return getByIndexSync(r'entityID', [entityID]);
+  }
+
+  Future<bool> deleteByEntityID(String entityID) {
+    return deleteByIndex(r'entityID', [entityID]);
+  }
+
+  bool deleteByEntityIDSync(String entityID) {
+    return deleteByIndexSync(r'entityID', [entityID]);
+  }
+
+  Future<List<SettingsEntity?>> getAllByEntityID(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return getAllByIndex(r'entityID', values);
+  }
+
+  List<SettingsEntity?> getAllByEntityIDSync(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'entityID', values);
+  }
+
+  Future<int> deleteAllByEntityID(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'entityID', values);
+  }
+
+  int deleteAllByEntityIDSync(List<String> entityIDValues) {
+    final values = entityIDValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'entityID', values);
+  }
+
+  Future<Id> putByEntityID(SettingsEntity object) {
+    return putByIndex(r'entityID', object);
+  }
+
+  Id putByEntityIDSync(SettingsEntity object, {bool saveLinks = true}) {
+    return putByIndexSync(r'entityID', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByEntityID(List<SettingsEntity> objects) {
+    return putAllByIndex(r'entityID', objects);
+  }
+
+  List<Id> putAllByEntityIDSync(List<SettingsEntity> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'entityID', objects, saveLinks: saveLinks);
+  }
 }
 
 extension SettingsEntityQueryWhereSort
@@ -182,6 +257,51 @@ extension SettingsEntityQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhereClause>
+      entityIDEqualTo(String entityID) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'entityID',
+        value: [entityID],
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhereClause>
+      entityIDNotEqualTo(String entityID) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [],
+              upper: [entityID],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [entityID],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [entityID],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'entityID',
+              lower: [],
+              upper: [entityID],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
@@ -380,8 +500,26 @@ extension SettingsEntityQueryFilter
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeVersionsFetchedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastTimeVersionsFetched',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeVersionsFetchedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastTimeVersionsFetched',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
       lastTimeVersionsFetchedEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -395,7 +533,7 @@ extension SettingsEntityQueryFilter
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
       lastTimeVersionsFetchedGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -411,7 +549,7 @@ extension SettingsEntityQueryFilter
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
       lastTimeVersionsFetchedLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -427,8 +565,8 @@ extension SettingsEntityQueryFilter
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
       lastTimeVersionsFetchedBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -628,7 +766,7 @@ extension SettingsEntityQueryProperty
     });
   }
 
-  QueryBuilder<SettingsEntity, String, QQueryOperations>
+  QueryBuilder<SettingsEntity, String?, QQueryOperations>
       lastTimeVersionsFetchedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastTimeVersionsFetched');

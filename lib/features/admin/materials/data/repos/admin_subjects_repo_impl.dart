@@ -6,7 +6,7 @@ import 'package:atm_app/core/materials/data/data_source/subjects_data_source/sub
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
-import 'package:atm_app/core/services/background_services.dart';
+import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -22,7 +22,7 @@ class AdminSubjectsRepoImpl extends SubjectsRepo {
   final StorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
-  final BackgroundServices backgroundDownloadService;
+  final StorageSyncService backgroundDownloadService;
   AdminSubjectsRepoImpl({
     required this.dataBase,
     required this.storageService,

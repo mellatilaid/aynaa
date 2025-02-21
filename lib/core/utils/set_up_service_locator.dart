@@ -14,14 +14,16 @@ import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
-import 'package:atm_app/core/services/background_services.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
 import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/services/local_settings_service/local_setting_service.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/core/services/supabase_storage.dart';
@@ -85,8 +87,16 @@ setUpCoreServiceLocator() async {
   await getit.allReady();
   getit
     ..registerFactory<LocalDBService>(() => LocalDBService(getit()))
-    ..registerSingleton<RealtimeSyncService>(RealtimeSyncService());
-  //..registerSingletonAsync<Isar>(() async => _isarInit());
+    ..registerSingleton<RealtimeSyncService>(RealtimeSyncService())
+    ..registerSingleton<ILocalSettingsService>(
+      LocalSettingService(localDBService: getit.get<LocalDBService>())
+        ..init(
+          settingsEntity: SettingsEntity(
+            entityID: '0',
+            lastTimeVersionsFetched: null,
+          ),
+        ),
+    );
 }
 
 setUpServiceLocator({required UserRole userRole}) {
@@ -98,8 +108,8 @@ setUpServiceLocator({required UserRole userRole}) {
 
   registerIfNotExists<FileCacheManager>(FileSystemCacheManager());
 
-  registerIfNotExists<BackgroundServices<LessonEntity>>(
-    BackgroundServices(
+  registerIfNotExists<StorageSyncService<LessonEntity>>(
+    StorageSyncService(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -111,8 +121,8 @@ setUpServiceLocator({required UserRole userRole}) {
     ),
   );
 
-  registerIfNotExists<BackgroundServices<SubjectsEntity>>(
-    BackgroundServices(
+  registerIfNotExists<StorageSyncService<SubjectsEntity>>(
+    StorageSyncService(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -124,8 +134,8 @@ setUpServiceLocator({required UserRole userRole}) {
     ),
   );
 
-  registerIfNotExists<BackgroundServices<AynaaVersionsEntity>>(
-    BackgroundServices(
+  registerIfNotExists<StorageSyncService<AynaaVersionsEntity>>(
+    StorageSyncService(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -137,8 +147,8 @@ setUpServiceLocator({required UserRole userRole}) {
     ),
   );
 
-  registerIfNotExists<BackgroundServices<ExamEntity>>(
-    BackgroundServices(
+  registerIfNotExists<StorageSyncService<ExamEntity>>(
+    StorageSyncService(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -149,8 +159,8 @@ setUpServiceLocator({required UserRole userRole}) {
                   ),
     ),
   );
-  registerIfNotExists<BackgroundServices<ExamSectionsEntity>>(
-    BackgroundServices(
+  registerIfNotExists<StorageSyncService<ExamSectionsEntity>>(
+    StorageSyncService(
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -195,6 +205,7 @@ setUpServiceLocator({required UserRole userRole}) {
         AdminVersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           localDB: getit.get<LocalDBService>(),
+          iLocalSettingsService: getit.get<ILocalSettingsService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(
@@ -237,7 +248,7 @@ setUpServiceLocator({required UserRole userRole}) {
           remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
           versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
           backgroundServices:
-              getit.get<BackgroundServices<AynaaVersionsEntity>>(),
+              getit.get<StorageSyncService<AynaaVersionsEntity>>(),
         ),
       );
       registerIfNotExists<SubjectsRepo>(
@@ -247,7 +258,7 @@ setUpServiceLocator({required UserRole userRole}) {
           subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
           subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
           backgroundDownloadService:
-              getit.get<BackgroundServices<SubjectsEntity>>(),
+              getit.get<StorageSyncService<SubjectsEntity>>(),
         ),
       );
       registerIfNotExists<LessonsRepo>(
@@ -324,7 +335,7 @@ setUpServiceLocator({required UserRole userRole}) {
           remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
           versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
           backgroundServices:
-              getit.get<BackgroundServices<AynaaVersionsEntity>>(),
+              getit.get<StorageSyncService<AynaaVersionsEntity>>(),
         ),
       );
       registerIfNotExists<SubjectsRepo>(
@@ -334,7 +345,7 @@ setUpServiceLocator({required UserRole userRole}) {
           subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
           subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
           backgroundDownloadService:
-              getit.get<BackgroundServices<SubjectsEntity>>(),
+              getit.get<StorageSyncService<SubjectsEntity>>(),
         ),
       );
       registerIfNotExists<LessonsRepo>(
