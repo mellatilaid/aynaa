@@ -17,8 +17,13 @@ const SettingsEntitySchema = CollectionSchema(
   name: r'SettingsEntity',
   id: -7271317039764597112,
   properties: {
-    r'lastTimeVersionsFetched': PropertySchema(
+    r'entityID': PropertySchema(
       id: 0,
+      name: r'entityID',
+      type: IsarType.string,
+    ),
+    r'lastTimeVersionsFetched': PropertySchema(
+      id: 1,
       name: r'lastTimeVersionsFetched',
       type: IsarType.string,
     )
@@ -43,6 +48,7 @@ int _settingsEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.entityID.length * 3;
   bytesCount += 3 + object.lastTimeVersionsFetched.length * 3;
   return bytesCount;
 }
@@ -53,7 +59,8 @@ void _settingsEntitySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.lastTimeVersionsFetched);
+  writer.writeString(offsets[0], object.entityID);
+  writer.writeString(offsets[1], object.lastTimeVersionsFetched);
 }
 
 SettingsEntity _settingsEntityDeserialize(
@@ -63,7 +70,7 @@ SettingsEntity _settingsEntityDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SettingsEntity(
-    lastTimeVersionsFetched: reader.readString(offsets[0]),
+    lastTimeVersionsFetched: reader.readString(offsets[1]),
   );
   object.id = id;
   return object;
@@ -77,6 +84,8 @@ P _settingsEntityDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -179,6 +188,142 @@ extension SettingsEntityQueryWhere
 
 extension SettingsEntityQueryFilter
     on QueryBuilder<SettingsEntity, SettingsEntity, QFilterCondition> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'entityID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'entityID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'entityID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'entityID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'entityID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'entityID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'entityID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'entityID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'entityID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      entityIDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'entityID',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -381,6 +526,19 @@ extension SettingsEntityQueryLinks
 
 extension SettingsEntityQuerySortBy
     on QueryBuilder<SettingsEntity, SettingsEntity, QSortBy> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy> sortByEntityID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'entityID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      sortByEntityIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'entityID', Sort.desc);
+    });
+  }
+
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
       sortByLastTimeVersionsFetched() {
     return QueryBuilder.apply(this, (query) {
@@ -398,6 +556,19 @@ extension SettingsEntityQuerySortBy
 
 extension SettingsEntityQuerySortThenBy
     on QueryBuilder<SettingsEntity, SettingsEntity, QSortThenBy> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy> thenByEntityID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'entityID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      thenByEntityIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'entityID', Sort.desc);
+    });
+  }
+
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -427,6 +598,13 @@ extension SettingsEntityQuerySortThenBy
 
 extension SettingsEntityQueryWhereDistinct
     on QueryBuilder<SettingsEntity, SettingsEntity, QDistinct> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QDistinct> distinctByEntityID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'entityID', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
       distinctByLastTimeVersionsFetched({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -441,6 +619,12 @@ extension SettingsEntityQueryProperty
   QueryBuilder<SettingsEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SettingsEntity, String, QQueryOperations> entityIDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'entityID');
     });
   }
 

@@ -194,7 +194,7 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
         AdminVersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          localDB: getit.get<LocalDBService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(

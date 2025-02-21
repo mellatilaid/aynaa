@@ -1,3 +1,4 @@
+import 'package:atm_app/core/common/settings_entity.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
@@ -15,10 +16,10 @@ import '../../../../../../core/utils/set_up_service_locator.dart';
 class AdminVersionsRemoteDataSourceImpl
     implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
-  final LocalDBService isarStorageService;
+  final LocalDBService localDB;
   AdminVersionsRemoteDataSourceImpl({
     required this.dataBase,
-    required this.isarStorageService,
+    required this.localDB,
   });
   @override
   Future<List<AynaaVersionsEntity>> fetchAynaaVersions() async {
@@ -27,7 +28,8 @@ class AdminVersionsRemoteDataSourceImpl
 
     List<AynaaVersionsEntity> versions =
         mapToListOfEntity(aynaaVersions, Entities.version);
-    isarStorageService.putAll<AynaaVersionsEntity>(
+
+    localDB.putAll<AynaaVersionsEntity>(
         items: versions, collentionType: CollentionType.versions);
     getit
         .get<BackgroundServices<AynaaVersionsEntity>>()
@@ -38,7 +40,7 @@ class AdminVersionsRemoteDataSourceImpl
   @override
   Future<void> syncVersions() async {
     // TODO: implement syncVersions
-    final String isarPath = await isarStorageService.getIsarPath();
+    final String isarPath = await localDB.getIsarPath();
     syncDataInBackground(IsolateSyncParams(
       isarPath: isarPath,
       tableName: 'subjects',
@@ -48,5 +50,10 @@ class AdminVersionsRemoteDataSourceImpl
           path: DbEnpoints.aynaaVersions, columns: kUuid),
       fromJson: (json) => AynaaVersionsModel.fromJson(json),
     ));
+  }
+
+  _updateLocalDBSettings() async {
+    final settings = await localDB.get<SettingsEntity>(
+        id: '0', collentionType: CollentionType.lessons);
   }
 }
