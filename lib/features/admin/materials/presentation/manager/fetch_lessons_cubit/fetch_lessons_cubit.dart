@@ -3,24 +3,23 @@ import 'dart:developer';
 
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../../core/helper/enums.dart';
 import '../../../../../../core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
-import '../../../../../../core/services/local_d_b_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 part 'fetch_lessons_state.dart';
 
 class FetchLessonsCubit extends Cubit<FetchLessonsState> {
   final LessonsRepo lessonsRepo;
-  final LocalDBService isarStorageService;
+  final ILocalDbService iLocalDbService;
   StreamSubscription? _subscription;
   @override
   bool isClosed = false;
-  FetchLessonsCubit(
-      {required this.lessonsRepo, required this.isarStorageService})
+  FetchLessonsCubit({required this.lessonsRepo, required this.iLocalDbService})
       : super(FetchLessonsInitial()) {
     //_sync();
   }
@@ -41,7 +40,7 @@ class FetchLessonsCubit extends Cubit<FetchLessonsState> {
   void _stream({
     required String subjectID,
   }) {
-    isarStorageService
+    iLocalDbService
         .watchAll<LessonEntity>(
             collectionType: CollentionType.lessons, id: subjectID)
         .listen((items) {

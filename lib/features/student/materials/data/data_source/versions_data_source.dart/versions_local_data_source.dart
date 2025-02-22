@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
 class StudentVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
-  final LocalDBService isarStorageService;
-  StudentVersionsLocalDataSourceImpl({required this.isarStorageService});
+  final ILocalDbService iLocalDbService;
+  StudentVersionsLocalDataSourceImpl({required this.iLocalDbService});
   @override
   Future<List<AynaaVersionsEntity>> fetchVersion() async {
-    final versions = await isarStorageService.getAll<AynaaVersionsEntity>();
+    final versions = await iLocalDbService.getAll<AynaaVersionsEntity>();
     return versions;
   }
 
@@ -26,7 +26,7 @@ class StudentVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
       required PostgressEventType eventType}) async {
     switch (eventType) {
       case PostgressEventType.insert:
-        await isarStorageService.put(
+        await iLocalDbService.put(
           item: version,
         );
         /* final newLessons = await isarStorageService.filter(
@@ -39,8 +39,7 @@ class StudentVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
         _controller.add(newLessons);*/
         break;
       case PostgressEventType.delete:
-        await isarStorageService.delete(
-            id: id!, collentionType: CollentionType.versions);
+        await iLocalDbService.delete(id: id!);
         /*final newLessons = await isarStorageService.filter(
           collentionType: CollentionType.lessons,
           query: {

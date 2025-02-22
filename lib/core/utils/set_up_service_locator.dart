@@ -17,7 +17,7 @@ import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
 import 'package:atm_app/core/services/local_settings_service/local_setting_service.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
@@ -71,6 +71,7 @@ import '../../features/admin/materials/data/data_source/admin_subjects_data_sour
 import '../../features/student/materials/data/repos/student_lessons_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_subjects_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_versions_repo_impl.dart';
+import '../services/local_db_service/i_local_db_service.dart';
 
 final getit = GetIt.instance;
 setUpCoreServiceLocator() async {
@@ -85,11 +86,13 @@ setUpCoreServiceLocator() async {
         profileStorage: getit.get<ProfileStorage>()));
 
   await getit.allReady();
+  getit.registerFactory<ILocalDbService>(() => LocalDbService(getit()));
+
+  await getit.allReady();
   getit
-    ..registerFactory<LocalDBService>(() => LocalDBService(getit()))
     ..registerSingleton<RealtimeSyncService>(RealtimeSyncService())
     ..registerSingleton<ILocalSettingsService>(
-      LocalSettingService(localDBService: getit.get<LocalDBService>())
+      LocalSettingService(localDBService: getit.get<ILocalDbService>())
         ..init(
           settingsEntity: SettingsEntity(
             entityID: '0',
@@ -176,26 +179,26 @@ setUpServiceLocator({required UserRole userRole}) {
     case UserRole.admin:
       registerIfNotExists<VersionsLocalDataSource>(
         AdminVersionsLocalDataSourceImpl(
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<SubjectsLocalDataSource>(
         AdminSubjectsLocalDataSourceImpl(
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
         AdminLessonsLocalDataSourceImpl(
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<ExamsLocalDataSource>(
         AdminExamsLocalDataSourceImpl(
-            isarStorageService: getit.get<LocalDBService>()),
+            iLocalDbService: getit.get<ILocalDbService>()),
       );
       registerIfNotExists<ExamSectionsLocalDataSource>(
         AdminExamSectionsLocalDataSourceImpl(
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<QuestionsLocalDataSource>(
@@ -204,20 +207,20 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
         AdminVersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          localDB: getit.get<LocalDBService>(),
+          localDB: getit.get<ILocalDbService>(),
           iLocalSettingsService: getit.get<ILocalSettingsService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(
         AdminSubjectsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<LessonsRemoteDataSource>(
         LessonsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
           storageService: getit.get<StorageService>(),
           fileCacheManager: getit.get<FileCacheManager>(),
         ),
@@ -225,19 +228,19 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<ExamsRemoteDataSource>(
         AdminExamsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<ExamSectionsRemoteDataSource>(
         AdminExamSectionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<QuestionsRemoteDataSource>(
         AdminQuestionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
 
@@ -294,35 +297,35 @@ setUpServiceLocator({required UserRole userRole}) {
     case UserRole.student:
       registerIfNotExists<VersionsLocalDataSource>(
         StudentVersionsLocalDataSourceImpl(
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<SubjectsLocalDataSource>(
         StudentSubjectsLocalDataSourceImpl(
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
         StudentLessonsLocalDataSourceImpl(
-          isarStorageService: getit.get<LocalDBService>(),
+          iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
         StudentVersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          isarStorageService: getit.get<LocalDbService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(
         StudentSubjectsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          isarStorageService: getit.get<LocalDbService>(),
         ),
       );
       registerIfNotExists<LessonsRemoteDataSource>(
         StudentLessonsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDBService>(),
+          isarStorageService: getit.get<LocalDbService>(),
           storageService: getit.get<StorageService>(),
           fileCacheManager: getit.get<FileCacheManager>(),
         ),
@@ -363,7 +366,7 @@ setUpServiceLocator({required UserRole userRole}) {
     DeleteItemsServiceImpl(
       dataBase: getit.get<DataBase>(),
       storageService: getit.get<StorageService>(),
-      isarStorageService: getit.get<LocalDBService>(),
+      iLocalDbService: getit.get<ILocalDbService>(),
     ),
   );
 }

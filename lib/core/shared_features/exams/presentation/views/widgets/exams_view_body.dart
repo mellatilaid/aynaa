@@ -1,8 +1,7 @@
 import 'dart:developer';
 
-import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exams_list_view.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
@@ -29,9 +28,7 @@ class _ExamsViewBodyState extends State<ExamsViewBody> {
       BlocProvider.of<FetchExamsCubit>(context)
           .fetchExams(versionID: widget.versionsEntity.entityID);
     } else {
-      getit.get<LocalDBService>().clear(
-            collentionType: CollentionType.exam,
-          );
+      getit.get<LocalDbService>().clear();
     }
   }
 

@@ -13,6 +13,7 @@ import 'package:path/path.dart' as path;
 class StorageSyncService<T extends Entity> extends IStorageSyncService {
   final StorageService storageService;
   final FileCacheManager fileSystemCacheManager;
+
   final Future<void> Function(T entity, PostgressEventType eventType)
       updateLocalDataSource;
   StorageSyncService({
@@ -98,6 +99,16 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
 
         await fileSystemCacheManager.deleteCachedFile(
             item.url!, deletedItemType);
+    }
+  }
+
+  @override
+  void updateLocalDB(Entity item, CollentionType collectionType,
+      PostgressEventType eventType) async {
+    switch (eventType) {
+      case PostgressEventType.insert:
+        break;
+      default:
     }
   }
 }

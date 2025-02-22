@@ -3,7 +3,7 @@ import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:path/path.dart' as path;
@@ -24,11 +24,11 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   final DataBase dataBase;
   final StorageService storageService;
 
-  final LocalDBService isarStorageService;
+  final ILocalDbService iLocalDbService;
   DeleteItemsServiceImpl({
     required this.dataBase,
     required this.storageService,
-    required this.isarStorageService,
+    required this.iLocalDbService,
   });
 
   late Entity _item;
@@ -38,9 +38,9 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   Future<void> deleteItemPermanently(
       {required DeletedItemType deletedItemType}) async {
     _deletedItemType = deletedItemType;
-    deletedItems = await isarStorageService.getAll<DeletedItmesEntity>();
+    deletedItems = await iLocalDbService.getAll<DeletedItmesEntity>();
     for (var item in deletedItems) {
-      _item = await isarStorageService.get(
+      _item = await iLocalDbService.get(
         id: item.itemID,
       );
       await Future.wait([
@@ -75,19 +75,16 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   _deleteRelatedItems() async {
     switch (_deletedItemType) {
       case DeletedItemType.subject:
-        final relatedLessons = isarStorageService.filter(
+        final relatedLessons = iLocalDbService.filter(
             collentionType: CollentionType.lessons,
             query: {kSubjectID: _item.entityID});
         if (relatedLessons.isEmpty) {
-          isarStorageService.delete(
-              id: _item.entityID, collentionType: CollentionType.subjects);
-          isarStorageService.delete(
-              id: _item.entityID, collentionType: CollentionType.deletedItmes);
+          iLocalDbService.delete(id: _item.entityID);
+          iLocalDbService.delete(id: _item.entityID);
         } else {
           final deletedLessonsIds = relatedLessons.map((e) => e.id).toList();
-          isarStorageService.deleteAll(
+          iLocalDbService.deleteAll(
             ids: deletedLessonsIds,
-            collentionType: CollentionType.lessons,
           );
         }
         break;
@@ -110,7 +107,7 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
       {required Entity item, required DeletedItemType deletedItemType}) async {
     _item = item;
     _deletedItemType = deletedItemType;
-    await isarStorageService.markAsDeleted(
+    await iLocalDbService.markAsDeleted(
       id: item.entityID,
       collentionType: CollentionType.subjects,
     );

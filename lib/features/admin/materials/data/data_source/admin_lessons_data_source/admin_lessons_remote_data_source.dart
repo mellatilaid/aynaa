@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
@@ -17,12 +17,12 @@ import '../../../../../../core/utils/db_enpoints.dart';
 
 class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
-  final LocalDBService isarStorageService;
+  final ILocalDbService iLocalDbService;
   final StorageService storageService;
   final FileCacheManager fileCacheManager;
   LessonsRemoteDataSourceImpl({
     required this.dataBase,
-    required this.isarStorageService,
+    required this.iLocalDbService,
     required this.storageService,
     required this.fileCacheManager,
   });
@@ -40,7 +40,7 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
         mapToListOfEntity<LessonEntity>(data, Entities.lesson);
 
     if (lessons.isNotEmpty) {
-      isarStorageService.putAll(
+      iLocalDbService.putAll(
         items: lessons,
         collentionType: CollentionType.lessons,
       );

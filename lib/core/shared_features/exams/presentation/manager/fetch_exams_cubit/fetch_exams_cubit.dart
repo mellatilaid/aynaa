@@ -1,5 +1,5 @@
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:bloc/bloc.dart';
@@ -10,10 +10,10 @@ part 'fetch_exams_state.dart';
 class FetchExamsCubit extends Cubit<FetchExamsState> {
   FetchExamsCubit({
     required this.examsRepo,
-    required this.isarStorageService,
+    required this.iLocalDbService,
   }) : super(FetchExamsInitial());
   final ExamsRepo examsRepo;
-  final LocalDBService isarStorageService;
+  final ILocalDbService iLocalDbService;
 
   @override
   bool isClosed = false;
@@ -32,7 +32,7 @@ class FetchExamsCubit extends Cubit<FetchExamsState> {
   void _stream({
     required String id,
   }) {
-    isarStorageService
+    iLocalDbService
         .watchAll<ExamEntity>(collectionType: CollentionType.exam, id: id)
         .listen((items) {
       if (isClosed) return;

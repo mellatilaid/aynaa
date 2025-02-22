@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
@@ -17,7 +17,7 @@ import '../../../../../../core/utils/db_enpoints.dart';
 
 class StudentLessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
-  final LocalDBService isarStorageService;
+  final LocalDbService isarStorageService;
   final StorageService storageService;
   final FileCacheManager fileCacheManager;
   StudentLessonsRemoteDataSourceImpl({

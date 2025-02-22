@@ -3,7 +3,7 @@ import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
 
 import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
@@ -14,12 +14,14 @@ import '../../../../../../core/utils/set_up_service_locator.dart';
 class AdminVersionsRemoteDataSourceImpl
     implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
-  final LocalDBService localDB;
+  final ILocalDbService localDB;
   final ILocalSettingsService iLocalSettingsService;
+  // final IStorageSyncService iStorageSyncService;
   AdminVersionsRemoteDataSourceImpl({
     required this.dataBase,
     required this.localDB,
     required this.iLocalSettingsService,
+    //  required this.iStorageSyncService,
   });
   @override
   Future<List<AynaaVersionsEntity>> fetchAynaaVersions() async {
@@ -27,6 +29,7 @@ class AdminVersionsRemoteDataSourceImpl
 
     final List<Map<String, dynamic>> aynaaVersions = await dataBase.getData(
       path: DbEnpoints.aynaaVersions,
+      query: {kIsDeleted: false},
     );
     versions = mapToListOfEntity(aynaaVersions, Entities.version);
     //update last time versions fetched from remote in settings

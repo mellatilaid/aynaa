@@ -1,5 +1,5 @@
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -14,7 +14,7 @@ class FetchExamSectionsCubit extends Cubit<FetchExamSectionsState> {
     required this.isarStorageService,
   }) : super(FetchExamSectionsInitial());
   final ExamSectionsRepo examSectionsRepo;
-  final LocalDBService isarStorageService;
+  final LocalDbService isarStorageService;
 
   @override
   bool isClosed = false;

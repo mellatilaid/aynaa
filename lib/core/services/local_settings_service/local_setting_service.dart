@@ -1,9 +1,9 @@
 import 'package:atm_app/core/common/settings_entity.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
 
 class LocalSettingService extends ILocalSettingsService {
-  final LocalDBService localDBService;
+  final ILocalDbService localDBService;
   LocalSettingService({required this.localDBService});
   @override
   Future<SettingsEntity?> getSettings() async {

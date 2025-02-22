@@ -6,36 +6,21 @@ import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dar
 import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../helper/enums.dart';
+import '../../helper/enums.dart';
 
-class LocalDBService {
+class LocalDbService extends ILocalDbService {
   final Isar _isar;
 
-  LocalDBService(this._isar);
-  Future<void> init() async {
-    /* if (Isar.instanceNames.isEmpty) {
-      final dir = await getApplicationDocumentsDirectory();
-      _isar = await Isar.open(
-        [
-          AynaaVersionsEntitySchema,
-          LessonEntitySchema,
-          SubjectsEntitySchema,
-          DeletedItmesEntitySchema,
-          ExamEntitySchema,
-          SettingsEntitySchema,
-        ],
-        directory: dir.path,
-      );
-    }*/
-  }
+  LocalDbService(this._isar);
 
   /// Get all cached items
+  @override
   Future<List<E>> getAll<E>() async {
-    await init();
     try {
       final collection = _isar.collection<E>();
       final items = await collection.where().findAll();
@@ -46,6 +31,7 @@ class LocalDBService {
   }
 
   /// Get a single item by ID
+  @override
   Future<E?> get<E>({required String id}) async {
     try {
       final collection = _isar.collection<E>();
@@ -74,6 +60,7 @@ class LocalDBService {
     }*/
   }
 
+  @override
   Future<String> getIsarPath() async {
     final dir = await getApplicationDocumentsDirectory();
     return dir.path;
@@ -83,7 +70,6 @@ class LocalDBService {
     required List<dynamic> items,
     required CollentionType collentionType,
   }) async {
-    await init();
     try {
       final collection = _isar.collection<E>();
       await _isar.writeTxn(() async {
@@ -94,8 +80,8 @@ class LocalDBService {
     }
   }
 
+  @override
   Future<void> put<E>({required dynamic item}) async {
-    await init();
     try {
       final collection = _isar.collection<E>();
       await _isar.writeTxn(() async {
@@ -107,9 +93,8 @@ class LocalDBService {
   }
 
   /// Delete items by IDs
-  Future<void> delete<E>(
-      {required String id, required CollentionType collentionType}) async {
-    await init();
+  @override
+  Future<void> delete<E>({required String id}) async {
     try {
       final collection = _isar.collection<E>();
       await _isar.writeTxn(() async {
@@ -120,9 +105,8 @@ class LocalDBService {
     }
   }
 
-  Future<void> deleteAll<E>(
-      {required List<Id> ids, required CollentionType collentionType}) async {
-    await init();
+  @override
+  Future<void> deleteAll<E>({required List<Id> ids}) async {
     try {
       final collection = _isar.collection<E>();
       await _isar.writeTxn(() async {
@@ -133,11 +117,10 @@ class LocalDBService {
     }
   }
 
+  @override
   filter(
       {required Map<String, dynamic> query,
       required CollentionType collentionType}) async {
-    await init();
-
     switch (collentionType) {
       case CollentionType.lessons:
         final result = await _isar.lessonEntitys
@@ -169,8 +152,8 @@ class LocalDBService {
   }
 
   /// Clear entire cache
-  Future<void> clear<E>({required CollentionType collentionType}) async {
-    await init();
+  @override
+  Future<void> clear<E>() async {
     try {
       final collection = _isar.collection<E>();
       await _isar.writeTxn(() async {
@@ -181,9 +164,10 @@ class LocalDBService {
     }
   }
 
+  @override
   Stream<List<T>> watchAll<T>(
       {required CollentionType collectionType, String? id}) async* {
-    await init(); // Ensure Isar is initialized
+    // Ensure Isar is initialized
 
     switch (collectionType) {
       case CollentionType.lessons:
@@ -227,9 +211,9 @@ class LocalDBService {
     }
   }
 
+  @override
   Future<void> markAsDeleted(
       {required String id, required CollentionType collentionType}) async {
-    await init();
     switch (collentionType) {
       case CollentionType.lessons:
       case CollentionType.versions:

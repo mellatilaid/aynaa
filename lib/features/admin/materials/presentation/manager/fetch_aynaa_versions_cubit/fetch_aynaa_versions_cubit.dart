@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
-import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -14,15 +11,15 @@ part 'fetch_aynaa_versions_state.dart';
 
 class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
   final VersionsRepo materialsRepo;
-  final LocalDBService isarStorageService;
+  final ILocalDbService iLocalDbService;
   StreamSubscription? _subscription;
   @override
   bool isClosed = false;
-  FetchAynaaVersionsCubit(this.materialsRepo, this.isarStorageService)
+  FetchAynaaVersionsCubit(this.materialsRepo, this.iLocalDbService)
       : super(FetchAynaaVersionsInitial()) {
     //_sync();
   }
-  _sync() {
+  /* _sync() {
     _subscription = getit.get<VersionsLocalDataSource>().versionsStream.listen(
       (versions) {
         if (isClosed) {
@@ -38,7 +35,7 @@ class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
         .listen((versions) {
       emit(FetchAynaaVersionsSucuss(aynaaVersions: versions));
     });*/
-  }
+  }*/
 
   Future<void> fetchAynaaVersions() async {
     emit(FetchAynaaVersionsLoading());
@@ -56,7 +53,7 @@ class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
   }
 
   void _stream() {
-    isarStorageService
+    iLocalDbService
         .watchAll<AynaaVersionsEntity>(collectionType: CollentionType.versions)
         .listen((versions) {
       if (isClosed) return;

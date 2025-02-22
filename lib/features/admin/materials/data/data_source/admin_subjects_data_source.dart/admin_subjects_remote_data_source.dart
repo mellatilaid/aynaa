@@ -2,7 +2,7 @@ import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/helper/enums.dart';
@@ -12,9 +12,9 @@ import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class AdminSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   final DataBase dataBase;
-  final LocalDBService isarStorageService;
+  final ILocalDbService iLocalDbService;
   AdminSubjectsRemoteDataSourceImpl(
-      {required this.dataBase, required this.isarStorageService});
+      {required this.dataBase, required this.iLocalDbService});
 
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
@@ -24,7 +24,7 @@ class AdminSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
 
     List<SubjectsEntity> subjects =
         mapToListOfEntity(aynaaSubjects, Entities.subject);
-    isarStorageService.putAll(
+    iLocalDbService.putAll(
       items: subjects,
       collentionType: CollentionType.subjects,
     );

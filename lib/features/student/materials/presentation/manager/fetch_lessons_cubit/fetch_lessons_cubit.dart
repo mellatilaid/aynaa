@@ -8,14 +8,14 @@ import 'package:meta/meta.dart';
 
 import '../../../../../../core/helper/enums.dart';
 import '../../../../../../core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
-import '../../../../../../core/services/local_d_b_service.dart';
+import '../../../../../../core/services/local_db_service/local_d_b_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 part 'fetch_lessons_state.dart';
 
 class FetchLessonsCubit extends Cubit<FetchLessonsState> {
   final LessonsRepo lessonsRepo;
-  final LocalDBService isarStorageService;
+  final LocalDbService isarStorageService;
   StreamSubscription? _subscription;
   @override
   bool isClosed = false;

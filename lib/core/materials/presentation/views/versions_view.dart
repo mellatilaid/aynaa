@@ -2,7 +2,8 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/add_new_aynaa_version_bottom_sheet.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/sign_out_button_bloc_builder.dart';
-import 'package:atm_app/core/services/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_aynaa_versions_cubit/fetch_aynaa_versions_cubit.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class VersionsView extends StatelessWidget {
         BlocProvider(
           create: (context) => FetchAynaaVersionsCubit(
             getit.get<VersionsRepo>(),
-            getit.get<LocalDBService>(),
+            getit.get<ILocalDbService>(),
           ),
         ),
         BlocProvider(
@@ -76,7 +77,7 @@ class VersionsView extends StatelessWidget {
     return BlocProvider(
       create: (context) => FetchAynaaVersionsCubit(
         getit.get<VersionsRepo>(),
-        getit.get<LocalDBService>(),
+        getit.get<LocalDbService>(),
       ),
       child: Scaffold(
         body: const AynaaVersionsViewBody(),
