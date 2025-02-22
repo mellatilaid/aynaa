@@ -101,7 +101,10 @@ class AdminVersionsRepoImpl extends VersionsRepo {
       await dataBase.updateData(
         path: DbEnpoints.aynaaVersions,
         uid: aynaaVersion.entityID,
-        data: {kIsDeleted: true},
+        data: {
+          kIsDeleted: true,
+          kVersionName: '',
+        },
       );
       return const Right('');
     } on PostgrestException catch (e) {

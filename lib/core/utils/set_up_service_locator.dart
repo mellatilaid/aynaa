@@ -1,4 +1,5 @@
 import 'package:atm_app/core/classes/pick_file.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/common/settings_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
@@ -23,6 +24,7 @@ import 'package:atm_app/core/services/local_settings_service/local_setting_servi
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/storage_sync_service/I_storage_sync_service.dart';
 import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
@@ -85,11 +87,9 @@ setUpCoreServiceLocator() async {
         dataBase: SupabaseDb(),
         profileStorage: getit.get<ProfileStorage>()));
 
-  await getit.allReady();
-  getit.registerFactory<ILocalDbService>(() => LocalDbService(getit()));
-
-  await getit.allReady();
+  await getit.getAsync<Isar>();
   getit
+    ..registerFactory<ILocalDbService>(() => LocalDbService(getit()))
     ..registerSingleton<RealtimeSyncService>(RealtimeSyncService())
     ..registerSingleton<ILocalSettingsService>(
       LocalSettingService(localDBService: getit.get<ILocalDbService>())
@@ -110,9 +110,21 @@ setUpServiceLocator({required UserRole userRole}) {
   }
 
   registerIfNotExists<FileCacheManager>(FileSystemCacheManager());
+  registerIfNotExists<IStorageSyncService>(
+    StorageSyncService(
+      iLocalDbService: getit.get<ILocalDbService>(),
+      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      storageService: getit.get<StorageService>(),
+      updateLocalDataSource:
+          (Entity entity, PostgressEventType eventType) async {
+        return await null;
+      },
+    ),
+  );
 
   registerIfNotExists<StorageSyncService<LessonEntity>>(
     StorageSyncService(
+      iLocalDbService: getit.get<ILocalDbService>(),
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -126,6 +138,7 @@ setUpServiceLocator({required UserRole userRole}) {
 
   registerIfNotExists<StorageSyncService<SubjectsEntity>>(
     StorageSyncService(
+      iLocalDbService: getit.get<ILocalDbService>(),
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -139,6 +152,7 @@ setUpServiceLocator({required UserRole userRole}) {
 
   registerIfNotExists<StorageSyncService<AynaaVersionsEntity>>(
     StorageSyncService(
+      iLocalDbService: getit.get<ILocalDbService>(),
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -152,6 +166,7 @@ setUpServiceLocator({required UserRole userRole}) {
 
   registerIfNotExists<StorageSyncService<ExamEntity>>(
     StorageSyncService(
+      iLocalDbService: getit.get<ILocalDbService>(),
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -164,6 +179,7 @@ setUpServiceLocator({required UserRole userRole}) {
   );
   registerIfNotExists<StorageSyncService<ExamSectionsEntity>>(
     StorageSyncService(
+      iLocalDbService: getit.get<ILocalDbService>(),
       fileSystemCacheManager: getit.get<FileCacheManager>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
@@ -180,6 +196,7 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<VersionsLocalDataSource>(
         AdminVersionsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
+          iStorageSyncService: getit.get<IStorageSyncService>(),
         ),
       );
       registerIfNotExists<SubjectsLocalDataSource>(
@@ -209,6 +226,7 @@ setUpServiceLocator({required UserRole userRole}) {
           dataBase: getit.get<DataBase>(),
           localDB: getit.get<ILocalDbService>(),
           iLocalSettingsService: getit.get<ILocalSettingsService>(),
+          iStorageSyncService: getit.get<IStorageSyncService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(

@@ -5,23 +5,22 @@ import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dar
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/services/storage_sync_service/I_storage_sync_service.dart';
 
 import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
-import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
-import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class AdminVersionsRemoteDataSourceImpl
     implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
   final ILocalDbService localDB;
   final ILocalSettingsService iLocalSettingsService;
-  // final IStorageSyncService iStorageSyncService;
+  final IStorageSyncService iStorageSyncService;
   AdminVersionsRemoteDataSourceImpl({
     required this.dataBase,
     required this.localDB,
     required this.iLocalSettingsService,
-    //  required this.iStorageSyncService,
+    required this.iStorageSyncService,
   });
   @override
   Future<List<AynaaVersionsEntity>> fetchAynaaVersions() async {
@@ -37,15 +36,15 @@ class AdminVersionsRemoteDataSourceImpl
 
     localDB.putAll<AynaaVersionsEntity>(
         items: versions, collentionType: CollentionType.versions);
-    getit
-        .get<StorageSyncService<AynaaVersionsEntity>>()
-        .donwloadInBauckground(versions);
+    iStorageSyncService.donwloadInBauckground(
+        versions, CollentionType.versions);
+
     return versions;
   }
 
   @override
   Future<void> syncVersions() async {
-    List<AynaaVersionsEntity> versions;
+    List<AynaaVersionsEntity> items;
     final settings = await iLocalSettingsService.getSettings();
     final List<Map<String, dynamic>> updatedData = await dataBase.getData(
       path: DbEnpoints.aynaaVersions,
@@ -59,18 +58,17 @@ class AdminVersionsRemoteDataSourceImpl
     );
 
     if (updatedData.isNotEmpty) {
-      versions = mapToListOfEntity(updatedData, Entities.version);
+      items = mapToListOfEntity(updatedData, Entities.version);
       //update last time versions fetched from remote in settings
       _updateLocalDBSettings();
 
       localDB.putAll<AynaaVersionsEntity>(
-          items: versions, collentionType: CollentionType.versions);
-      getit
-          .get<StorageSyncService<AynaaVersionsEntity>>()
-          .donwloadInBauckground(versions);
+          items: items, collentionType: CollentionType.versions);
+      iStorageSyncService.donwloadInBauckground(items, CollentionType.versions);
     }
     if (deletedItems.isNotEmpty) {
-      versions = mapToListOfEntity(updatedData, Entities.version);
+      items = mapToListOfEntity(deletedItems, Entities.version);
+      iStorageSyncService.deleteInBauckground(items, DeletedItemType.version);
     }
   }
 

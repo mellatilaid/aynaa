@@ -16,7 +16,9 @@ class AdminExamsLocalDataSourceImpl extends ExamsLocalDataSource {
       collentionType: CollentionType.exam,
       query: {kVersionID: versionID},
     );
-    getit.get<StorageSyncService<ExamEntity>>().donwloadInBauckground(items);
+    getit
+        .get<StorageSyncService<ExamEntity>>()
+        .donwloadInBauckground(items, CollentionType.exam);
     return items as List<ExamEntity>;
   }
 

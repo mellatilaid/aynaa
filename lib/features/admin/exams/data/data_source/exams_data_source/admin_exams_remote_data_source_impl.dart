@@ -23,7 +23,9 @@ class AdminExamsRemoteDataSourceImpl extends ExamsRemoteDataSource {
 
     List<ExamEntity> items = mapToListOfEntity(data, Entities.exams);
     iLocalDbService.putAll(items: items, collentionType: CollentionType.exam);
-    getit.get<StorageSyncService<ExamEntity>>().donwloadInBauckground(items);
+    getit
+        .get<StorageSyncService<ExamEntity>>()
+        .donwloadInBauckground(items, CollentionType.exam);
     return items;
   }
 }

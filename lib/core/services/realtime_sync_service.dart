@@ -4,11 +4,9 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
@@ -109,11 +107,11 @@ class RealtimeSyncService {
         final entity = AynaaVersionsModel.fromJson(payload.newRecord);
         log(payload.toString());
         log('iserted subject to remote id is ${entity.entityID}');
-        getit.get<VersionsLocalDataSource>().handleUpdate(
+        /* getit.get<VersionsLocalDataSource>().handleUpdate(
             version: entity, eventType: PostgressEventType.insert);
         getit
             .get<StorageSyncService<AynaaVersionsEntity>>()
-            .donwloadInBauckground([entity]);
+            .donwloadInBauckground([entity], CollentionType.versions);*/
         break;
       case PostgresChangeEvent.delete:
         /*getit.get<VersionsLocalDataSource>().handleUpdate(
@@ -137,7 +135,7 @@ class RealtimeSyncService {
             subject: entity, eventType: PostgressEventType.insert);
         getit
             .get<StorageSyncService<SubjectsEntity>>()
-            .donwloadInBauckground([entity]);
+            .donwloadInBauckground([entity], CollentionType.subjects);
         break;
       case PostgresChangeEvent.delete:
         getit.get<SubjectsLocalDataSource>().handleUpdate(
@@ -160,7 +158,7 @@ class RealtimeSyncService {
             .handleUpdate(lesson: entity, eventType: PostgressEventType.insert);
         getit
             .get<StorageSyncService<LessonEntity>>()
-            .donwloadInBauckground([entity]);
+            .donwloadInBauckground([entity], CollentionType.lessons);
         break;
       case PostgresChangeEvent.delete:
         getit.get<LessonsLocalDataSource>().handleUpdate(
@@ -184,7 +182,7 @@ class RealtimeSyncService {
             .handleUpdate(exam: entity, eventType: PostgressEventType.insert);
         getit
             .get<StorageSyncService<ExamEntity>>()
-            .donwloadInBauckground([entity]);
+            .donwloadInBauckground([entity], CollentionType.exam);
         break;
       case PostgresChangeEvent.delete:
         getit.get<ExamsLocalDataSource>().handleUpdate(
