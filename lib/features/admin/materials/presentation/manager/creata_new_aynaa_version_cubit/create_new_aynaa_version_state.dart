@@ -5,6 +5,8 @@ sealed class CreateNewAynaaVersionState {}
 
 final class CreateNewAynaaVersionInitial extends CreateNewAynaaVersionState {}
 
+final class NoInternetState extends CreateNewAynaaVersionState {}
+
 final class CreateNewAynaaVersionLoading extends CreateNewAynaaVersionState {}
 
 final class CreateNewAynaaVersionSuccess extends CreateNewAynaaVersionState {}

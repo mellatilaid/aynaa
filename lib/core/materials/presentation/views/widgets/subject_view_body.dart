@@ -1,11 +1,11 @@
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_subjects_cubit/fetch_subject_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/set_up_service_locator.dart';
-import '../../../../services/local_db_service/local_d_b_service.dart';
 import 'subjects_list_view.dart';
 
 class SubjectsViewBody extends StatefulWidget {
@@ -29,7 +29,7 @@ class _SubjectsViewBodyState extends State<SubjectsViewBody> {
       BlocProvider.of<FetchSubjectCubit>(context)
           .fetchSubjects(versionID: widget.versionsEntity.entityID);
     } else {
-      getit.get<LocalDbService>().clear<SubjectsEntity>();
+      getit.get<ILocalDbService>().clear<SubjectsEntity>();
     }
   }
 

@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/core/functions/check_internet.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:dartz/dartz.dart';
@@ -24,12 +26,14 @@ class AdminVersionsRepoImpl extends VersionsRepo {
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
   final StorageSyncService backgroundServices;
+  final INetworkStateService networkStateService;
   AdminVersionsRepoImpl({
     required this.remoteDataSource,
     required this.dataBase,
     required this.storageService,
     required this.versionsLocalDataSource,
     required this.backgroundServices,
+    required this.networkStateService,
   });
   @override
   Future<Either<Failures, List<AynaaVersionsEntity>>> fetchVersions() async {
@@ -37,11 +41,19 @@ class AdminVersionsRepoImpl extends VersionsRepo {
       List<AynaaVersionsEntity> versions;
       versions = await versionsLocalDataSource.fetchVersion();
 
-      if (versions.isNotEmpty && await hasInternetConnection()) {
-        remoteDataSource.syncVersions();
+      if (versions.isNotEmpty) {
+        // Return local versions immediately
+        if (await networkStateService.isOnline()) {
+          // Perform sync in the background without blocking
+          unawaited(remoteDataSource.syncVersions());
+        }
+
         return right(versions);
       } else if (versions.isNotEmpty) {
         return right(versions);
+      }
+      if (!await networkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternet));
       }
       versions = await remoteDataSource.fetchAynaaVersions();
       log('remote version ${versions.length}');
@@ -55,6 +67,9 @@ class AdminVersionsRepoImpl extends VersionsRepo {
   Future<Either<Failures, String>> setVersion(
       {required AynaaVersionsEntity version, required String filePath}) async {
     try {
+      if (!await networkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternet));
+      }
       await storageService.createBucket(version.versionName);
       final model = AynaaVersionsModel.fromVersionEntity(version);
       final data = model.toMap();
@@ -94,6 +109,9 @@ class AdminVersionsRepoImpl extends VersionsRepo {
     try {
       //await storageService.emptyBucket(aynaaVersion.versionName);
       //await storageService.deleteBucket(aynaaVersion.versionName);
+      if (!await networkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternet));
+      }
       backgroundServices.deleteItemFile(
         item: aynaaVersion,
         deletedItemType: DeletedItemType.version,
@@ -103,7 +121,6 @@ class AdminVersionsRepoImpl extends VersionsRepo {
         uid: aynaaVersion.entityID,
         data: {
           kIsDeleted: true,
-          kVersionName: '',
         },
       );
       return const Right('');

@@ -18,12 +18,15 @@ class ExamEntity with Entity {
   final String? url;
   @override
   String? localFilePath;
+  @override
+  bool isDeleted;
   ExamEntity({
     required this.entityID,
     required this.title,
     required this.versionID,
     required this.versionName,
     required this.url,
+    this.isDeleted = false,
     this.localFilePath,
   });
 

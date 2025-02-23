@@ -8,9 +8,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../core/utils/app_route.dart';
 import 'custom_version_card.dart';
 
-class AynaaVersionListView extends StatelessWidget {
+class VersionListView extends StatelessWidget {
   final List<AynaaVersionsEntity> aynaaVersions;
-  const AynaaVersionListView({
+  const VersionListView({
     super.key,
     required this.aynaaVersions,
   });
@@ -28,6 +28,7 @@ class AynaaVersionListView extends StatelessWidget {
                   aynaaVersions[index].entityID, aynaaVersions[index].name);
             },
             child: CustomVersionCard(
+              onEdit: () {},
               onDelete: () {
                 BlocProvider.of<DeleteVersionCubit>(context).deleteVersion(
                   aynaaVersion: aynaaVersions[index],

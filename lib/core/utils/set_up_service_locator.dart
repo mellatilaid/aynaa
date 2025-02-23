@@ -18,6 +18,8 @@ import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/delete_items_service.dart';
 import 'package:atm_app/core/services/file_cach_manager.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
+import 'package:atm_app/core/services/internt_state_service/network_state_service.dart';
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
 import 'package:atm_app/core/services/local_settings_service/local_setting_service.dart';
@@ -85,7 +87,8 @@ setUpCoreServiceLocator() async {
     ..registerSingleton<AuthRepo>(AuthRepoImpl(
         authServices: SupabaseAuthService(),
         dataBase: SupabaseDb(),
-        profileStorage: getit.get<ProfileStorage>()));
+        profileStorage: getit.get<ProfileStorage>()))
+    ..registerSingleton<INetworkStateService>(NetworkStateService());
 
   await getit.getAsync<Isar>();
   getit
@@ -202,6 +205,7 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<SubjectsLocalDataSource>(
         AdminSubjectsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
+          storageSyncService: getit.get<IStorageSyncService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
@@ -270,6 +274,7 @@ setUpServiceLocator({required UserRole userRole}) {
           versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
           backgroundServices:
               getit.get<StorageSyncService<AynaaVersionsEntity>>(),
+          networkStateService: getit.get<INetworkStateService>(),
         ),
       );
       registerIfNotExists<SubjectsRepo>(

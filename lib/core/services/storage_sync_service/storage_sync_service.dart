@@ -106,9 +106,11 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
         break;
       case DeletedItemType.version:
         if (ProfileStorageImpl.userRole == kAdminRole) {
-          await storageService.deleteBucket(
-            item.versionName,
-          );
+          if (item.isDeleted == false) {
+            await storageService.deleteBucket(
+              item.versionName,
+            );
+          }
         }
 
         await fileSystemCacheManager.deleteCachedFile(

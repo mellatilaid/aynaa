@@ -10,8 +10,13 @@ import '../../../../../features/admin/materials/presentation/manager/creata_new_
 class AddNewVersionButtonBuilder extends StatefulWidget {
   final TextEditingController subjectTitleController;
   final GlobalKey<FormState> formKey;
-  const AddNewVersionButtonBuilder(
-      {super.key, required this.subjectTitleController, required this.formKey});
+  final bool isButtonEnabled;
+  const AddNewVersionButtonBuilder({
+    super.key,
+    required this.subjectTitleController,
+    required this.formKey,
+    required this.isButtonEnabled,
+  });
 
   @override
   State<AddNewVersionButtonBuilder> createState() =>
@@ -26,13 +31,15 @@ class _AddNewVersionButtonBuilderState
       builder: (context, state) {
         return CustomActionButtonType2(
           isLoading: state is CreateNewAynaaVersionLoading ? true : false,
-          onPressed: () {
-            if (widget.formKey.currentState!.validate()) {
-              widget.formKey.currentState!.save();
-              BlocProvider.of<CreateNewAynaaVersionCubit>(context)
-                  .createNewAynaaVersion(version: _toVersionEntity());
-            }
-          },
+          onPressed: (widget.isButtonEnabled)
+              ? () {
+                  if (widget.formKey.currentState!.validate()) {
+                    widget.formKey.currentState!.save();
+                    BlocProvider.of<CreateNewAynaaVersionCubit>(context)
+                        .createNewAynaaVersion(version: _toVersionEntity());
+                  }
+                }
+              : null,
           icon: const FaIcon(FontAwesomeIcons.floppyDisk),
           title: 'حفظ',
           backGroundColor: kPrimaryColor,

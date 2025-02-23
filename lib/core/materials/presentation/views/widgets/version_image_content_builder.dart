@@ -7,9 +7,11 @@ import 'lesson_media_preview.dart';
 
 class VersionImageContentBuilder extends StatelessWidget {
   final String? filePath;
+  final Function(String path) onFileLoaded;
   const VersionImageContentBuilder({
     super.key,
     required this.filePath,
+    required this.onFileLoaded,
   });
 
   @override
@@ -25,6 +27,7 @@ class VersionImageContentBuilder extends StatelessWidget {
         if (state is PickFileFailure) {
           return ErrorWidget(state.errMessage);
         } else if (state is PickFileLoaded) {
+          onFileLoaded(state.filePath.path);
           return LessonMediaPreview(
             filePath: state.filePath,
           );

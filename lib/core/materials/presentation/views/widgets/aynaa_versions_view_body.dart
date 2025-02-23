@@ -1,12 +1,14 @@
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
+import 'package:atm_app/core/widgets/no_internet_widget.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_aynaa_versions_cubit/fetch_aynaa_versions_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/set_up_service_locator.dart';
-import 'aynaa_versions_list_view.dart';
+import 'versions_list_view.dart';
 
 class AynaaVersionsViewBody extends StatefulWidget {
   const AynaaVersionsViewBody({super.key});
@@ -36,6 +38,12 @@ class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
         if (state is FetchAynaaVersionsLoading) {
           return const LoadingWidget();
         } else if (state is FetchAynaaVersionsFailure) {
+          if (state.errMessage == kNoInternet) {
+            return NoInternetWidget(
+              onTap: () => BlocProvider.of<FetchAynaaVersionsCubit>(context)
+                  .fetchAynaaVersions(),
+            );
+          }
           return ErrorWidget(state.errMessage);
         } else if (state is FetchAynaaVersionsSucuss) {
           if (state.aynaaVersions.isEmpty) {
@@ -43,7 +51,7 @@ class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
               child: Text('No Aynaa Versions'),
             );
           }
-          return AynaaVersionListView(
+          return VersionListView(
             aynaaVersions: state.aynaaVersions,
           );
         }

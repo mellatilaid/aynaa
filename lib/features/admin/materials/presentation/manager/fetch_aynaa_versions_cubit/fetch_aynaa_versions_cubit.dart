@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -12,11 +13,15 @@ part 'fetch_aynaa_versions_state.dart';
 class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
   final VersionsRepo materialsRepo;
   final ILocalDbService iLocalDbService;
+  final INetworkStateService networkStateService;
   StreamSubscription? _subscription;
   @override
   bool isClosed = false;
-  FetchAynaaVersionsCubit(this.materialsRepo, this.iLocalDbService)
-      : super(FetchAynaaVersionsInitial()) {
+  FetchAynaaVersionsCubit({
+    required this.materialsRepo,
+    required this.iLocalDbService,
+    required this.networkStateService,
+  }) : super(FetchAynaaVersionsInitial()) {
     //_sync();
   }
   /* _sync() {

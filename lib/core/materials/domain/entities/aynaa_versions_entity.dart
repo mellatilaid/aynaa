@@ -11,7 +11,8 @@ class AynaaVersionsEntity with Entity {
   final String entityID;
   @override
   final String versionName;
-
+  @override
+  bool isDeleted;
   @override
   String? localFilePath;
   String updatedAt;
@@ -22,6 +23,7 @@ class AynaaVersionsEntity with Entity {
     required this.versionName,
     required this.url,
     required this.updatedAt,
+    this.isDeleted = false,
     this.localFilePath,
   });
 

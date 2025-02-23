@@ -5,13 +5,15 @@ import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
-
-import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
-import '../../../../../../core/utils/set_up_service_locator.dart';
+import 'package:atm_app/core/services/storage_sync_service/I_storage_sync_service.dart';
 
 class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
   final ILocalDbService iLocalDbService;
-  AdminSubjectsLocalDataSourceImpl({required this.iLocalDbService});
+  final IStorageSyncService storageSyncService;
+  AdminSubjectsLocalDataSourceImpl({
+    required this.iLocalDbService,
+    required this.storageSyncService,
+  });
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
       {required String versionID}) async {
@@ -19,9 +21,7 @@ class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
       collentionType: CollentionType.subjects,
       query: {kVersionID: versionID},
     );
-    getit
-        .get<StorageSyncService<SubjectsEntity>>()
-        .donwloadInBauckground(subjects);
+    storageSyncService.donwloadInBauckground(subjects, CollentionType.subjects);
     return subjects as List<SubjectsEntity>;
   }
 

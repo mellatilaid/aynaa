@@ -5,6 +5,8 @@ sealed class FetchAynaaVersionsState {}
 
 final class FetchAynaaVersionsInitial extends FetchAynaaVersionsState {}
 
+final class FetchNoInternetState extends FetchAynaaVersionsState {}
+
 final class FetchAynaaVersionsLoading extends FetchAynaaVersionsState {}
 
 final class FetchAynaaVersionsFailure extends FetchAynaaVersionsState {

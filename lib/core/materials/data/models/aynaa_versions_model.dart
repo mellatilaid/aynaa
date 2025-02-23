@@ -9,6 +9,7 @@ class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
     required super.versionName,
     required super.url,
     required super.updatedAt,
+    super.isDeleted,
     super.localFilePath,
   });
   factory AynaaVersionsModel.fromJson(Map<String, dynamic> data) {
@@ -17,6 +18,7 @@ class AynaaVersionsModel extends AynaaVersionsEntity with Mappable {
       versionName: data[kVersionName],
       url: data[kUrl],
       updatedAt: data[kUpdatedAt],
+      isDeleted: data[kIsDeleted],
       //localFilePath: data[kLocalFilePath],
     );
   }

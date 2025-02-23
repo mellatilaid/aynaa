@@ -14,6 +14,9 @@ class ExamSectionsEntity with Entity {
   @override
   String? localFilePath;
   bool isLocked;
+
+  @override
+  bool isDeleted;
   ExamSectionsEntity({
     required this.entityID,
     required this.title,
@@ -22,6 +25,7 @@ class ExamSectionsEntity with Entity {
     this.url,
     required this.examID,
     this.localFilePath,
+    this.isDeleted = false,
     this.isLocked = true,
   });
 

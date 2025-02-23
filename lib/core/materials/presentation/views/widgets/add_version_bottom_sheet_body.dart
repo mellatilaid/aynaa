@@ -16,6 +16,7 @@ class AddVersionBottomSheetBody extends StatefulWidget {
 
 class _AddVersionBottomSheetBodyState extends State<AddVersionBottomSheetBody> {
   final _titleController = TextEditingController();
+  final _filePathController = TextEditingController();
   String? selectedFile;
   final _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isButtonEnabled = ValueNotifier<bool>(false);
@@ -23,10 +24,6 @@ class _AddVersionBottomSheetBodyState extends State<AddVersionBottomSheetBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _titleController.addListener(() {
-      final hasText = _titleController.text.trim().isNotEmpty;
-      _isButtonEnabled.value = hasText; // Enable or disable the button
-    });
   }
 
   @override
@@ -56,6 +53,7 @@ class _AddVersionBottomSheetBodyState extends State<AddVersionBottomSheetBody> {
                     children: [
                       VersionImageContentBuilder(
                         filePath: selectedFile,
+                        onFileLoaded: _onFileLoaded,
                       ),
                       const SizedBox(height: 16),
                       InvisibleTextField(
@@ -82,6 +80,7 @@ class _AddVersionBottomSheetBodyState extends State<AddVersionBottomSheetBody> {
                 valueListenable: _isButtonEnabled,
                 builder: (context, value, child) {
                   return AddNewVersionButtonBuilder(
+                    isButtonEnabled: true,
                     formKey: _formKey, // Pass the form key to the button
                     subjectTitleController: _titleController,
                   );
@@ -92,6 +91,10 @@ class _AddVersionBottomSheetBodyState extends State<AddVersionBottomSheetBody> {
         ],
       ),
     );
+  }
+
+  _onFileLoaded(String filePath) {
+    _filePathController.text = filePath;
   }
 }
 

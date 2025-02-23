@@ -1,22 +1,22 @@
 import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/functions/build_preview.dart';
 import 'package:atm_app/core/helper/user_profile.dart';
-import 'package:atm_app/core/widgets/loading_widget.dart';
-import 'package:atm_app/features/admin/materials/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
+import 'package:atm_app/core/widgets/three_dots_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../const/remote_db_const.dart';
 
 class CustomVersionCard extends StatelessWidget {
   final Entity item;
   final VoidCallback? onTap; // Action when the card is tapped
-  final VoidCallback? onDelete;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
   const CustomVersionCard({
     super.key,
     required this.item,
     this.onTap,
-    this.onDelete,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -62,41 +62,27 @@ class CustomVersionCard extends StatelessWidget {
             ),
             (globalUserRole != null && globalUserRole! == kAdminRole)
                 ? Positioned(
-                    top: 0,
+                    top: 9,
                     left: 0,
-                    child: DeleteVersionBuilder(onDelete: onDelete),
+                    child: ThreeDotsMenu(
+                      onDelete: () => onDelete,
+                      onEdit: () => onEdit,
+                      popItems: [
+                        genericPopUpMenuItem(
+                          value: 'تعديل',
+                          icon: const Icon(Icons.edit),
+                        ),
+                        genericPopUpMenuItem(
+                          value: 'حذف',
+                          icon: const Icon(Icons.edit),
+                        ),
+                      ],
+                    ),
                   )
                 : const SizedBox.shrink(),
           ],
         ),
       ),
-    );
-  }
-}
-
-class DeleteVersionBuilder extends StatelessWidget {
-  const DeleteVersionBuilder({
-    super.key,
-    required this.onDelete,
-  });
-
-  final VoidCallback? onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<DeleteVersionCubit, DeleteVersionState>(
-      builder: (context, state) {
-        if (state is DeleteVersionLoading) {
-          return const LoadingWidget();
-        }
-        return IconButton(
-          onPressed: onDelete,
-          icon: const Icon(
-            Icons.delete,
-            color: Colors.red,
-          ),
-        );
-      },
     );
   }
 }

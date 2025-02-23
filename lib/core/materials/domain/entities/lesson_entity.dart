@@ -21,6 +21,8 @@ class LessonEntity with Entity {
   final String subjectName;
   @override
   String? localFilePath;
+  @override
+  bool isDeleted;
   LessonEntity({
     required this.entityID,
     required this.name,
@@ -30,6 +32,7 @@ class LessonEntity with Entity {
     required this.subjectId,
     required this.versionName,
     required this.subjectName,
+    this.isDeleted = false,
     this.localFilePath,
   });
 }

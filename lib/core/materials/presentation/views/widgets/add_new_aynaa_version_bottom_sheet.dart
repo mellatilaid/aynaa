@@ -1,5 +1,7 @@
 import 'package:atm_app/core/classes/pick_file.dart';
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/core/widgets/scaffold_message.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/creata_new_aynaa_version_cubit/create_new_aynaa_version_cubit.dart';
@@ -9,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'add_new_aynaa_version_bottom_sheet_body.dart';
+import 'add_version_bottom_sheet_body.dart';
 
 class AddAynaaVersionBottomSheet extends StatelessWidget {
   const AddAynaaVersionBottomSheet({
@@ -21,8 +23,10 @@ class AddAynaaVersionBottomSheet extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              CreateNewAynaaVersionCubit(getit.get<VersionsRepo>()),
+          create: (context) => CreateNewAynaaVersionCubit(
+            getit.get<VersionsRepo>(),
+            getit.get<INetworkStateService>(),
+          ),
         ),
         BlocProvider(
           create: (context) => PickFileCubit(getit.get<FilePickerHelper>()),
@@ -40,7 +44,11 @@ class AddAynaaVersionBottomSheet extends StatelessWidget {
             });
           } else if (state is CreateNewAynaaVersionFailure) {
             Navigator.pop(context);
-            showScaffoldMessage(context, state.errMessage);
+            if (state.errMessage == kNoInternet) {
+              showScaffoldMessage(context, kNoInternetMessage);
+            } else {
+              showScaffoldMessage(context, state.errMessage);
+            }
           }
         },
         child: const AddVersionBottomSheetBody(),
