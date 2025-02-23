@@ -5,7 +5,7 @@ import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 
 import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
-import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
+import '../../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
@@ -23,11 +23,11 @@ class StudentVersionsRemoteDataSourceImpl
         await dataBase.getData(path: DbEnpoints.aynaaVersions);
 
     List<AynaaVersionsEntity> versions =
-        mapToListOfEntity(aynaaVersions, Entities.version);
+        mapToListOfEntity(aynaaVersions, Entities.versions);
     isarStorageService.putAll(
-        items: versions, collentionType: CollentionType.versions);
+        items: versions, collentionType: Entities.versions);
     getit
-        .get<StorageSyncService<AynaaVersionsEntity>>()
+        .get<DBSyncService<AynaaVersionsEntity>>()
         .donwloadInBauckground(versions);
     return versions;
   }

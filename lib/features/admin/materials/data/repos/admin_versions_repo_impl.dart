@@ -8,6 +8,7 @@ import 'package:atm_app/core/materials/data/data_source/versions_data_source/ver
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
@@ -18,21 +19,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/helper/enums.dart';
 import '../../../../../core/materials/domain/repos/versions_repo.dart';
-import '../../../../../core/services/storage_sync_service/storage_sync_service.dart';
 
 class AdminVersionsRepoImpl extends VersionsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
-  final StorageSyncService backgroundServices;
+  final IDBSyncService dbSyncService;
   final INetworkStateService networkStateService;
   AdminVersionsRepoImpl({
     required this.remoteDataSource,
     required this.dataBase,
     required this.storageService,
     required this.versionsLocalDataSource,
-    required this.backgroundServices,
+    required this.dbSyncService,
     required this.networkStateService,
   });
   @override
@@ -112,9 +112,9 @@ class AdminVersionsRepoImpl extends VersionsRepo {
       if (!await networkStateService.isOnline()) {
         return left(ServerFailure(errMessage: kNoInternet));
       }
-      backgroundServices.deleteItemFile(
-        item: aynaaVersion,
-        deletedItemType: DeletedItemType.version,
+      dbSyncService.deleteInBauckground(
+        [aynaaVersion],
+        Entities.versions,
       );
       await dataBase.updateData(
         path: DbEnpoints.aynaaVersions,

@@ -41,8 +41,7 @@ class FetchLessonsCubit extends Cubit<FetchLessonsState> {
     required String subjectID,
   }) {
     iLocalDbService
-        .watchAll<LessonEntity>(
-            collectionType: CollentionType.lessons, id: subjectID)
+        .watchAll<LessonEntity>(collectionType: Entities.lessons, id: subjectID)
         .listen((items) {
       if (isClosed) return;
       emit(

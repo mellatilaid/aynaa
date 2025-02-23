@@ -19,7 +19,7 @@ import 'package:tus_client_dart/tus_client_dart.dart';
 import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import '../../../../../core/services/data_base.dart';
-import '../../../../../core/services/storage_sync_service/storage_sync_service.dart';
+import '../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 
 class AdminLessonsRepoImpl extends LessonsRepo {
@@ -73,8 +73,9 @@ class AdminLessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, void>> deleteLesson(
       {required LessonEntity lesson}) async {
     try {
-      getit.get<StorageSyncService<LessonEntity>>().deleteItemFile(
-          item: lesson, deletedItemType: DeletedItemType.lesson);
+      getit
+          .get<DBSyncService<LessonEntity>>()
+          .deleteItemFile(item: lesson, deletedItemType: Entities.lessons);
       await dataBase.deleteData(path: DbEnpoints.lessons, uid: lesson.entityID);
       return right(null);
     } on PostgrestException catch (e) {

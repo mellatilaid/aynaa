@@ -6,7 +6,7 @@ import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/helper/enums.dart';
-import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
+import '../../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
@@ -23,14 +23,12 @@ class StudentSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
         .getData(path: DbEnpoints.subjects, query: {kVersionID: versionID});
 
     List<SubjectsEntity> subjects =
-        mapToListOfEntity(aynaaSubjects, Entities.subject);
+        mapToListOfEntity(aynaaSubjects, Entities.subjects);
     isarStorageService.putAll(
       items: subjects,
-      collentionType: CollentionType.subjects,
+      collentionType: Entities.subjects,
     );
-    getit
-        .get<StorageSyncService<SubjectsEntity>>()
-        .donwloadInBauckground(subjects);
+    getit.get<DBSyncService<SubjectsEntity>>().donwloadInBauckground(subjects);
     return subjects;
   }
 }

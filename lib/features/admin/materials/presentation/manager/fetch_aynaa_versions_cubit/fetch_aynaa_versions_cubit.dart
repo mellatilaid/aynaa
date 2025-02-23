@@ -59,7 +59,7 @@ class FetchAynaaVersionsCubit extends Cubit<FetchAynaaVersionsState> {
 
   void _stream() {
     iLocalDbService
-        .watchAll<AynaaVersionsEntity>(collectionType: CollentionType.versions)
+        .watchAll<AynaaVersionsEntity>(collectionType: Entities.versions)
         .listen((versions) {
       if (isClosed) return;
       emit(

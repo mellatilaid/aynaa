@@ -33,8 +33,7 @@ class FetchQuestionsCubit extends Cubit<FetchQuestionsState> {
     required String id,
   }) {
     isarStorageService
-        .watchAll<ExamSectionsEntity>(
-            collectionType: CollentionType.subjects, id: id)
+        .watchAll<ExamSectionsEntity>(collectionType: Entities.subjects, id: id)
         .listen((items) {
       if (isClosed) return;
 

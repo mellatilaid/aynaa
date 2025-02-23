@@ -4,23 +4,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/services/local_storage_service/i_local_storage_service.dart';
 import 'package:crypto/crypto.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-abstract class FileCacheManager {
-  Future<File?> getCachedFile(String filePath);
-  Future<String?> cacheFile(String filePath, Uint8List data);
-  Future<void> deleteCachedFile(
-      String filePath, DeletedItemType deletedItemType);
-  Future<bool> isFileCached(String filePath);
-}
-
-class FileSystemCacheManager implements FileCacheManager {
+class LocalStorageService implements ILocalStorageService {
   static const String _cacheDirectoryName = 'supabase_cache';
   late Directory _cacheDirectory;
   late Directory appDocDir;
-  FileSystemCacheManager() {
+  LocalStorageService() {
     _init();
   }
 
@@ -78,9 +71,9 @@ class FileSystemCacheManager implements FileCacheManager {
 
   @override
   Future<void> deleteCachedFile(
-      String filePath, DeletedItemType deletedItemType) async {
+      String filePath, Entities deletedItemType) async {
     switch (deletedItemType) {
-      case DeletedItemType.lesson:
+      case Entities.lessons:
         await _init(filePath: filePath);
 
         final file =
@@ -90,7 +83,7 @@ class FileSystemCacheManager implements FileCacheManager {
           await file.delete();
         }
         break;
-      case DeletedItemType.subject:
+      case Entities.subjects:
         await _init(filePath: filePath);
         final parts = p.split(filePath);
         final dir = Directory(
@@ -99,7 +92,7 @@ class FileSystemCacheManager implements FileCacheManager {
           await dir.delete(recursive: true);
         }
         break;
-      case DeletedItemType.version:
+      case Entities.versions:
         await _init(filePath: filePath);
         final parts = p.split(filePath);
         final dir =
@@ -108,6 +101,9 @@ class FileSystemCacheManager implements FileCacheManager {
           await dir.delete(recursive: true);
         }
         break;
+      case Entities.examSections:
+      case Entities.exam:
+      case Entities.questions:
     }
   }
 

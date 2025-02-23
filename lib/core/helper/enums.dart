@@ -1,16 +1,18 @@
-enum Entities { lesson, version, subject, exams, examSections, questions }
+//enum Entities { lesson, version, subject, exams, examSections, questions }
 
-enum CollentionType {
+enum Entities {
   versions,
   subjects,
   lessons,
-  deletedItmes,
+
   exam,
+  examSections,
+  questions,
 }
 
 enum PostgressEventType { insert, delete, update }
 
-enum DeletedItemType { lesson, subject, version }
+//enum DeletedItemType { lesson, subject, version }
 
 enum UserRole { admin, student }
 

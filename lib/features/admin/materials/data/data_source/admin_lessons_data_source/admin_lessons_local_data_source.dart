@@ -7,7 +7,7 @@ import 'package:atm_app/core/materials/data/data_source/lessons_data_source/less
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
 import '../../../../../../core/materials/domain/entities/lesson_entity.dart';
-import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
+import '../../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
@@ -17,13 +17,11 @@ class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
   Future<List<LessonEntity>> fetchLessons(
       {required String versionID, required String subjectID}) async {
     final lessons = await iLocalDbService.filter(
-      collentionType: CollentionType.lessons,
+      collentionType: Entities.lessons,
       query: {kVersionID: versionID, kSubjectID: subjectID},
     ) as List<LessonEntity>;
 
-    getit
-        .get<StorageSyncService<LessonEntity>>()
-        .donwloadInBauckground(lessons);
+    getit.get<DBSyncService<LessonEntity>>().donwloadInBauckground(lessons);
     return lessons;
   }
 

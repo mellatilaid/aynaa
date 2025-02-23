@@ -10,7 +10,7 @@ abstract class ILocalDbService {
   Future<String> getIsarPath();
   Future<void> putAll<E>({
     required List<dynamic> items,
-    required CollentionType collentionType,
+    required Entities collentionType,
   });
 
   Future<void> put<E>({required dynamic item});
@@ -21,14 +21,12 @@ abstract class ILocalDbService {
   Future<void> deleteAll<E>({required List<Id> ids});
 
   filter(
-      {required Map<String, dynamic> query,
-      required CollentionType collentionType});
+      {required Map<String, dynamic> query, required Entities collentionType});
 
   /// Clear entire cache
   Future<void> clear<E>();
 
-  Stream<List<T>> watchAll<T>(
-      {required CollentionType collectionType, String? id});
+  Stream<List<T>> watchAll<T>({required Entities collectionType, String? id});
   Future<void> markAsDeleted(
-      {required String id, required CollentionType collentionType});
+      {required String id, required Entities collentionType});
 }

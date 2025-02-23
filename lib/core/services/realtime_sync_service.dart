@@ -9,7 +9,7 @@ import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
+import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
@@ -134,8 +134,8 @@ class RealtimeSyncService {
         getit.get<SubjectsLocalDataSource>().handleUpdate(
             subject: entity, eventType: PostgressEventType.insert);
         getit
-            .get<StorageSyncService<SubjectsEntity>>()
-            .donwloadInBauckground([entity], CollentionType.subjects);
+            .get<DBSyncService<SubjectsEntity>>()
+            .donwloadInBauckground([entity], Entities.subjects);
         break;
       case PostgresChangeEvent.delete:
         getit.get<SubjectsLocalDataSource>().handleUpdate(
@@ -157,8 +157,8 @@ class RealtimeSyncService {
             .get<LessonsLocalDataSource>()
             .handleUpdate(lesson: entity, eventType: PostgressEventType.insert);
         getit
-            .get<StorageSyncService<LessonEntity>>()
-            .donwloadInBauckground([entity], CollentionType.lessons);
+            .get<DBSyncService<LessonEntity>>()
+            .donwloadInBauckground([entity], Entities.lessons);
         break;
       case PostgresChangeEvent.delete:
         getit.get<LessonsLocalDataSource>().handleUpdate(
@@ -181,8 +181,8 @@ class RealtimeSyncService {
             .get<ExamsLocalDataSource>()
             .handleUpdate(exam: entity, eventType: PostgressEventType.insert);
         getit
-            .get<StorageSyncService<ExamEntity>>()
-            .donwloadInBauckground([entity], CollentionType.exam);
+            .get<DBSyncService<ExamEntity>>()
+            .donwloadInBauckground([entity], Entities.exam);
         break;
       case PostgresChangeEvent.delete:
         getit.get<ExamsLocalDataSource>().handleUpdate(

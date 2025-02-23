@@ -39,8 +39,7 @@ class FetchSubjectCubit extends Cubit<FetchSubjectState> {
     required String id,
   }) {
     iLocalDbService
-        .watchAll<SubjectsEntity>(
-            collectionType: CollentionType.subjects, id: id)
+        .watchAll<SubjectsEntity>(collectionType: Entities.subjects, id: id)
         .listen((items) {
       if (isClosed) return;
 

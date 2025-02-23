@@ -33,7 +33,7 @@ class FetchExamsCubit extends Cubit<FetchExamsState> {
     required String id,
   }) {
     iLocalDbService
-        .watchAll<ExamEntity>(collectionType: CollentionType.exam, id: id)
+        .watchAll<ExamEntity>(collectionType: Entities.exam, id: id)
         .listen((items) {
       if (isClosed) return;
 

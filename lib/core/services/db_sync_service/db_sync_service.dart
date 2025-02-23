@@ -3,35 +3,38 @@ import 'dart:developer';
 
 import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
+import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/services/file_cach_manager.dart';
+import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/services/local_storage_service/i_local_storage_service.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/services/storage_sync_service/I_storage_sync_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:path/path.dart' as path;
 
-class StorageSyncService<T extends Entity> extends IStorageSyncService {
+class DBSyncService<T extends Entity> extends IDBSyncService {
   final StorageService storageService;
-  final FileCacheManager fileSystemCacheManager;
+  final ILocalStorageService localStorageService;
   final ILocalDbService iLocalDbService;
+  final DataBase dataBase;
   final Future<void> Function(T entity, PostgressEventType eventType)
       updateLocalDataSource;
-  StorageSyncService({
+  DBSyncService({
     required this.storageService,
-    required this.fileSystemCacheManager,
+    required this.localStorageService,
     required this.updateLocalDataSource,
     required this.iLocalDbService,
+    required this.dataBase,
   });
 
   @override
-  void donwloadInBauckground(List<Entity> items,
-      [CollentionType? collectionType]) {
+  void donwloadInBauckground(List<Entity> items, [Entities? collectionType]) {
     for (final item in items) {
       if (item.url == null || item.localFilePath != null) continue;
       unawaited(_downloadAndUpdateItem(item as T, collectionType!));
@@ -39,23 +42,21 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
   }
 
   @override
-  void deleteInBauckground(
-      List<Entity> items, DeletedItemType deletedItemType) {
+  void deleteInBauckground(List<Entity> items, Entities deletedItemType) {
     for (final item in items) {
       if (item.localFilePath != null) continue;
       unawaited(deleteItemFile(item: item, deletedItemType: deletedItemType));
     }
   }
 
-  Future<void> _downloadAndUpdateItem(
-      T item, CollentionType collectionType) async {
+  Future<void> _downloadAndUpdateItem(T item, Entities collectionType) async {
     try {
       // Download and cache file
       if (item.url == null) return;
       final fileName = item.url!.replaceFirst('${item.versionName}/', '');
       final file = await storageService.downloadFile(
           bucketName: item.versionName, filePath: fileName);
-      final localPath = await fileSystemCacheManager.cacheFile(item.url!, file);
+      final localPath = await localStorageService.cacheFile(item.url!, file);
 
       item.localFilePath = localPath;
 
@@ -72,9 +73,9 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
   }
 
   Future<void> deleteItemFile(
-      {required Entity item, required DeletedItemType deletedItemType}) async {
+      {required Entity item, required Entities deletedItemType}) async {
     switch (deletedItemType) {
-      case DeletedItemType.lesson:
+      case Entities.lessons:
         if (item.localFilePath != null && item.url != null) {
           final fileName = item.url!.replaceFirst('${item.versionName}/', '');
           if (ProfileStorageImpl.userRole == kAdminRole) {
@@ -84,14 +85,14 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
             );
           }
 
-          await fileSystemCacheManager.deleteCachedFile(
+          await localStorageService.deleteCachedFile(
               item.url!, deletedItemType);
 
           //await updateLocalDataSource(lesson, PostgressEventType.delete);
           // _lessonUpdatesController.add(updatedLesson);
         }
         break;
-      case DeletedItemType.subject:
+      case Entities.subjects:
         final parts = path.split(item.url!);
         final fileName = parts[1];
         if (ProfileStorageImpl.userRole == kAdminRole) {
@@ -101,10 +102,9 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
           );
         }
 
-        await fileSystemCacheManager.deleteCachedFile(
-            item.url!, deletedItemType);
+        await localStorageService.deleteCachedFile(item.url!, deletedItemType);
         break;
-      case DeletedItemType.version:
+      case Entities.versions:
         if (ProfileStorageImpl.userRole == kAdminRole) {
           if (item.isDeleted == false) {
             await storageService.deleteBucket(
@@ -113,13 +113,17 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
           }
         }
 
-        await fileSystemCacheManager.deleteCachedFile(
-            item.url!, deletedItemType);
+        await localStorageService.deleteCachedFile(item.url!, deletedItemType);
         await updateLocalDB(
           eventType: PostgressEventType.delete,
           id: item.entityID,
-          collectionType: CollentionType.versions,
+          collectionType: Entities.versions,
         );
+
+        break;
+      case Entities.exam:
+      case Entities.questions:
+      case Entities.examSections:
     }
   }
 
@@ -127,38 +131,73 @@ class StorageSyncService<T extends Entity> extends IStorageSyncService {
   Future<void> updateLocalDB(
       {Entity? item,
       String? id,
-      required CollentionType collectionType,
+      required Entities collectionType,
       required PostgressEventType eventType}) async {
     switch (eventType) {
       case PostgressEventType.insert:
         switch (collectionType) {
-          case CollentionType.versions:
+          case Entities.versions:
             await iLocalDbService.put<AynaaVersionsEntity>(item: item);
-          case CollentionType.subjects:
+          case Entities.subjects:
             await iLocalDbService.put<SubjectsEntity>(item: item);
-          case CollentionType.lessons:
+          case Entities.lessons:
             await iLocalDbService.put<LessonEntity>(item: item);
-          case CollentionType.exam:
+          case Entities.exam:
             await iLocalDbService.put<ExamEntity>(item: item);
-          case CollentionType.deletedItmes:
-            await iLocalDbService.put<DeletedItmesEntity>(item: item);
+          case Entities.questions:
+          case Entities.examSections:
         }
         break;
       case PostgressEventType.delete:
         switch (collectionType) {
-          case CollentionType.versions:
+          case Entities.versions:
             await iLocalDbService.delete<AynaaVersionsEntity>(id: id!);
-          case CollentionType.subjects:
+          case Entities.subjects:
             await iLocalDbService.delete<SubjectsEntity>(id: id!);
-          case CollentionType.lessons:
+          case Entities.lessons:
             await iLocalDbService.delete<LessonEntity>(id: id!);
-          case CollentionType.exam:
+          case Entities.exam:
             await iLocalDbService.delete<ExamEntity>(id: id!);
-          case CollentionType.deletedItmes:
-            await iLocalDbService.delete<DeletedItmesEntity>(id: id!);
+          case Entities.questions:
+          case Entities.examSections:
         }
         break;
       default:
+    }
+  }
+
+  @override
+  void syncDB<E>(
+      {required String path,
+      required Entities entityType,
+      required String lastTimeItemsFetched}) async {
+    List<AynaaVersionsEntity> items;
+
+    final List<Map<String, dynamic>> updatedData = await dataBase.getData(
+      path: path.toString(),
+      filterComparison: FilterComparison.greaterThan,
+      query: {kUpdatedAt: lastTimeItemsFetched},
+    );
+    final List<Map<String, dynamic>> deletedItems = await dataBase.getData(
+      path: path.toString(),
+      filterComparison: FilterComparison.equal,
+      query: {kIsDeleted: true},
+    );
+
+    if (updatedData.isNotEmpty) {
+      items = mapToListOfEntity(updatedData, entityType);
+      //update last time versions fetched from remote in settings
+      updateLastFetchedItemsTime(itemType: entityType);
+
+      iLocalDbService.putAll<E>(
+        items: items,
+        collentionType: entityType,
+      );
+      donwloadInBauckground(items, entityType);
+    }
+    if (deletedItems.isNotEmpty) {
+      items = mapToListOfEntity(deletedItems, entityType);
+      deleteInBauckground(items, entityType);
     }
   }
 }

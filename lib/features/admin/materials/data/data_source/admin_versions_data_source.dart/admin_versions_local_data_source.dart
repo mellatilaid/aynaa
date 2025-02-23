@@ -3,19 +3,18 @@ import 'dart:async';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
-import 'package:atm_app/core/services/storage_sync_service/I_storage_sync_service.dart';
 
 class AdminVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
   final ILocalDbService iLocalDbService;
-  final IStorageSyncService iStorageSyncService;
+  final IDBSyncService iStorageSyncService;
   AdminVersionsLocalDataSourceImpl(
       {required this.iLocalDbService, required this.iStorageSyncService});
   @override
   Future<List<AynaaVersionsEntity>> fetchVersion() async {
     final versions = await iLocalDbService.getAll<AynaaVersionsEntity>();
-    iStorageSyncService.donwloadInBauckground(
-        versions, CollentionType.versions);
+    iStorageSyncService.donwloadInBauckground(versions, Entities.versions);
     return versions;
   }
 

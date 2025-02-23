@@ -16,18 +16,17 @@ import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/services/delete_items_service.dart';
-import 'package:atm_app/core/services/file_cach_manager.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/internt_state_service/network_state_service.dart';
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
 import 'package:atm_app/core/services/local_settings_service/local_setting_service.dart';
+import 'package:atm_app/core/services/local_storage_service/file_cach_manager.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/services/storage_sync_service/I_storage_sync_service.dart';
-import 'package:atm_app/core/services/storage_sync_service/storage_sync_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/core/services/supabase_storage.dart';
@@ -38,25 +37,16 @@ import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_s
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
-import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
-import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
-import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
-import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_remote_data_source_impl.dart';
-import 'package:atm_app/features/admin/exams/data/repos/admin_exam_repo_impl.dart';
-import 'package:atm_app/features/admin/exams/data/repos/admin_exam_sections_repo_impl.dart';
-import 'package:atm_app/features/admin/exams/data/repos/admin_question_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_remote_data_sourse.dart';
-import 'package:atm_app/features/admin/materials/data/repos/admin_lessons_repo_impl.dart';
-import 'package:atm_app/features/admin/materials/data/repos/admin_subjects_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/repos/admin_versions_repo_impl.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
@@ -76,6 +66,7 @@ import '../../features/student/materials/data/repos/student_lessons_repo_impl.da
 import '../../features/student/materials/data/repos/student_subjects_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_versions_repo_impl.dart';
 import '../services/local_db_service/i_local_db_service.dart';
+import '../services/local_storage_service/i_local_storage_service.dart';
 
 final getit = GetIt.instance;
 setUpCoreServiceLocator() async {
@@ -112,20 +103,22 @@ setUpServiceLocator({required UserRole userRole}) {
     }
   }
 
-  registerIfNotExists<FileCacheManager>(FileSystemCacheManager());
-  registerIfNotExists<IStorageSyncService>(
-    StorageSyncService(
+  registerIfNotExists<ILocalStorageService>(LocalStorageService());
+
+  registerIfNotExists<IDBSyncService>(
+    DBSyncService(
       iLocalDbService: getit.get<ILocalDbService>(),
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      localStorageService: getit.get<ILocalStorageService>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
           (Entity entity, PostgressEventType eventType) async {
         return await null;
       },
+      dataBase: getit.get<DataBase>(),
     ),
   );
 
-  registerIfNotExists<StorageSyncService<LessonEntity>>(
+  /*registerIfNotExists<StorageSyncService<LessonEntity>>(
     StorageSyncService(
       iLocalDbService: getit.get<ILocalDbService>(),
       fileSystemCacheManager: getit.get<FileCacheManager>(),
@@ -165,12 +158,12 @@ setUpServiceLocator({required UserRole userRole}) {
                     eventType: eventType,
                   ),
     ),
-  );
+  );*/
 
-  registerIfNotExists<StorageSyncService<ExamEntity>>(
-    StorageSyncService(
+  /* registerIfNotExists<DBSyncService<ExamEntity>>(
+    DBSyncService(
       iLocalDbService: getit.get<ILocalDbService>(),
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      localStorageService: getit.get<ILocalStorageService>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
           (ExamEntity entity, PostgressEventType eventType) =>
@@ -180,10 +173,10 @@ setUpServiceLocator({required UserRole userRole}) {
                   ),
     ),
   );
-  registerIfNotExists<StorageSyncService<ExamSectionsEntity>>(
-    StorageSyncService(
+  registerIfNotExists<DBSyncService<ExamSectionsEntity>>(
+    DBSyncService(
       iLocalDbService: getit.get<ILocalDbService>(),
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
+      localStorageService: getit.get<ILocalStorageService>(),
       storageService: getit.get<StorageService>(),
       updateLocalDataSource:
           (ExamSectionsEntity entity, PostgressEventType eventType) =>
@@ -192,20 +185,20 @@ setUpServiceLocator({required UserRole userRole}) {
                     eventType: eventType,
                   ),
     ),
-  );
+  );*/
 
   switch (userRole) {
     case UserRole.admin:
       registerIfNotExists<VersionsLocalDataSource>(
         AdminVersionsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
-          iStorageSyncService: getit.get<IStorageSyncService>(),
+          iStorageSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<SubjectsLocalDataSource>(
         AdminSubjectsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
-          storageSyncService: getit.get<IStorageSyncService>(),
+          storageSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
@@ -230,13 +223,14 @@ setUpServiceLocator({required UserRole userRole}) {
           dataBase: getit.get<DataBase>(),
           localDB: getit.get<ILocalDbService>(),
           iLocalSettingsService: getit.get<ILocalSettingsService>(),
-          iStorageSyncService: getit.get<IStorageSyncService>(),
+          iStorageSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(
         AdminSubjectsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
+          storageSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<LessonsRemoteDataSource>(
@@ -244,7 +238,7 @@ setUpServiceLocator({required UserRole userRole}) {
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
           storageService: getit.get<StorageService>(),
-          fileCacheManager: getit.get<FileCacheManager>(),
+          fileCacheManager: getit.get<ILocalStorageService>(),
         ),
       );
       registerIfNotExists<ExamsRemoteDataSource>(
@@ -272,19 +266,17 @@ setUpServiceLocator({required UserRole userRole}) {
           storageService: getit.get<StorageService>(),
           remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
           versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-          backgroundServices:
-              getit.get<StorageSyncService<AynaaVersionsEntity>>(),
+          dbSyncService: getit.get<IDBSyncService>(),
           networkStateService: getit.get<INetworkStateService>(),
         ),
       );
-      registerIfNotExists<SubjectsRepo>(
+      /* registerIfNotExists<SubjectsRepo>(
         AdminSubjectsRepoImpl(
           dataBase: getit.get<DataBase>(),
           storageService: getit.get<StorageService>(),
           subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
           subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-          backgroundDownloadService:
-              getit.get<StorageSyncService<SubjectsEntity>>(),
+          backgroundDownloadService: getit.get<DBSyncService<SubjectsEntity>>(),
         ),
       );
       registerIfNotExists<LessonsRepo>(
@@ -314,7 +306,7 @@ setUpServiceLocator({required UserRole userRole}) {
             storageService: getit.get<StorageService>(),
             remoteDataSource: getit.get<QuestionsRemoteDataSource>(),
             localDataSource: getit.get<QuestionsLocalDataSource>()),
-      );
+      );*/
 
       break;
     case UserRole.student:
@@ -350,7 +342,7 @@ setUpServiceLocator({required UserRole userRole}) {
           dataBase: getit.get<DataBase>(),
           isarStorageService: getit.get<LocalDbService>(),
           storageService: getit.get<StorageService>(),
-          fileCacheManager: getit.get<FileCacheManager>(),
+          fileCacheManager: getit.get<ILocalStorageService>(),
         ),
       );
 
@@ -360,8 +352,7 @@ setUpServiceLocator({required UserRole userRole}) {
           storageService: getit.get<StorageService>(),
           remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
           versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-          backgroundServices:
-              getit.get<StorageSyncService<AynaaVersionsEntity>>(),
+          backgroundServices: getit.get<DBSyncService<AynaaVersionsEntity>>(),
         ),
       );
       registerIfNotExists<SubjectsRepo>(
@@ -370,8 +361,7 @@ setUpServiceLocator({required UserRole userRole}) {
           storageService: getit.get<StorageService>(),
           subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
           subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-          backgroundDownloadService:
-              getit.get<StorageSyncService<SubjectsEntity>>(),
+          backgroundDownloadService: getit.get<DBSyncService<SubjectsEntity>>(),
         ),
       );
       registerIfNotExists<LessonsRepo>(
@@ -385,13 +375,6 @@ setUpServiceLocator({required UserRole userRole}) {
   }
 
   registerIfNotExists<FilePickerHelper>(FilePickerHelper());
-  registerIfNotExists<DeleteItemsService>(
-    DeleteItemsServiceImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
-      iLocalDbService: getit.get<ILocalDbService>(),
-    ),
-  );
 }
 
 Future<Isar> _isarInit() async {

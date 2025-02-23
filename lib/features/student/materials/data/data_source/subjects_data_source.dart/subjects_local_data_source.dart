@@ -6,7 +6,7 @@ import 'package:atm_app/core/materials/data/data_source/subjects_data_source/sub
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
-import '../../../../../../core/services/storage_sync_service/storage_sync_service.dart';
+import '../../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
@@ -16,12 +16,10 @@ class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
   Future<List<SubjectsEntity>> fetchSubjects(
       {required String versionID}) async {
     final subjects = await iLocalDbService.filter(
-      collentionType: CollentionType.subjects,
+      collentionType: Entities.subjects,
       query: {kVersionID: versionID},
     );
-    getit
-        .get<StorageSyncService<SubjectsEntity>>()
-        .donwloadInBauckground(subjects);
+    getit.get<DBSyncService<SubjectsEntity>>().donwloadInBauckground(subjects);
     return subjects as List<SubjectsEntity>;
   }
 
@@ -70,7 +68,7 @@ class StudentSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
   Future<void> deleteSubject({required String subjectID}) async {
     await iLocalDbService.markAsDeleted(
       id: subjectID,
-      collentionType: CollentionType.subjects,
+      collentionType: Entities.subjects,
     );
   }
 }

@@ -69,12 +69,8 @@ class CustomVersionCard extends StatelessWidget {
                       onEdit: () => onEdit,
                       popItems: [
                         genericPopUpMenuItem(
-                          value: 'تعديل',
-                          icon: const Icon(Icons.edit),
-                        ),
-                        genericPopUpMenuItem(
                           value: 'حذف',
-                          icon: const Icon(Icons.edit),
+                          icon: const Icon(Icons.delete, color: Colors.red),
                         ),
                       ],
                     ),

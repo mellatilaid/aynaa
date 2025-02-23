@@ -10,23 +10,23 @@ import '../helper/enums.dart';
 List<T> mapToListOfEntity<T>(List<Map<String, dynamic>> data, Entities value) {
   final List<T> resault;
   switch (value) {
-    case Entities.version:
+    case Entities.versions:
       resault = data.map((item) {
         return AynaaVersionsModel.fromJson(item);
       }).toList() as List<T>;
       return resault;
 
-    case Entities.subject:
+    case Entities.subjects:
       resault = data.map((item) {
         return SubjectsModel.fromMap(item);
       }).toList() as List<T>;
       return resault;
-    case Entities.lesson:
+    case Entities.lessons:
       resault = data.map((item) {
         return LessonModel.fromMap(item);
       }).toList() as List<T>;
       return resault;
-    case Entities.exams:
+    case Entities.exam:
       resault = data.map((item) {
         return ExamModel.fromMap(item);
       }).toList() as List<T>;

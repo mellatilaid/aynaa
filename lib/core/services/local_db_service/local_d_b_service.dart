@@ -66,9 +66,10 @@ class LocalDbService extends ILocalDbService {
     return dir.path;
   }
 
+  @override
   Future<void> putAll<E>({
     required List<dynamic> items,
-    required CollentionType collentionType,
+    required Entities collentionType,
   }) async {
     try {
       final collection = _isar.collection<E>();
@@ -120,9 +121,9 @@ class LocalDbService extends ILocalDbService {
   @override
   filter(
       {required Map<String, dynamic> query,
-      required CollentionType collentionType}) async {
+      required Entities collentionType}) async {
     switch (collentionType) {
-      case CollentionType.lessons:
+      case Entities.lessons:
         final result = await _isar.lessonEntitys
             .filter()
             .aynaaVersionIdEqualTo(query[kVersionID])
@@ -132,8 +133,8 @@ class LocalDbService extends ILocalDbService {
         final number = await _isar.lessonEntitys.count();
         log(number.toString());
         return result;
-      case CollentionType.versions:
-      case CollentionType.subjects:
+      case Entities.versions:
+      case Entities.subjects:
         final result = await _isar.subjectsEntitys
             .filter()
             .versionIDEqualTo(query[kVersionID])
@@ -141,13 +142,14 @@ class LocalDbService extends ILocalDbService {
             .group((q) => q.isDeletedEqualTo(false))
             .findAll();
         return result;
-      case CollentionType.exam:
+      case Entities.exam:
         final result = await _isar.examEntitys
             .filter()
             .versionIDEqualTo(query[kVersionID])
             .findAll();
         return result;
-      case CollentionType.deletedItmes:
+      case Entities.questions:
+      case Entities.examSections:
     }
   }
 
@@ -166,11 +168,11 @@ class LocalDbService extends ILocalDbService {
 
   @override
   Stream<List<T>> watchAll<T>(
-      {required CollentionType collectionType, String? id}) async* {
+      {required Entities collectionType, String? id}) async* {
     // Ensure Isar is initialized
 
     switch (collectionType) {
-      case CollentionType.lessons:
+      case Entities.lessons:
         Stream<void> lessonStream = _isar.lessonEntitys.watchLazy();
 
         yield* lessonStream.asyncMap((_) async {
@@ -181,13 +183,13 @@ class LocalDbService extends ILocalDbService {
               .findAll() as List<T>; // Fetch updated data
         });
 
-      case CollentionType.versions:
+      case Entities.versions:
         Stream<void> versionsStream = _isar.aynaaVersionsEntitys.watchLazy();
         yield* versionsStream.asyncMap((_) async {
           return await _isar.aynaaVersionsEntitys.where().findAll() as List<T>;
         });
 
-      case CollentionType.subjects:
+      case Entities.subjects:
         Stream<void> subjectsStream = _isar.subjectsEntitys.watchLazy();
         yield* subjectsStream.asyncMap((_) async {
           return await _isar.subjectsEntitys
@@ -197,7 +199,7 @@ class LocalDbService extends ILocalDbService {
               .group((q) => q.isDeletedEqualTo(false))
               .findAll() as List<T>;
         });
-      case CollentionType.exam:
+      case Entities.exam:
         Stream<void> subjectsStream = _isar.examEntitys.watchLazy();
         yield* subjectsStream.asyncMap((_) async {
           return await _isar.examEntitys
@@ -207,16 +209,17 @@ class LocalDbService extends ILocalDbService {
               .findAll() as List<T>;
         });
 
-      case CollentionType.deletedItmes:
+      case Entities.questions:
+      case Entities.examSections:
     }
   }
 
   @override
   Future<void> markAsDeleted(
-      {required String id, required CollentionType collentionType}) async {
+      {required String id, required Entities collentionType}) async {
     switch (collentionType) {
-      case CollentionType.lessons:
-      case CollentionType.versions:
+      case Entities.lessons:
+      case Entities.versions:
         final deletedVersion = await get(id: id);
         if (deletedVersion != null) {
           deletedVersion.isDeleted = true;
@@ -227,7 +230,7 @@ class LocalDbService extends ILocalDbService {
         }
         final itemDeleted = DeletedItmesEntity(id, true, false);
         _isar.deletedItmesEntitys.putByIndex('itemID', itemDeleted);
-      case CollentionType.subjects:
+      case Entities.subjects:
         final deletedSubject = await get(id: id);
         if (deletedSubject != null) {
           deletedSubject.isDeleted = true;
@@ -236,7 +239,7 @@ class LocalDbService extends ILocalDbService {
             // collentionType: CollentionType.subjects,
           );
         }
-      case CollentionType.exam:
+      case Entities.exam:
         final deletedSubject = await get(id: id);
         if (deletedSubject != null) {
           deletedSubject.isDeleted = true;
@@ -245,7 +248,8 @@ class LocalDbService extends ILocalDbService {
             //collentionType: CollentionType.exam,
           );
         }
-      case CollentionType.deletedItmes:
+      case Entities.questions:
+      case Entities.examSections:
     }
   }
 }

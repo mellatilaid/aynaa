@@ -1,23 +1,12 @@
-import 'package:atm_app/core/common/entitiy.dart';
-import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
-import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/utils/set_up_service_locator.dart';
-import 'package:path/path.dart' as path;
 
-import '../const/remote_db_const.dart';
-import '../utils/db_enpoints.dart';
 
-abstract class DeleteItemsService<T> {
+/*abstract class DeleteItemsService<T> {
   Future<void> deleteItemPermanently(
-      {required DeletedItemType deletedItemType});
+      {required Entities deletedItemType});
   Future<void> deleteItemFromRemote();
   Future<void> deleteItemFromLocal();
   Future<void> markItemAsDeleted(
-      {required Entity item, required DeletedItemType deletedItemType});
+      {required Entity item, required Entities deletedItemType});
 }
 
 class DeleteItemsServiceImpl<T> extends DeleteItemsService {
@@ -65,7 +54,7 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
 
   @override
   Future<void> deleteItemFromLocal() async {
-    await getit.get<FileCacheManager>().deleteCachedFile(
+    await getit.get<ILocalStorageService>().deleteCachedFile(
           _getFileName(),
           _deletedItemType,
         );
@@ -76,7 +65,7 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
     switch (_deletedItemType) {
       case DeletedItemType.subject:
         final relatedLessons = iLocalDbService.filter(
-            collentionType: CollentionType.lessons,
+            collentionType: Entities.lessons,
             query: {kSubjectID: _item.entityID});
         if (relatedLessons.isEmpty) {
           iLocalDbService.delete(id: _item.entityID);
@@ -109,7 +98,7 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
     _deletedItemType = deletedItemType;
     await iLocalDbService.markAsDeleted(
       id: item.entityID,
-      collentionType: CollentionType.subjects,
+      collentionType: Entities.subjects,
     );
     deleteItemPermanently(deletedItemType: deletedItemType);
     /*final itemDeleted = DeletedItmesEntity(id, false, false);
@@ -271,4 +260,4 @@ class DeleteItemsServiceImpl extends DeleteItemsService {
     }
   }
 }
-*/
+*/*/
