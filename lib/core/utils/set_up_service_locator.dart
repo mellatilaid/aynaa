@@ -47,6 +47,8 @@ import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_
 import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_remote_data_sourse.dart';
+import 'package:atm_app/features/admin/materials/data/repos/admin_lessons_repo_impl.dart';
+import 'package:atm_app/features/admin/materials/data/repos/admin_subjects_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/repos/admin_versions_repo_impl.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
@@ -91,6 +93,7 @@ setUpCoreServiceLocator() async {
           settingsEntity: SettingsEntity(
             entityID: '0',
             lastTimeVersionsFetched: null,
+            lastTimeSubjectsFetched: null,
           ),
         ),
     );
@@ -198,12 +201,13 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<SubjectsLocalDataSource>(
         AdminSubjectsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
-          storageSyncService: getit.get<IDBSyncService>(),
+          iDBSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
         AdminLessonsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
+          idbSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<ExamsLocalDataSource>(
@@ -231,6 +235,7 @@ setUpServiceLocator({required UserRole userRole}) {
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
           storageSyncService: getit.get<IDBSyncService>(),
+          iLocalSettingsService: getit.get<ILocalSettingsService>(),
         ),
       );
       registerIfNotExists<LessonsRemoteDataSource>(
@@ -270,13 +275,14 @@ setUpServiceLocator({required UserRole userRole}) {
           networkStateService: getit.get<INetworkStateService>(),
         ),
       );
-      /* registerIfNotExists<SubjectsRepo>(
+      registerIfNotExists<SubjectsRepo>(
         AdminSubjectsRepoImpl(
           dataBase: getit.get<DataBase>(),
           storageService: getit.get<StorageService>(),
           subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
           subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-          backgroundDownloadService: getit.get<DBSyncService<SubjectsEntity>>(),
+          iDBSyncService: getit.get<IDBSyncService>(),
+          iNetworkStateService: getit.get<INetworkStateService>(),
         ),
       );
       registerIfNotExists<LessonsRepo>(
@@ -286,7 +292,7 @@ setUpServiceLocator({required UserRole userRole}) {
             lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
             lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
       );
-      registerIfNotExists<ExamsRepo>(
+      /* registerIfNotExists<ExamsRepo>(
         AdminExamRepoImpl(
             dataBase: getit.get<DataBase>(),
             storageService: getit.get<StorageService>(),

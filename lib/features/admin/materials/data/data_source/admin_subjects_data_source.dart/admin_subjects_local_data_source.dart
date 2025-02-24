@@ -9,10 +9,10 @@ import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
 class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
   final ILocalDbService iLocalDbService;
-  final IDBSyncService storageSyncService;
+  final IDBSyncService iDBSyncService;
   AdminSubjectsLocalDataSourceImpl({
     required this.iLocalDbService,
-    required this.storageSyncService,
+    required this.iDBSyncService,
   });
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
@@ -21,7 +21,7 @@ class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
       collentionType: Entities.subjects,
       query: {kVersionID: versionID},
     );
-    storageSyncService.donwloadInBauckground(subjects, Entities.subjects);
+    iDBSyncService.donwloadInBauckground(subjects, Entities.subjects);
     return subjects as List<SubjectsEntity>;
   }
 

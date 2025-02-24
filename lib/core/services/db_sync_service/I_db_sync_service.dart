@@ -6,6 +6,8 @@ abstract class IDBSyncService<T extends Entity> {
     required String path,
     required Entities entityType,
     required String lastTimeItemsFetched,
+    required Map<String, dynamic> updtatedItemsQuery,
+    required Map<String, dynamic> deletedItemsQuery,
   });
   void donwloadInBauckground(List<T> items, Entities collectionType);
   void deleteInBauckground(List<T> items, Entities deletedItemType);

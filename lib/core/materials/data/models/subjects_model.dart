@@ -4,13 +4,15 @@ import 'package:atm_app/core/mixins/mappable.dart';
 import '../../../../../../core/const/remote_db_const.dart';
 
 class SubjectsModel extends SubjectsEntity with Mappable {
-  SubjectsModel(
-      {required super.entityID,
-      required super.subjectName,
-      required super.versionName,
-      required super.url,
-      required super.versionID,
-      required super.localFilePath});
+  SubjectsModel({
+    required super.entityID,
+    required super.subjectName,
+    required super.versionName,
+    required super.url,
+    required super.versionID,
+    required super.localFilePath,
+    required super.updatedAt,
+  });
 
   /*factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
     return SubjectsModel(id: data[kID].toString(), subjectName: data[kName]);
@@ -18,12 +20,14 @@ class SubjectsModel extends SubjectsEntity with Mappable {
 
   factory SubjectsModel.fromSubjectEntity(SubjectsEntity subject) {
     return SubjectsModel(
-        entityID: subject.entityID,
-        subjectName: subject.subjectName,
-        versionName: subject.versionName,
-        url: subject.url,
-        versionID: subject.versionID,
-        localFilePath: subject.localFilePath);
+      entityID: subject.entityID,
+      subjectName: subject.subjectName,
+      versionName: subject.versionName,
+      url: subject.url,
+      versionID: subject.versionID,
+      localFilePath: subject.localFilePath,
+      updatedAt: subject.updatedAt,
+    );
   }
 
   @override
@@ -33,6 +37,7 @@ class SubjectsModel extends SubjectsEntity with Mappable {
       kVersionID: versionID,
       kVersionName: versionName,
       kSubjectName: subjectName,
+      kUpdatedAt: updatedAt,
     };
   }
 
@@ -44,6 +49,7 @@ class SubjectsModel extends SubjectsEntity with Mappable {
       url: data[kUrl],
       versionName: data[kVersionName],
       localFilePath: data[kLocalFilePath],
+      updatedAt: data[kUpdatedAt],
     );
   }
 }

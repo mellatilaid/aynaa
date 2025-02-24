@@ -8,7 +8,6 @@ import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
@@ -131,11 +130,11 @@ class RealtimeSyncService {
         final entity = SubjectsModel.fromMap(payload.newRecord);
         log(payload.toString());
         log('iserted subject to remote id is ${entity.entityID}');
-        getit.get<SubjectsLocalDataSource>().handleUpdate(
+        /* getit.get<SubjectsLocalDataSource>().handleUpdate(
             subject: entity, eventType: PostgressEventType.insert);
         getit
             .get<DBSyncService<SubjectsEntity>>()
-            .donwloadInBauckground([entity], Entities.subjects);
+            .donwloadInBauckground([entity], Entities.subjects);*/
         break;
       case PostgresChangeEvent.delete:
         getit.get<SubjectsLocalDataSource>().handleUpdate(

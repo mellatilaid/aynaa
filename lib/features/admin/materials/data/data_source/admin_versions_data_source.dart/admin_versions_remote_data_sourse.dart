@@ -6,6 +6,7 @@ import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/utils/db_filter_types.dart';
 
 import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
@@ -45,10 +46,17 @@ class AdminVersionsRemoteDataSourceImpl
   Future<void> syncVersions() async {
     List<AynaaVersionsEntity> items;
     final settings = await iLocalSettingsService.getSettings();
+
     iStorageSyncService.syncDB<AynaaVersionsEntity>(
         path: DbEnpoints.aynaaVersions,
         entityType: Entities.versions,
-        lastTimeItemsFetched: settings!.lastTimeVersionsFetched!);
+        updtatedItemsQuery: {
+          kUpdatedAt: {
+            DbFilterTypes.greaterThan: settings!.lastTimeVersionsFetched
+          }
+        },
+        deletedItemsQuery: {kIsDeleted: true},
+        lastTimeItemsFetched: settings.lastTimeVersionsFetched!);
     /*final List<Map<String, dynamic>> updatedData = await dataBase.getData(
       path: DbEnpoints.aynaaVersions,
       filterComparison: FilterComparison.greaterThan,

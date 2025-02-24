@@ -20,6 +20,7 @@ class SubjectsEntity with Entity {
   final String url;
   @override
   late String? localFilePath;
+  String updatedAt;
   SubjectsEntity({
     required this.entityID,
     required this.subjectName,
@@ -27,6 +28,7 @@ class SubjectsEntity with Entity {
     required this.url,
     required this.versionID,
     this.localFilePath,
+    required this.updatedAt,
   });
 
   @override

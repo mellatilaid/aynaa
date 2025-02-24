@@ -34,6 +34,42 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
   });
 
   @override
+  void syncDB<E>({
+    required String path,
+    required Entities entityType,
+    required String lastTimeItemsFetched,
+    required Map<String, dynamic> updtatedItemsQuery,
+    required Map<String, dynamic> deletedItemsQuery,
+  }) async {
+    final List<Map<String, dynamic>> updatedData = await dataBase.getData(
+      path: path.toString(),
+      //  filterComparison: FilterComparison.greaterThan,
+      query: updtatedItemsQuery,
+    );
+    final List<Map<String, dynamic>> deletedItems = await dataBase.getData(
+      path: path.toString(),
+      //  filterComparison: FilterComparison.equal,
+      query: deletedItemsQuery,
+    );
+
+    if (updatedData.isNotEmpty) {
+      final List<Entity> items = mapToListOfEntity(updatedData, entityType);
+      //update last time versions fetched from remote in settings
+      updateLastFetchedItemsTime(itemType: entityType);
+
+      iLocalDbService.putAll<E>(
+        items: items,
+        collentionType: entityType,
+      );
+      donwloadInBauckground(items, entityType);
+    }
+    if (deletedItems.isNotEmpty) {
+      final List<Entity> items = mapToListOfEntity(deletedItems, entityType);
+      deleteInBauckground(items, entityType);
+    }
+  }
+
+  @override
   void donwloadInBauckground(List<Entity> items, [Entities? collectionType]) {
     for (final item in items) {
       if (item.url == null || item.localFilePath != null) continue;
@@ -103,6 +139,11 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         }
 
         await localStorageService.deleteCachedFile(item.url!, deletedItemType);
+        await updateLocalDB(
+          id: item.entityID,
+          eventType: PostgressEventType.delete,
+          collectionType: Entities.subjects,
+        );
         break;
       case Entities.versions:
         if (ProfileStorageImpl.userRole == kAdminRole) {
@@ -163,41 +204,6 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         }
         break;
       default:
-    }
-  }
-
-  @override
-  void syncDB<E>(
-      {required String path,
-      required Entities entityType,
-      required String lastTimeItemsFetched}) async {
-    List<AynaaVersionsEntity> items;
-
-    final List<Map<String, dynamic>> updatedData = await dataBase.getData(
-      path: path.toString(),
-      filterComparison: FilterComparison.greaterThan,
-      query: {kUpdatedAt: lastTimeItemsFetched},
-    );
-    final List<Map<String, dynamic>> deletedItems = await dataBase.getData(
-      path: path.toString(),
-      filterComparison: FilterComparison.equal,
-      query: {kIsDeleted: true},
-    );
-
-    if (updatedData.isNotEmpty) {
-      items = mapToListOfEntity(updatedData, entityType);
-      //update last time versions fetched from remote in settings
-      updateLastFetchedItemsTime(itemType: entityType);
-
-      iLocalDbService.putAll<E>(
-        items: items,
-        collentionType: entityType,
-      );
-      donwloadInBauckground(items, entityType);
-    }
-    if (deletedItems.isNotEmpty) {
-      items = mapToListOfEntity(deletedItems, entityType);
-      deleteInBauckground(items, entityType);
     }
   }
 }

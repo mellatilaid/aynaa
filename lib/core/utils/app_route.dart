@@ -35,11 +35,11 @@ abstract class AppRouter {
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
-        path: signInView,
+        path: '/ddd',
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(
-        path: adminNavBarView,
+        path: '/',
         builder: (context, state) => const AdminBottomNavView(),
       ),
       GoRoute(
@@ -77,7 +77,7 @@ abstract class AppRouter {
         },
       ),
       GoRoute(
-        path: '/',
+        path: 'dddd',
         builder: (context, state) => const StudentBottomNavView(),
       ),
       GoRoute(

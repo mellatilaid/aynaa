@@ -65,8 +65,8 @@ class CustomVersionCard extends StatelessWidget {
                     top: 9,
                     left: 0,
                     child: ThreeDotsMenu(
-                      onDelete: () => onDelete,
-                      onEdit: () => onEdit,
+                      onDelete: onDelete,
+                      onEdit: onEdit,
                       popItems: [
                         genericPopUpMenuItem(
                           value: 'حذف',

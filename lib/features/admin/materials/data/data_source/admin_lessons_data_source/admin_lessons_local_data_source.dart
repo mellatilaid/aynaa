@@ -4,15 +4,18 @@ import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
 import '../../../../../../core/materials/domain/entities/lesson_entity.dart';
-import '../../../../../../core/services/db_sync_service/db_sync_service.dart';
-import '../../../../../../core/utils/set_up_service_locator.dart';
 
 class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
   final ILocalDbService iLocalDbService;
-  AdminLessonsLocalDataSourceImpl({required this.iLocalDbService});
+  final IDBSyncService idbSyncService;
+  AdminLessonsLocalDataSourceImpl({
+    required this.iLocalDbService,
+    required this.idbSyncService,
+  });
   @override
   Future<List<LessonEntity>> fetchLessons(
       {required String versionID, required String subjectID}) async {
@@ -20,8 +23,8 @@ class AdminLessonsLocalDataSourceImpl implements LessonsLocalDataSource {
       collentionType: Entities.lessons,
       query: {kVersionID: versionID, kSubjectID: subjectID},
     ) as List<LessonEntity>;
+    idbSyncService.donwloadInBauckground(lessons, Entities.lessons);
 
-    getit.get<DBSyncService<LessonEntity>>().donwloadInBauckground(lessons);
     return lessons;
   }
 

@@ -22,8 +22,13 @@ const SettingsEntitySchema = CollectionSchema(
       name: r'entityID',
       type: IsarType.string,
     ),
-    r'lastTimeVersionsFetched': PropertySchema(
+    r'lastTimeSubjectsFetched': PropertySchema(
       id: 1,
+      name: r'lastTimeSubjectsFetched',
+      type: IsarType.string,
+    ),
+    r'lastTimeVersionsFetched': PropertySchema(
+      id: 2,
       name: r'lastTimeVersionsFetched',
       type: IsarType.string,
     )
@@ -64,6 +69,12 @@ int _settingsEntityEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.entityID.length * 3;
   {
+    final value = object.lastTimeSubjectsFetched;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.lastTimeVersionsFetched;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -79,7 +90,8 @@ void _settingsEntitySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.entityID);
-  writer.writeString(offsets[1], object.lastTimeVersionsFetched);
+  writer.writeString(offsets[1], object.lastTimeSubjectsFetched);
+  writer.writeString(offsets[2], object.lastTimeVersionsFetched);
 }
 
 SettingsEntity _settingsEntityDeserialize(
@@ -90,7 +102,8 @@ SettingsEntity _settingsEntityDeserialize(
 ) {
   final object = SettingsEntity(
     entityID: reader.readString(offsets[0]),
-    lastTimeVersionsFetched: reader.readStringOrNull(offsets[1]),
+    lastTimeSubjectsFetched: reader.readStringOrNull(offsets[1]),
+    lastTimeVersionsFetched: reader.readStringOrNull(offsets[2]),
   );
   object.id = id;
   return object;
@@ -106,6 +119,8 @@ P _settingsEntityDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
+      return (reader.readStringOrNull(offset)) as P;
+    case 2:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -500,6 +515,162 @@ extension SettingsEntityQueryFilter
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastTimeSubjectsFetched',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastTimeSubjectsFetched',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastTimeSubjectsFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastTimeSubjectsFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastTimeSubjectsFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastTimeSubjectsFetched',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'lastTimeSubjectsFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'lastTimeSubjectsFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedContains(String value,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'lastTimeSubjectsFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'lastTimeSubjectsFetched',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastTimeSubjectsFetched',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeSubjectsFetchedIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'lastTimeSubjectsFetched',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
       lastTimeVersionsFetchedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -678,6 +849,20 @@ extension SettingsEntityQuerySortBy
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      sortByLastTimeSubjectsFetched() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeSubjectsFetched', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      sortByLastTimeSubjectsFetchedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeSubjectsFetched', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
       sortByLastTimeVersionsFetched() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastTimeVersionsFetched', Sort.asc);
@@ -720,6 +905,20 @@ extension SettingsEntityQuerySortThenBy
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      thenByLastTimeSubjectsFetched() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeSubjectsFetched', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      thenByLastTimeSubjectsFetchedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeSubjectsFetched', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
       thenByLastTimeVersionsFetched() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastTimeVersionsFetched', Sort.asc);
@@ -744,6 +943,14 @@ extension SettingsEntityQueryWhereDistinct
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
+      distinctByLastTimeSubjectsFetched({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastTimeSubjectsFetched',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
       distinctByLastTimeVersionsFetched({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'lastTimeVersionsFetched',
@@ -763,6 +970,13 @@ extension SettingsEntityQueryProperty
   QueryBuilder<SettingsEntity, String, QQueryOperations> entityIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entityID');
+    });
+  }
+
+  QueryBuilder<SettingsEntity, String?, QQueryOperations>
+      lastTimeSubjectsFetchedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastTimeSubjectsFetched');
     });
   }
 

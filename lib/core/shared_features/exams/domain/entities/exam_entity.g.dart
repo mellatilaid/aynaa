@@ -22,33 +22,38 @@ const ExamEntitySchema = CollectionSchema(
       name: r'entityID',
       type: IsarType.string,
     ),
-    r'localFilePath': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 1,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'localFilePath': PropertySchema(
+      id: 2,
       name: r'localFilePath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'title',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionID': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'versionID',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -119,12 +124,13 @@ void _examEntitySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.entityID);
-  writer.writeString(offsets[1], object.localFilePath);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.title);
-  writer.writeString(offsets[4], object.url);
-  writer.writeString(offsets[5], object.versionID);
-  writer.writeString(offsets[6], object.versionName);
+  writer.writeBool(offsets[1], object.isDeleted);
+  writer.writeString(offsets[2], object.localFilePath);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.title);
+  writer.writeString(offsets[5], object.url);
+  writer.writeString(offsets[6], object.versionID);
+  writer.writeString(offsets[7], object.versionName);
 }
 
 ExamEntity _examEntityDeserialize(
@@ -135,11 +141,12 @@ ExamEntity _examEntityDeserialize(
 ) {
   final object = ExamEntity(
     entityID: reader.readString(offsets[0]),
-    localFilePath: reader.readStringOrNull(offsets[1]),
-    title: reader.readString(offsets[3]),
-    url: reader.readStringOrNull(offsets[4]),
-    versionID: reader.readString(offsets[5]),
-    versionName: reader.readString(offsets[6]),
+    isDeleted: reader.readBoolOrNull(offsets[1]) ?? false,
+    localFilePath: reader.readStringOrNull(offsets[2]),
+    title: reader.readString(offsets[4]),
+    url: reader.readStringOrNull(offsets[5]),
+    versionID: reader.readString(offsets[6]),
+    versionName: reader.readString(offsets[7]),
   );
   object.id = id;
   return object;
@@ -155,16 +162,18 @@ P _examEntityDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
-    case 4:
       return (reader.readStringOrNull(offset)) as P;
-    case 5:
+    case 4:
       return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -545,6 +554,16 @@ extension ExamEntityQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> isDeletedEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
       ));
     });
   }
@@ -1417,6 +1436,18 @@ extension ExamEntityQuerySortBy
     });
   }
 
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> sortByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1516,6 +1547,18 @@ extension ExamEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> thenByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1598,6 +1641,12 @@ extension ExamEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ExamEntity, ExamEntity, QDistinct> distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
   QueryBuilder<ExamEntity, ExamEntity, QDistinct> distinctByLocalFilePath(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1653,6 +1702,12 @@ extension ExamEntityQueryProperty
   QueryBuilder<ExamEntity, String, QQueryOperations> entityIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entityID');
+    });
+  }
+
+  QueryBuilder<ExamEntity, bool, QQueryOperations> isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
     });
   }
 

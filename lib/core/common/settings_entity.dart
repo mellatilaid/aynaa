@@ -8,7 +8,11 @@ class SettingsEntity {
   @Index(unique: true, replace: true)
   final String entityID;
   String? lastTimeVersionsFetched;
+  String? lastTimeSubjectsFetched;
 
-  SettingsEntity(
-      {required this.entityID, required this.lastTimeVersionsFetched});
+  SettingsEntity({
+    required this.entityID,
+    required this.lastTimeVersionsFetched,
+    required this.lastTimeSubjectsFetched,
+  });
 }

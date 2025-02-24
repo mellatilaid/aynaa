@@ -42,18 +42,23 @@ const SubjectsEntitySchema = CollectionSchema(
       name: r'subjectName',
       type: IsarType.string,
     ),
-    r'url': PropertySchema(
+    r'updatedAt': PropertySchema(
       id: 5,
+      name: r'updatedAt',
+      type: IsarType.string,
+    ),
+    r'url': PropertySchema(
+      id: 6,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionID': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'versionID',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -101,6 +106,7 @@ int _subjectsEntityEstimateSize(
   }
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.subjectName.length * 3;
+  bytesCount += 3 + object.updatedAt.length * 3;
   bytesCount += 3 + object.url.length * 3;
   bytesCount += 3 + object.versionID.length * 3;
   bytesCount += 3 + object.versionName.length * 3;
@@ -118,9 +124,10 @@ void _subjectsEntitySerialize(
   writer.writeString(offsets[2], object.localFilePath);
   writer.writeString(offsets[3], object.name);
   writer.writeString(offsets[4], object.subjectName);
-  writer.writeString(offsets[5], object.url);
-  writer.writeString(offsets[6], object.versionID);
-  writer.writeString(offsets[7], object.versionName);
+  writer.writeString(offsets[5], object.updatedAt);
+  writer.writeString(offsets[6], object.url);
+  writer.writeString(offsets[7], object.versionID);
+  writer.writeString(offsets[8], object.versionName);
 }
 
 SubjectsEntity _subjectsEntityDeserialize(
@@ -133,9 +140,10 @@ SubjectsEntity _subjectsEntityDeserialize(
     entityID: reader.readString(offsets[0]),
     localFilePath: reader.readStringOrNull(offsets[2]),
     subjectName: reader.readString(offsets[4]),
-    url: reader.readString(offsets[5]),
-    versionID: reader.readString(offsets[6]),
-    versionName: reader.readString(offsets[7]),
+    updatedAt: reader.readString(offsets[5]),
+    url: reader.readString(offsets[6]),
+    versionID: reader.readString(offsets[7]),
+    versionName: reader.readString(offsets[8]),
   );
   object.id = id;
   object.isDeleted = reader.readBool(offsets[1]);
@@ -164,6 +172,8 @@ P _subjectsEntityDeserializeProp<P>(
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -994,6 +1004,142 @@ extension SubjectsEntityQueryFilter
   }
 
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updatedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'updatedAt',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
+      updatedAtIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'updatedAt',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterFilterCondition>
       urlEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1476,6 +1622,19 @@ extension SubjectsEntityQuerySortBy
     });
   }
 
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy> sortByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy>
+      sortByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy> sortByUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'url', Sort.asc);
@@ -1596,6 +1755,19 @@ extension SubjectsEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy> thenByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy>
+      thenByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<SubjectsEntity, SubjectsEntity, QAfterSortBy> thenByUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'url', Sort.asc);
@@ -1674,6 +1846,13 @@ extension SubjectsEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SubjectsEntity, SubjectsEntity, QDistinct> distinctByUpdatedAt(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updatedAt', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<SubjectsEntity, SubjectsEntity, QDistinct> distinctByUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1732,6 +1911,12 @@ extension SubjectsEntityQueryProperty
   QueryBuilder<SubjectsEntity, String, QQueryOperations> subjectNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subjectName');
+    });
+  }
+
+  QueryBuilder<SubjectsEntity, String, QQueryOperations> updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updatedAt');
     });
   }
 

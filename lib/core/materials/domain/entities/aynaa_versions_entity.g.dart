@@ -23,28 +23,33 @@ const AynaaVersionsEntitySchema = CollectionSchema(
       name: r'entityID',
       type: IsarType.string,
     ),
-    r'localFilePath': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 1,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'localFilePath': PropertySchema(
+      id: 2,
       name: r'localFilePath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'updatedAt',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -104,11 +109,12 @@ void _aynaaVersionsEntitySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.entityID);
-  writer.writeString(offsets[1], object.localFilePath);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.updatedAt);
-  writer.writeString(offsets[4], object.url);
-  writer.writeString(offsets[5], object.versionName);
+  writer.writeBool(offsets[1], object.isDeleted);
+  writer.writeString(offsets[2], object.localFilePath);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.updatedAt);
+  writer.writeString(offsets[5], object.url);
+  writer.writeString(offsets[6], object.versionName);
 }
 
 AynaaVersionsEntity _aynaaVersionsEntityDeserialize(
@@ -119,10 +125,11 @@ AynaaVersionsEntity _aynaaVersionsEntityDeserialize(
 ) {
   final object = AynaaVersionsEntity(
     entityID: reader.readString(offsets[0]),
-    localFilePath: reader.readStringOrNull(offsets[1]),
-    updatedAt: reader.readString(offsets[3]),
-    url: reader.readString(offsets[4]),
-    versionName: reader.readString(offsets[5]),
+    isDeleted: reader.readBoolOrNull(offsets[1]) ?? false,
+    localFilePath: reader.readStringOrNull(offsets[2]),
+    updatedAt: reader.readString(offsets[4]),
+    url: reader.readString(offsets[5]),
+    versionName: reader.readString(offsets[6]),
   );
   object.id = id;
   return object;
@@ -138,14 +145,16 @@ P _aynaaVersionsEntityDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -537,6 +546,16 @@ extension AynaaVersionsEntityQueryFilter on QueryBuilder<AynaaVersionsEntity,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      isDeletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
       ));
     });
   }
@@ -1263,6 +1282,20 @@ extension AynaaVersionsEntityQuerySortBy
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
       sortByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1364,6 +1397,20 @@ extension AynaaVersionsEntityQuerySortThenBy
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
       thenByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1444,6 +1491,13 @@ extension AynaaVersionsEntityQueryWhereDistinct
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QDistinct>
+      distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QDistinct>
       distinctByLocalFilePath({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'localFilePath',
@@ -1492,6 +1546,13 @@ extension AynaaVersionsEntityQueryProperty
       entityIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entityID');
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, bool, QQueryOperations>
+      isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
     });
   }
 

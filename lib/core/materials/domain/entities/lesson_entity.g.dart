@@ -32,33 +32,38 @@ const LessonEntitySchema = CollectionSchema(
       name: r'entityID',
       type: IsarType.string,
     ),
-    r'localFilePath': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 3,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'localFilePath': PropertySchema(
+      id: 4,
       name: r'localFilePath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'subjectId': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'subjectId',
       type: IsarType.string,
     ),
     r'subjectName': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'subjectName',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -128,12 +133,13 @@ void _lessonEntitySerialize(
   writer.writeString(offsets[0], object.aynaaVersionId);
   writer.writeString(offsets[1], object.description);
   writer.writeString(offsets[2], object.entityID);
-  writer.writeString(offsets[3], object.localFilePath);
-  writer.writeString(offsets[4], object.name);
-  writer.writeString(offsets[5], object.subjectId);
-  writer.writeString(offsets[6], object.subjectName);
-  writer.writeString(offsets[7], object.url);
-  writer.writeString(offsets[8], object.versionName);
+  writer.writeBool(offsets[3], object.isDeleted);
+  writer.writeString(offsets[4], object.localFilePath);
+  writer.writeString(offsets[5], object.name);
+  writer.writeString(offsets[6], object.subjectId);
+  writer.writeString(offsets[7], object.subjectName);
+  writer.writeString(offsets[8], object.url);
+  writer.writeString(offsets[9], object.versionName);
 }
 
 LessonEntity _lessonEntityDeserialize(
@@ -146,12 +152,13 @@ LessonEntity _lessonEntityDeserialize(
     aynaaVersionId: reader.readString(offsets[0]),
     description: reader.readString(offsets[1]),
     entityID: reader.readString(offsets[2]),
-    localFilePath: reader.readStringOrNull(offsets[3]),
-    name: reader.readString(offsets[4]),
-    subjectId: reader.readString(offsets[5]),
-    subjectName: reader.readString(offsets[6]),
-    url: reader.readStringOrNull(offsets[7]),
-    versionName: reader.readString(offsets[8]),
+    isDeleted: reader.readBoolOrNull(offsets[3]) ?? false,
+    localFilePath: reader.readStringOrNull(offsets[4]),
+    name: reader.readString(offsets[5]),
+    subjectId: reader.readString(offsets[6]),
+    subjectName: reader.readString(offsets[7]),
+    url: reader.readStringOrNull(offsets[8]),
+    versionName: reader.readString(offsets[9]),
   );
   object.id = id;
   return object;
@@ -171,16 +178,18 @@ P _lessonEntityDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readStringOrNull(offset)) as P;
+    case 9:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -838,6 +847,16 @@ extension LessonEntityQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      isDeletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
       ));
     });
   }
@@ -1735,6 +1754,18 @@ extension LessonEntityQuerySortBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1864,6 +1895,18 @@ extension LessonEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1964,6 +2007,12 @@ extension LessonEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByLocalFilePath(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2032,6 +2081,12 @@ extension LessonEntityQueryProperty
   QueryBuilder<LessonEntity, String, QQueryOperations> entityIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entityID');
+    });
+  }
+
+  QueryBuilder<LessonEntity, bool, QQueryOperations> isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
     });
   }
 

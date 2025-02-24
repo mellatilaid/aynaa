@@ -57,6 +57,7 @@ class _AddNewSubjectButtonBlocBuilderState
       versionName: versionInfo.$2,
       url: '',
       versionID: versionInfo.$1,
+      updatedAt: DateTime.now().toUtc().toIso8601String(),
     );
   }
 

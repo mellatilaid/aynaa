@@ -1,12 +1,10 @@
-import 'package:atm_app/core/helper/enums.dart';
-
 abstract class DataBase {
   Future<dynamic> getData({
     required String path,
     String? uID,
     Map<String, dynamic>? query,
     String? columns,
-    FilterComparison? filterComparison,
+    // FilterComparison? filterComparison,
   });
   Future<void> setDate({
     required String path,

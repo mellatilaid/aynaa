@@ -31,4 +31,10 @@ class StudentSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
     getit.get<DBSyncService<SubjectsEntity>>().donwloadInBauckground(subjects);
     return subjects;
   }
+
+  @override
+  Future<void> syncDB({required String versionID}) {
+    // TODO: implement syncDB
+    throw UnimplementedError();
+  }
 }

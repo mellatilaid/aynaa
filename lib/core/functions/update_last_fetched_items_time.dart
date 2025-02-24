@@ -3,10 +3,17 @@ import 'package:atm_app/core/services/local_settings_service/i_local_settings_se
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 
 updateLastFetchedItemsTime({required Entities itemType}) async {
+  final settings = await getit.get<ILocalSettingsService>().getSettings();
   switch (itemType) {
     case Entities.versions:
-      final settings = await getit.get<ILocalSettingsService>().getSettings();
       settings!.lastTimeVersionsFetched =
+          DateTime.now().toUtc().toIso8601String();
+      await getit
+          .get<ILocalSettingsService>()
+          .updateSettings(settingsEntity: settings);
+      break;
+    case Entities.subjects:
+      settings!.lastTimeSubjectsFetched =
           DateTime.now().toUtc().toIso8601String();
       await getit
           .get<ILocalSettingsService>()
