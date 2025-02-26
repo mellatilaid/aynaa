@@ -3,11 +3,10 @@ import 'dart:developer';
 
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
-import 'package:atm_app/core/services/local_storage_service/i_local_storage_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/utils/db_filter_types.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/functions/map_to_list_of_entity.dart';
@@ -18,13 +17,13 @@ import '../../../../../../core/utils/db_enpoints.dart';
 class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
   final ILocalDbService iLocalDbService;
-  final StorageService storageService;
-  final ILocalStorageService fileCacheManager;
+  final ILocalSettingsService iLocalSettingsService;
+  final IDBSyncService storageSyncService;
   LessonsRemoteDataSourceImpl({
     required this.dataBase,
     required this.iLocalDbService,
-    required this.storageService,
-    required this.fileCacheManager,
+    required this.storageSyncService,
+    required this.iLocalSettingsService,
   });
   @override
   Future<List<LessonEntity>> fetchLessons(
@@ -44,10 +43,27 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
         items: lessons,
         collentionType: Entities.lessons,
       );
-      getit.get<DBSyncService<LessonEntity>>().donwloadInBauckground(lessons);
+      storageSyncService.donwloadInBauckground(lessons, Entities.lessons);
     }
 
     return lessons;
+  }
+
+  @override
+  Future<void> syncDB({required String subjectID}) async {
+    final settings = await iLocalSettingsService.getSettings();
+    storageSyncService.syncDB<LessonEntity>(
+      path: DbEnpoints.subjects,
+      entityType: Entities.subjects,
+      updtatedItemsQuery: {
+        kVersionID: subjectID,
+        kUpdatedAt: {
+          DbFilterTypes.greaterThan: settings!.lastTimeSubjectsFetched
+        }
+      },
+      deletedItemsQuery: {kVersionID: subjectID, kIsDeleted: true},
+      lastTimeItemsFetched: settings.lastTimeVersionsFetched!,
+    );
   }
 }
 

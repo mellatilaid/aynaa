@@ -35,7 +35,7 @@ class AdminSubjectsRepoImpl extends SubjectsRepo {
     required this.iNetworkStateService,
   });
   @override
-  Future<Either<Failures, void>> addSubject(
+  Future<Either<Failures, String>> addSubject(
       {required SubjectsEntity subject, String? filePath}) async {
     try {
       final SubjectsModel subjectsModel =
@@ -49,10 +49,11 @@ class AdminSubjectsRepoImpl extends SubjectsRepo {
           filePath: filePath,
           fileName: '${subject.subjectName}/$fileName',
         );
+
         data[kUrl] = fullPath;
       }
       await dataBase.setDate(path: DbEnpoints.subjects, data: data);
-      return const Right(null);
+      return Right(subject.versionID);
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {
@@ -72,9 +73,12 @@ class AdminSubjectsRepoImpl extends SubjectsRepo {
         [subject],
         Entities.subjects,
       );
-      await dataBase.deleteData(
+      await dataBase.updateData(
         path: DbEnpoints.subjects,
         uid: subject.entityID,
+        data: {
+          kIsDeleted: true,
+        },
       );
 
       return const Right(null);
@@ -118,9 +122,64 @@ class AdminSubjectsRepoImpl extends SubjectsRepo {
   }
 
   @override
-  Future<Either<Failures, void>> updateSubject(
-      {required String subjectID, required Map<String, dynamic> data}) {
-    // TODO: implement updateSubject
-    throw UnimplementedError();
+
+  ///
+  /// Updates a subject in the database
+  ///
+  /// This function takes a [SubjectsEntity] and an optional file path as parameters.
+  /// It will update the subject with the new file path if it is different from the
+  /// existing file path.
+  ///
+  /// If the file path is null, or if the file path is the same as the existing file
+  /// path, the function will not update the subject.
+  ///
+  /// If the file path is different from the existing file path, the function will
+  /// upload the file to the storage service and update the subject with the new file
+  /// path.
+
+  /// If the function fails, it will return a [Left] with a [Failures] object that
+  /// contains the error message.
+  ///
+  /// If the function succeeds, it will return a [Right] with the version ID of the
+  /// subject.
+  Future<Either<Failures, String>> updateSubject(
+      {required SubjectsEntity subject, String? filePath}) async {
+    try {
+      final SubjectsModel subjectsModel =
+          SubjectsModel.fromSubjectEntity(subject);
+      final data = subjectsModel.toMap();
+      log(data[kVersionName]);
+      log(subject.pickedFilePath.toString());
+      log(filePath.toString());
+
+      if (filePath != null) {
+        //final fileName = path.basename(filePath);
+        final fileName =
+            subject.url.replaceFirst('${subject.versionName}/', '');
+        final fullPath = await storageService.updateFile(
+          bucketName: subject.versionName,
+          filePath: filePath,
+          fileName: fileName,
+        );
+        data[kPickedFilePath] = filePath;
+
+        data[kUrl] = fullPath;
+      }
+      data[kOldUrl] = subject.url;
+      await dataBase.updateData(
+        path: DbEnpoints.subjects,
+        data: data,
+        uid: subject.entityID,
+      );
+      return Right(subject.versionID);
+      /*final String bucketId = await storageService.createBucket(versionName);
+      return Right(bucketId);*/
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 }

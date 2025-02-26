@@ -18,6 +18,8 @@ class AynaaVersionsEntity with Entity {
   String updatedAt;
   @override
   String url;
+  @override
+  String? oldUrl;
   AynaaVersionsEntity({
     required this.entityID,
     required this.versionName,
@@ -25,6 +27,7 @@ class AynaaVersionsEntity with Entity {
     required this.updatedAt,
     this.isDeleted = false,
     this.localFilePath,
+    this.oldUrl,
   });
 
   @override

@@ -1,6 +1,7 @@
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/widgets/empty_widget.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_subjects_cubit/fetch_subject_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +43,9 @@ class _SubjectsViewBodyState extends State<SubjectsViewBody> {
         } else if (state is FetchSubjectFailure) {
           return ErrorWidget(state.errMessage);
         } else if (state is FetchSubjectSucuss) {
+          if (state.subjects.isEmpty) {
+            return const EmptyWidget();
+          }
           return SubjectsListView(subjects: state.subjects);
         } else {
           return Container();

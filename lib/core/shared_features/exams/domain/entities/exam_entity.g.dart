@@ -37,23 +37,28 @@ const ExamEntitySchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'title': PropertySchema(
+    r'oldUrl': PropertySchema(
       id: 4,
+      name: r'oldUrl',
+      type: IsarType.string,
+    ),
+    r'title': PropertySchema(
+      id: 5,
       name: r'title',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionID': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'versionID',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -105,6 +110,12 @@ int _examEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.oldUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.title.length * 3;
   {
     final value = object.url;
@@ -127,10 +138,11 @@ void _examEntitySerialize(
   writer.writeBool(offsets[1], object.isDeleted);
   writer.writeString(offsets[2], object.localFilePath);
   writer.writeString(offsets[3], object.name);
-  writer.writeString(offsets[4], object.title);
-  writer.writeString(offsets[5], object.url);
-  writer.writeString(offsets[6], object.versionID);
-  writer.writeString(offsets[7], object.versionName);
+  writer.writeString(offsets[4], object.oldUrl);
+  writer.writeString(offsets[5], object.title);
+  writer.writeString(offsets[6], object.url);
+  writer.writeString(offsets[7], object.versionID);
+  writer.writeString(offsets[8], object.versionName);
 }
 
 ExamEntity _examEntityDeserialize(
@@ -143,10 +155,11 @@ ExamEntity _examEntityDeserialize(
     entityID: reader.readString(offsets[0]),
     isDeleted: reader.readBoolOrNull(offsets[1]) ?? false,
     localFilePath: reader.readStringOrNull(offsets[2]),
-    title: reader.readString(offsets[4]),
-    url: reader.readStringOrNull(offsets[5]),
-    versionID: reader.readString(offsets[6]),
-    versionName: reader.readString(offsets[7]),
+    oldUrl: reader.readStringOrNull(offsets[4]),
+    title: reader.readString(offsets[5]),
+    url: reader.readStringOrNull(offsets[6]),
+    versionID: reader.readString(offsets[7]),
+    versionName: reader.readString(offsets[8]),
   );
   object.id = id;
   return object;
@@ -168,12 +181,14 @@ P _examEntityDeserializeProp<P>(
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
-    case 5:
       return (reader.readStringOrNull(offset)) as P;
-    case 6:
+    case 5:
       return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -868,6 +883,154 @@ extension ExamEntityQueryFilter
     });
   }
 
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition>
+      oldUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'oldUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'oldUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> oldUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition>
+      oldUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<ExamEntity, ExamEntity, QAfterFilterCondition> titleEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1472,6 +1635,18 @@ extension ExamEntityQuerySortBy
     });
   }
 
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> sortByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> sortByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1583,6 +1758,18 @@ extension ExamEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> thenByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> thenByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<ExamEntity, ExamEntity, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1662,6 +1849,13 @@ extension ExamEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ExamEntity, ExamEntity, QDistinct> distinctByOldUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'oldUrl', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<ExamEntity, ExamEntity, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1720,6 +1914,12 @@ extension ExamEntityQueryProperty
   QueryBuilder<ExamEntity, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<ExamEntity, String?, QQueryOperations> oldUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'oldUrl');
     });
   }
 

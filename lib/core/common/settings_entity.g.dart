@@ -22,13 +22,18 @@ const SettingsEntitySchema = CollectionSchema(
       name: r'entityID',
       type: IsarType.string,
     ),
-    r'lastTimeSubjectsFetched': PropertySchema(
+    r'lastTimeLessonssFetched': PropertySchema(
       id: 1,
+      name: r'lastTimeLessonssFetched',
+      type: IsarType.string,
+    ),
+    r'lastTimeSubjectsFetched': PropertySchema(
+      id: 2,
       name: r'lastTimeSubjectsFetched',
       type: IsarType.string,
     ),
     r'lastTimeVersionsFetched': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'lastTimeVersionsFetched',
       type: IsarType.string,
     )
@@ -69,6 +74,12 @@ int _settingsEntityEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.entityID.length * 3;
   {
+    final value = object.lastTimeLessonssFetched;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.lastTimeSubjectsFetched;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -90,8 +101,9 @@ void _settingsEntitySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.entityID);
-  writer.writeString(offsets[1], object.lastTimeSubjectsFetched);
-  writer.writeString(offsets[2], object.lastTimeVersionsFetched);
+  writer.writeString(offsets[1], object.lastTimeLessonssFetched);
+  writer.writeString(offsets[2], object.lastTimeSubjectsFetched);
+  writer.writeString(offsets[3], object.lastTimeVersionsFetched);
 }
 
 SettingsEntity _settingsEntityDeserialize(
@@ -102,8 +114,9 @@ SettingsEntity _settingsEntityDeserialize(
 ) {
   final object = SettingsEntity(
     entityID: reader.readString(offsets[0]),
-    lastTimeSubjectsFetched: reader.readStringOrNull(offsets[1]),
-    lastTimeVersionsFetched: reader.readStringOrNull(offsets[2]),
+    lastTimeLessonssFetched: reader.readStringOrNull(offsets[1]),
+    lastTimeSubjectsFetched: reader.readStringOrNull(offsets[2]),
+    lastTimeVersionsFetched: reader.readStringOrNull(offsets[3]),
   );
   object.id = id;
   return object;
@@ -121,6 +134,8 @@ P _settingsEntityDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    case 3:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -515,6 +530,162 @@ extension SettingsEntityQueryFilter
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastTimeLessonssFetched',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastTimeLessonssFetched',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastTimeLessonssFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastTimeLessonssFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastTimeLessonssFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastTimeLessonssFetched',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'lastTimeLessonssFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'lastTimeLessonssFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedContains(String value,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'lastTimeLessonssFetched',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'lastTimeLessonssFetched',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastTimeLessonssFetched',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+      lastTimeLessonssFetchedIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'lastTimeLessonssFetched',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
       lastTimeSubjectsFetchedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -849,6 +1020,20 @@ extension SettingsEntityQuerySortBy
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      sortByLastTimeLessonssFetched() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeLessonssFetched', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      sortByLastTimeLessonssFetchedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeLessonssFetched', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
       sortByLastTimeSubjectsFetched() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastTimeSubjectsFetched', Sort.asc);
@@ -905,6 +1090,20 @@ extension SettingsEntityQuerySortThenBy
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      thenByLastTimeLessonssFetched() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeLessonssFetched', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+      thenByLastTimeLessonssFetchedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastTimeLessonssFetched', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
       thenByLastTimeSubjectsFetched() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastTimeSubjectsFetched', Sort.asc);
@@ -943,6 +1142,14 @@ extension SettingsEntityQueryWhereDistinct
   }
 
   QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
+      distinctByLastTimeLessonssFetched({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastTimeLessonssFetched',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
       distinctByLastTimeSubjectsFetched({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'lastTimeSubjectsFetched',
@@ -970,6 +1177,13 @@ extension SettingsEntityQueryProperty
   QueryBuilder<SettingsEntity, String, QQueryOperations> entityIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entityID');
+    });
+  }
+
+  QueryBuilder<SettingsEntity, String?, QQueryOperations>
+      lastTimeLessonssFetchedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastTimeLessonssFetched');
     });
   }
 

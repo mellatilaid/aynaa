@@ -19,6 +19,8 @@ class ExamsListView extends StatelessWidget {
               extra: exams[index],
               AppRouter.examSectionsView,
             ),
+            onDelete: () {},
+            onEdit: () {},
             item: exams[index],
           );
         });

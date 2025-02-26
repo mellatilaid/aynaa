@@ -3,7 +3,6 @@ import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
-import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_bottom_sheet.dart';
@@ -85,7 +84,9 @@ class SubjectsView extends StatelessWidget {
                               builder: (context) {
                                 return BlocProvider.value(
                                   value: subjectsCubit,
-                                  child: const NewSubjectBottomSheet(),
+                                  child: NewSubjectBottomSheet(
+                                    fetchSubjectsCubit: subjectsCubit,
+                                  ),
                                 );
                               });
                         },
@@ -113,41 +114,6 @@ class SubjectsView extends StatelessWidget {
                 })
               : null,
         ),
-      ),
-    );
-    return BlocProvider(
-      create: (context) => FetchSubjectCubit(
-        getit.get<SubjectsRepo>(),
-        getit.get<LocalDbService>(),
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(aynaaVersionsEntity.versionName.toString()),
-        ),
-        body: SubjectsViewBody(
-          versionsEntity: aynaaVersionsEntity,
-        ),
-        floatingActionButton: Builder(builder: (fabContext) {
-          return FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            onPressed: () {
-              final subjectsCubit = fabContext.read<FetchSubjectCubit>();
-              showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: subjectsCubit,
-                      child: const NewSubjectBottomSheet(),
-                    );
-                  });
-            },
-            child: const Icon(Icons.add),
-          );
-        }),
       ),
     );
   }

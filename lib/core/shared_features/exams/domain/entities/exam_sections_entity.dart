@@ -10,6 +10,8 @@ class ExamSectionsEntity with Entity {
 
   @override
   String? url;
+  @override
+  String? oldUrl;
   final String examID;
   @override
   String? localFilePath;
@@ -23,6 +25,7 @@ class ExamSectionsEntity with Entity {
     required this.examTitle,
     required this.versionName,
     this.url,
+    this.oldUrl,
     required this.examID,
     this.localFilePath,
     this.isDeleted = false,

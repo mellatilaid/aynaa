@@ -47,23 +47,28 @@ const LessonEntitySchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'subjectId': PropertySchema(
+    r'oldUrl': PropertySchema(
       id: 6,
+      name: r'oldUrl',
+      type: IsarType.string,
+    ),
+    r'subjectId': PropertySchema(
+      id: 7,
       name: r'subjectId',
       type: IsarType.string,
     ),
     r'subjectName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'subjectName',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -112,6 +117,12 @@ int _lessonEntityEstimateSize(
     }
   }
   bytesCount += 3 + object.name.length * 3;
+  {
+    final value = object.oldUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.subjectId.length * 3;
   bytesCount += 3 + object.subjectName.length * 3;
   {
@@ -136,10 +147,11 @@ void _lessonEntitySerialize(
   writer.writeBool(offsets[3], object.isDeleted);
   writer.writeString(offsets[4], object.localFilePath);
   writer.writeString(offsets[5], object.name);
-  writer.writeString(offsets[6], object.subjectId);
-  writer.writeString(offsets[7], object.subjectName);
-  writer.writeString(offsets[8], object.url);
-  writer.writeString(offsets[9], object.versionName);
+  writer.writeString(offsets[6], object.oldUrl);
+  writer.writeString(offsets[7], object.subjectId);
+  writer.writeString(offsets[8], object.subjectName);
+  writer.writeString(offsets[9], object.url);
+  writer.writeString(offsets[10], object.versionName);
 }
 
 LessonEntity _lessonEntityDeserialize(
@@ -155,10 +167,11 @@ LessonEntity _lessonEntityDeserialize(
     isDeleted: reader.readBoolOrNull(offsets[3]) ?? false,
     localFilePath: reader.readStringOrNull(offsets[4]),
     name: reader.readString(offsets[5]),
-    subjectId: reader.readString(offsets[6]),
-    subjectName: reader.readString(offsets[7]),
-    url: reader.readStringOrNull(offsets[8]),
-    versionName: reader.readString(offsets[9]),
+    oldUrl: reader.readStringOrNull(offsets[6]),
+    subjectId: reader.readString(offsets[7]),
+    subjectName: reader.readString(offsets[8]),
+    url: reader.readStringOrNull(offsets[9]),
+    versionName: reader.readString(offsets[10]),
   );
   object.id = id;
   return object;
@@ -184,12 +197,14 @@ P _lessonEntityDeserializeProp<P>(
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
       return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 9:
+      return (reader.readStringOrNull(offset)) as P;
+    case 10:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1150,6 +1165,159 @@ extension LessonEntityQueryFilter
   }
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> oldUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> oldUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'oldUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> oldUrlMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'oldUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       subjectIdEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1791,6 +1959,18 @@ extension LessonEntityQuerySortBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortBySubjectId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.asc);
@@ -1932,6 +2112,18 @@ extension LessonEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenBySubjectId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.asc);
@@ -2028,6 +2220,13 @@ extension LessonEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByOldUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'oldUrl', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctBySubjectId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2100,6 +2299,12 @@ extension LessonEntityQueryProperty
   QueryBuilder<LessonEntity, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<LessonEntity, String?, QQueryOperations> oldUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'oldUrl');
     });
   }
 

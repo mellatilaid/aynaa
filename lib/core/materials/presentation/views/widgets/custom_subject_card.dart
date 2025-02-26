@@ -1,6 +1,7 @@
 import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/functions/build_preview.dart';
 import 'package:atm_app/core/helper/user_profile.dart';
+import 'package:atm_app/core/widgets/three_dots_menu.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../const/remote_db_const.dart';
@@ -8,12 +9,14 @@ import '../../../../const/remote_db_const.dart';
 class CustomSubjectCard extends StatelessWidget {
   final Entity item;
   final VoidCallback? onTap; // Action when the card is tapped
-  final VoidCallback? onDelete;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
   const CustomSubjectCard({
     super.key,
     required this.item,
     this.onTap,
-    this.onDelete,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -59,14 +62,22 @@ class CustomSubjectCard extends StatelessWidget {
             ),
             (globalUserRole != null && globalUserRole == kAdminRole)
                 ? Positioned(
-                    top: 0,
+                    top: 9,
                     left: 0,
-                    child: IconButton(
-                        onPressed: onDelete,
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        )),
+                    child: ThreeDotsMenu(
+                      onDelete: onDelete,
+                      onEdit: onEdit,
+                      popItems: [
+                        genericPopUpMenuItem(
+                          value: 'تعديل',
+                          icon: const Icon(Icons.edit, color: Colors.blue),
+                        ),
+                        genericPopUpMenuItem(
+                          value: 'حذف',
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
+                    ),
                   )
                 : const SizedBox.shrink(),
           ],

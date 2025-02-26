@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/materials/presentation/views/widgets/add_new_subject_bottom_sheet.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/delete_subject_cubit/delete_subject_cubit.dart';
+import 'package:atm_app/features/admin/materials/presentation/manager/fetch_subjects_cubit/fetch_subject_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +39,19 @@ class SubjectsListView extends StatelessWidget {
                 BlocProvider.of<DeleteSubjectCubit>(context).deleteSubject(
               subject: subjects[index],
             ),
+            onEdit: () {
+              final fetchSucjectsCubit = context.read<FetchSubjectCubit>();
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return NewSubjectBottomSheet(
+                      fetchSubjectsCubit: fetchSucjectsCubit,
+                      isEditMode: true,
+                      subjectsEntity: subjects[index],
+                    );
+                  });
+            },
             item: subjects[index],
           ),
         );

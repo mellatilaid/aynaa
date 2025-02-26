@@ -49,6 +49,12 @@ class StudentLessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
 
     return lessons;
   }
+
+  @override
+  Future<void> syncDB({required String subjectID}) {
+    // TODO: implement syncDB
+    throw UnimplementedError();
+  }
 }
 
 

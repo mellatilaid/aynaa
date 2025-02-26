@@ -19,6 +19,7 @@ class LocalStorageService implements ILocalStorageService {
 
   Future<void> _init({String? filePath}) async {
     appDocDir = await getApplicationDocumentsDirectory();
+
     if (filePath != null) {
       List<String> parts = _splitFilePath(filePath);
       if (parts.length <= 2) {
@@ -36,7 +37,30 @@ class LocalStorageService implements ILocalStorageService {
     }
   }
 
+  Map<String, String?> _parseFilePath(String? filePath) {
+    final List<String> segments = filePath?.split('/') ?? [];
+    return {
+      'version': segments.isNotEmpty ? segments[0] : null,
+      'subject': segments.length > 1 ? segments[1] : null,
+      'filename': segments.length > 2 ? segments[2] : 'image.png',
+    };
+  }
+
   String _generateFilename(String filePath) {
+    final parts = _parseFilePath(filePath);
+    // Always use "image.png" for subject images
+    return parts['filename'] ?? 'image.png';
+  }
+
+  String _generateCacheKey(String filePath) {
+    final uri = Uri.parse(filePath);
+    // Remove query parameters and fragments
+    final cleanPath = uri.path;
+    // Get stable hash from clean path
+    return sha256.convert(utf8.encode(cleanPath)).toString();
+  }
+
+  /* String _generateFilename(String filePath) {
     // Get the SHA-256 hash for uniqueness
     final baseName = p.basename(filePath);
     final hashedName = sha256.convert(utf8.encode(baseName)).toString();
@@ -45,8 +69,8 @@ class LocalStorageService implements ILocalStorageService {
     final extension = p.extension(filePath);
 
     // Return the hash with the original file extension
-    return "$hashedName$baseName";
-  }
+    return "$hashedName${DateTime.now().millisecondsSinceEpoch}$baseName";
+  }*/
 
   @override
   Future<File?> getCachedFile(String filePath) async {
@@ -60,13 +84,23 @@ class LocalStorageService implements ILocalStorageService {
   @override
   Future<String?> cacheFile(String filePath, Uint8List data) async {
     await _init(filePath: filePath);
-
-    log(filePath);
-    final file =
+    final targetFile =
         File(p.join(_cacheDirectory.path, _generateFilename(filePath)));
+
+    // Force overwrite existing image
+    if (await targetFile.exists()) await targetFile.delete();
+
+    return (await targetFile.writeAsBytes(data)).path;
+    /*log(filePath);
+    final cacheKey = _generateFilename(filePath);
+    final file = File(p.join(_cacheDirectory.path, cacheKey));
+    if (await file.exists()) {
+      await file.delete();
+      log('Deleted previous version: ${file.path}');
+    }
     final File cachedFile = await file.writeAsBytes(data);
 
-    return cachedFile.path;
+    return cachedFile.path;*/
   }
 
   @override

@@ -2,12 +2,10 @@ import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
@@ -152,18 +150,18 @@ class RealtimeSyncService {
       case PostgresChangeEvent.insert:
         final entity = LessonModel.fromMap(payload.newRecord);
         log(payload.toString());
-        getit
+        /* getit
             .get<LessonsLocalDataSource>()
             .handleUpdate(lesson: entity, eventType: PostgressEventType.insert);
         getit
             .get<DBSyncService<LessonEntity>>()
-            .donwloadInBauckground([entity], Entities.lessons);
+            .donwloadInBauckground([entity], Entities.lessons);*/
         break;
       case PostgresChangeEvent.delete:
-        getit.get<LessonsLocalDataSource>().handleUpdate(
+        /*   getit.get<LessonsLocalDataSource>().handleUpdate(
               id: payload.oldRecord[kUuid],
               eventType: PostgressEventType.delete,
-            );
+            );*/
 
         break;
       default:

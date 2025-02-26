@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/materials/presentation/views/subject_image_preview_builder.dart';
 import 'package:flutter/material.dart';
 
@@ -5,9 +8,19 @@ import '../../../../../../core/widgets/invisibla_text_field.dart';
 import 'add_new_subject_button_bloc_builder.dart';
 
 class AddSubjectBottomSheetBody extends StatefulWidget {
+  final SubjectsEntity? existingSubject;
+  final bool isEditMode;
   const AddSubjectBottomSheetBody({
     super.key,
+    this.existingSubject,
+    this.isEditMode = false,
   });
+  factory AddSubjectBottomSheetBody.edit({required SubjectsEntity subject}) {
+    return AddSubjectBottomSheetBody(
+      existingSubject: subject,
+      isEditMode: true,
+    );
+  }
 
   @override
   State<AddSubjectBottomSheetBody> createState() =>
@@ -23,10 +36,19 @@ class _AddSubjectBottomSheetBodyState extends State<AddSubjectBottomSheetBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _subjectTitleController.addListener(() {
-      final hasText = _subjectTitleController.text.trim().isNotEmpty;
-      _isButtonEnabled.value = hasText; // Enable or disable the button
-    });
+    if (widget.isEditMode && widget.existingSubject != null) {
+      _subjectTitleController.text = widget.existingSubject!.name;
+      selectedFile = widget.existingSubject!.localFilePath;
+    }
+    _subjectTitleController.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    final hasChanges = widget.isEditMode
+        ? _subjectTitleController.text != widget.existingSubject!.name
+        : _subjectTitleController.text.trim().isNotEmpty;
+
+    _isButtonEnabled.value = hasChanges;
   }
 
   @override
@@ -56,6 +78,11 @@ class _AddSubjectBottomSheetBodyState extends State<AddSubjectBottomSheetBody> {
                     children: [
                       SubjectImageContentBuilder(
                         filePath: selectedFile,
+                        onImageChanged: (newPath) {
+                          setState(() => selectedFile = newPath);
+                          log('laid laid $selectedFile' ?? '');
+                          _updateButtonState();
+                        },
                       ),
                       const SizedBox(height: 16),
                       InvisibleTextField(
@@ -82,8 +109,11 @@ class _AddSubjectBottomSheetBodyState extends State<AddSubjectBottomSheetBody> {
                 valueListenable: _isButtonEnabled,
                 builder: (context, value, child) {
                   return AddNewSubjectButtonBlocBuilder(
+                    isEditMode: widget.isEditMode,
+                    existingSubject: widget.existingSubject,
                     formKey: _formKey, // Pass the form key to the button
                     subjectTitleController: _subjectTitleController,
+                    filePath: selectedFile ?? '',
                   );
                 },
               ),

@@ -31,7 +31,7 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
     required this.backgroundDownloadService,
   });
   @override
-  Future<Either<Failures, void>> addSubject(
+  Future<Either<Failures, String>> addSubject(
       {required SubjectsEntity subject, String? filePath}) async {
     try {
       final SubjectsModel subjectsModel =
@@ -48,7 +48,7 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
         data[kUrl] = fullPath;
       }
       await dataBase.setDate(path: DbEnpoints.subjects, data: data);
-      return const Right(null);
+      return const Right('');
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {
@@ -109,9 +109,10 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
   }
 
   @override
-  Future<Either<Failures, void>> updateSubject(
-      {required String subjectID, required Map<String, dynamic> data}) {
+  Future<Either<Failures, String>> updateSubject(
+      {required SubjectsEntity subject, String? filePath}) async {
     // TODO: implement updateSubject
+    return right('');
     throw UnimplementedError();
   }
 }

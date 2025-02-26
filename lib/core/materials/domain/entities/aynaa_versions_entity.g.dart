@@ -38,18 +38,23 @@ const AynaaVersionsEntitySchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'updatedAt': PropertySchema(
+    r'oldUrl': PropertySchema(
       id: 4,
+      name: r'oldUrl',
+      type: IsarType.string,
+    ),
+    r'updatedAt': PropertySchema(
+      id: 5,
       name: r'updatedAt',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -96,6 +101,12 @@ int _aynaaVersionsEntityEstimateSize(
     }
   }
   bytesCount += 3 + object.name.length * 3;
+  {
+    final value = object.oldUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.updatedAt.length * 3;
   bytesCount += 3 + object.url.length * 3;
   bytesCount += 3 + object.versionName.length * 3;
@@ -112,9 +123,10 @@ void _aynaaVersionsEntitySerialize(
   writer.writeBool(offsets[1], object.isDeleted);
   writer.writeString(offsets[2], object.localFilePath);
   writer.writeString(offsets[3], object.name);
-  writer.writeString(offsets[4], object.updatedAt);
-  writer.writeString(offsets[5], object.url);
-  writer.writeString(offsets[6], object.versionName);
+  writer.writeString(offsets[4], object.oldUrl);
+  writer.writeString(offsets[5], object.updatedAt);
+  writer.writeString(offsets[6], object.url);
+  writer.writeString(offsets[7], object.versionName);
 }
 
 AynaaVersionsEntity _aynaaVersionsEntityDeserialize(
@@ -127,9 +139,10 @@ AynaaVersionsEntity _aynaaVersionsEntityDeserialize(
     entityID: reader.readString(offsets[0]),
     isDeleted: reader.readBoolOrNull(offsets[1]) ?? false,
     localFilePath: reader.readStringOrNull(offsets[2]),
-    updatedAt: reader.readString(offsets[4]),
-    url: reader.readString(offsets[5]),
-    versionName: reader.readString(offsets[6]),
+    oldUrl: reader.readStringOrNull(offsets[4]),
+    updatedAt: reader.readString(offsets[5]),
+    url: reader.readString(offsets[6]),
+    versionName: reader.readString(offsets[7]),
   );
   object.id = id;
   return object;
@@ -151,10 +164,12 @@ P _aynaaVersionsEntityDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -851,6 +866,160 @@ extension AynaaVersionsEntityQueryFilter on QueryBuilder<AynaaVersionsEntity,
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'oldUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'oldUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
+      oldUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterFilterCondition>
       updatedAtEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1324,6 +1493,20 @@ extension AynaaVersionsEntityQuerySortBy
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      sortByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      sortByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
       sortByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.asc);
@@ -1439,6 +1622,20 @@ extension AynaaVersionsEntityQuerySortThenBy
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      thenByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
+      thenByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QAfterSortBy>
       thenByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.asc);
@@ -1513,6 +1710,13 @@ extension AynaaVersionsEntityQueryWhereDistinct
   }
 
   QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QDistinct>
+      distinctByOldUrl({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'oldUrl', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, AynaaVersionsEntity, QDistinct>
       distinctByUpdatedAt({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'updatedAt', caseSensitive: caseSensitive);
@@ -1566,6 +1770,13 @@ extension AynaaVersionsEntityQueryProperty
   QueryBuilder<AynaaVersionsEntity, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<AynaaVersionsEntity, String?, QQueryOperations>
+      oldUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'oldUrl');
     });
   }
 

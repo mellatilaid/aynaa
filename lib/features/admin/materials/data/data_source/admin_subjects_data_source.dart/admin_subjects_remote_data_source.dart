@@ -27,8 +27,9 @@ class AdminSubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
       {required String versionID}) async {
-    final List<Map<String, dynamic>> aynaaSubjects = await dataBase
-        .getData(path: DbEnpoints.subjects, query: {kVersionID: versionID});
+    final List<Map<String, dynamic>> aynaaSubjects = await dataBase.getData(
+        path: DbEnpoints.subjects,
+        query: {kVersionID: versionID, kIsDeleted: false});
     updateLastFetchedItemsTime(itemType: Entities.subjects);
     List<SubjectsEntity> subjects =
         mapToListOfEntity(aynaaSubjects, Entities.subjects);

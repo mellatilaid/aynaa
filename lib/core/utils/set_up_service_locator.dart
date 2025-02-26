@@ -23,7 +23,7 @@ import 'package:atm_app/core/services/internt_state_service/network_state_servic
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
 import 'package:atm_app/core/services/local_settings_service/local_setting_service.dart';
-import 'package:atm_app/core/services/local_storage_service/file_cach_manager.dart';
+import 'package:atm_app/core/services/local_storage_service/local_storage_service.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
@@ -94,6 +94,7 @@ setUpCoreServiceLocator() async {
             entityID: '0',
             lastTimeVersionsFetched: null,
             lastTimeSubjectsFetched: null,
+            lastTimeLessonssFetched: null,
           ),
         ),
     );
@@ -242,8 +243,8 @@ setUpServiceLocator({required UserRole userRole}) {
         LessonsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
-          storageService: getit.get<StorageService>(),
-          fileCacheManager: getit.get<ILocalStorageService>(),
+          storageSyncService: getit.get<IDBSyncService>(),
+          iLocalSettingsService: getit.get<ILocalSettingsService>(),
         ),
       );
       registerIfNotExists<ExamsRemoteDataSource>(

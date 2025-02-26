@@ -13,6 +13,8 @@ class LessonEntity with Entity {
   String name;
   @override
   final String? url;
+  @override
+  String? oldUrl;
   String description;
   final String aynaaVersionId;
   final String subjectId;
@@ -34,5 +36,6 @@ class LessonEntity with Entity {
     required this.subjectName,
     this.isDeleted = false,
     this.localFilePath,
+    this.oldUrl,
   });
 }

@@ -17,6 +17,8 @@ class ExamEntity with Entity {
   @override
   final String? url;
   @override
+  String? oldUrl;
+  @override
   String? localFilePath;
   @override
   bool isDeleted;
@@ -28,6 +30,7 @@ class ExamEntity with Entity {
     required this.url,
     this.isDeleted = false,
     this.localFilePath,
+    this.oldUrl,
   });
 
   @override

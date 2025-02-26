@@ -72,7 +72,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
   @override
   void donwloadInBauckground(List<Entity> items, [Entities? collectionType]) {
     for (final item in items) {
-      if (item.url == null || item.localFilePath != null) continue;
+      if (item.url == null) continue;
       unawaited(_downloadAndUpdateItem(item as T, collectionType!));
     }
   }
@@ -80,7 +80,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
   @override
   void deleteInBauckground(List<Entity> items, Entities deletedItemType) {
     for (final item in items) {
-      if (item.localFilePath != null) continue;
+      if (item.localFilePath == null) continue;
       unawaited(deleteItemFile(item: item, deletedItemType: deletedItemType));
     }
   }
@@ -92,6 +92,10 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
       final fileName = item.url!.replaceFirst('${item.versionName}/', '');
       final file = await storageService.downloadFile(
           bucketName: item.versionName, filePath: fileName);
+      if (item.oldUrl != null) {
+        // await localStorageService.deleteCachedFile(item.url!, collectionType);
+      }
+
       final localPath = await localStorageService.cacheFile(item.url!, file);
 
       item.localFilePath = localPath;

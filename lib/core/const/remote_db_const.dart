@@ -32,3 +32,5 @@ const String kAnswer = 'answer';
 const String kOptions = 'options';
 const String kSectionID = 'section-id';
 const String kIsDeleted = 'is_deleted';
+const String kPickedFilePath = 'picked_fileile_path';
+const String kOldUrl = 'old_url';

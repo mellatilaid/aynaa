@@ -9,9 +9,11 @@ class SubjectsModel extends SubjectsEntity with Mappable {
     required super.subjectName,
     required super.versionName,
     required super.url,
+    super.oldUrl,
     required super.versionID,
     required super.localFilePath,
     required super.updatedAt,
+    super.pickedFilePath,
   });
 
   /*factory SubjectsModel.fromSupabase(Map<String, dynamic> data) {
@@ -24,20 +26,23 @@ class SubjectsModel extends SubjectsEntity with Mappable {
       subjectName: subject.subjectName,
       versionName: subject.versionName,
       url: subject.url,
+      oldUrl: subject.oldUrl,
       versionID: subject.versionID,
       localFilePath: subject.localFilePath,
       updatedAt: subject.updatedAt,
+      pickedFilePath: subject.pickedFilePath,
     );
   }
 
   @override
   toMap() {
     return {
-      kUrl: url,
       kVersionID: versionID,
       kVersionName: versionName,
       kSubjectName: subjectName,
       kUpdatedAt: updatedAt,
+      kPickedFilePath: pickedFilePath,
+      kOldUrl: oldUrl,
     };
   }
 
@@ -50,6 +55,8 @@ class SubjectsModel extends SubjectsEntity with Mappable {
       versionName: data[kVersionName],
       localFilePath: data[kLocalFilePath],
       updatedAt: data[kUpdatedAt],
+      pickedFilePath: data[kPickedFilePath],
+      oldUrl: data[kOldUrl],
     );
   }
 }

@@ -16,13 +16,16 @@ buildPreview({String? filePath}) {
     final fileName = getBaseFileName(baseName);
     if (['.jpg', '.jpeg', '.png', '.gif']
         .contains(fileExtension.toLowerCase())) {
-      // Preview image
+      final file = File(filePath);
+
       return CustomImageFame(
         child: Image.file(
-          File(filePath),
+          file,
           fit: BoxFit.cover, // Maintain aspect ratio and fill the space
-          filterQuality: FilterQuality.high, // Preserve image quality
-        ),
+          filterQuality: FilterQuality.high,
+
+          // Preserve image quality
+        )..image.evict(),
       );
     } else if (['.mp4', '.mov', '.avi'].contains(fileExtension.toLowerCase())) {
       // Show video thumbnail
