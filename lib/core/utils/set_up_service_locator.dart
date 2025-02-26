@@ -289,7 +289,9 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<LessonsRepo>(
         AdminLessonsRepoImpl(
             dataBase: getit.get<DataBase>(),
+            iNetworkStateService: getit.get<INetworkStateService>(),
             storageService: getit.get<StorageService>(),
+            idbSyncService: getit.get<IDBSyncService>(),
             lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
             lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
       );

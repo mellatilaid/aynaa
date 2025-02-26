@@ -62,13 +62,18 @@ const LessonEntitySchema = CollectionSchema(
       name: r'subjectName',
       type: IsarType.string,
     ),
-    r'url': PropertySchema(
+    r'updatedAt': PropertySchema(
       id: 9,
+      name: r'updatedAt',
+      type: IsarType.string,
+    ),
+    r'url': PropertySchema(
+      id: 10,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -125,6 +130,7 @@ int _lessonEntityEstimateSize(
   }
   bytesCount += 3 + object.subjectId.length * 3;
   bytesCount += 3 + object.subjectName.length * 3;
+  bytesCount += 3 + object.updatedAt.length * 3;
   {
     final value = object.url;
     if (value != null) {
@@ -150,8 +156,9 @@ void _lessonEntitySerialize(
   writer.writeString(offsets[6], object.oldUrl);
   writer.writeString(offsets[7], object.subjectId);
   writer.writeString(offsets[8], object.subjectName);
-  writer.writeString(offsets[9], object.url);
-  writer.writeString(offsets[10], object.versionName);
+  writer.writeString(offsets[9], object.updatedAt);
+  writer.writeString(offsets[10], object.url);
+  writer.writeString(offsets[11], object.versionName);
 }
 
 LessonEntity _lessonEntityDeserialize(
@@ -170,8 +177,9 @@ LessonEntity _lessonEntityDeserialize(
     oldUrl: reader.readStringOrNull(offsets[6]),
     subjectId: reader.readString(offsets[7]),
     subjectName: reader.readString(offsets[8]),
-    url: reader.readStringOrNull(offsets[9]),
-    versionName: reader.readString(offsets[10]),
+    updatedAt: reader.readString(offsets[9]),
+    url: reader.readStringOrNull(offsets[10]),
+    versionName: reader.readString(offsets[11]),
   );
   object.id = id;
   return object;
@@ -203,8 +211,10 @@ P _lessonEntityDeserializeProp<P>(
     case 8:
       return (reader.readString(offset)) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 10:
+      return (reader.readStringOrNull(offset)) as P;
+    case 11:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1589,6 +1599,142 @@ extension LessonEntityQueryFilter
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updatedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'updatedAt',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'updatedAt',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> urlIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1996,6 +2142,18 @@ extension LessonEntityQuerySortBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'url', Sort.asc);
@@ -2149,6 +2307,18 @@ extension LessonEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'url', Sort.asc);
@@ -2241,6 +2411,13 @@ extension LessonEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByUpdatedAt(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updatedAt', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2317,6 +2494,12 @@ extension LessonEntityQueryProperty
   QueryBuilder<LessonEntity, String, QQueryOperations> subjectNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subjectName');
+    });
+  }
+
+  QueryBuilder<LessonEntity, String, QQueryOperations> updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updatedAt');
     });
   }
 

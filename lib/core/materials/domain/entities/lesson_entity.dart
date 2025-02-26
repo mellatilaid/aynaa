@@ -24,6 +24,8 @@ class LessonEntity with Entity {
   @override
   String? localFilePath;
   @override
+  String updatedAt;
+  @override
   bool isDeleted;
   LessonEntity({
     required this.entityID,
@@ -34,6 +36,7 @@ class LessonEntity with Entity {
     required this.subjectId,
     required this.versionName,
     required this.subjectName,
+    required this.updatedAt,
     this.isDeleted = false,
     this.localFilePath,
     this.oldUrl,

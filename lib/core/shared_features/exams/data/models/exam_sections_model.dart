@@ -10,6 +10,7 @@ class ExamSectionsModel extends ExamSectionsEntity with Mappable {
     required super.url,
     required super.examTitle,
     required super.versionName,
+    required super.updatedAt,
     super.localFilePath,
   });
 
@@ -21,6 +22,7 @@ class ExamSectionsModel extends ExamSectionsEntity with Mappable {
       kExamID: examID,
       kVersionName: versionName,
       kExamTitle: examTitle,
+      kUpdatedAt: updatedAt,
     };
   }
 
@@ -32,6 +34,7 @@ class ExamSectionsModel extends ExamSectionsEntity with Mappable {
       url: map[kUrl],
       examTitle: map[kExamTitle],
       versionName: map[kVersionName],
+      updatedAt: map[kUpdatedAt],
     );
   }
 
@@ -44,6 +47,7 @@ class ExamSectionsModel extends ExamSectionsEntity with Mappable {
       versionName: exam.versionName,
       url: exam.url,
       localFilePath: exam.localFilePath,
+      updatedAt: exam.updatedAt,
     );
   }
 }

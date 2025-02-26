@@ -25,6 +25,7 @@ class LessonsListView extends StatelessWidget {
           onDelete: () {
             getit.get<LessonsRepo>().deleteLesson(lesson: lessons[index]);
           },
+          onEdit: () {},
         );
         //return CustomCard(entity: lessons[index]);
       },

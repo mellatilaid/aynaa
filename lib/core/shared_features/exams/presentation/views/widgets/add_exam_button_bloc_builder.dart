@@ -56,6 +56,7 @@ class _AddExamButtonBlocBuilderState extends State<AddExamButtonBlocBuilder> {
       versionName: versionInfo.$2,
       versionID: versionInfo.$1,
       localFilePath: null,
+      updatedAt: '',
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_lessons_cubit/fetch_lessons_cubit.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
-import '../../../../services/local_db_service/local_d_b_service.dart';
 import 'lessons_list_view.dart';
 
 class LessonsViewBody extends StatefulWidget {
@@ -28,7 +28,7 @@ class _LessonsViewBodyState extends State<LessonsViewBody> {
       BlocProvider.of<FetchLessonsCubit>(context).fetchLessons(
           subjectID: widget.subjectsEntity.entityID, versionID: versionID);
     } else {
-      getit.get<LocalDbService>().clear<LessonEntity>();
+      getit.get<ILocalDbService>().clear<LessonEntity>();
     }
     /* */
   }

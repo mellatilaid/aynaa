@@ -5,6 +5,7 @@ mixin Entity {
   String? get localFilePath;
   String? get oldUrl;
   String get versionName;
+  String get updatedAt;
   bool get isDeleted;
   set localFilePath(String? path);
 }

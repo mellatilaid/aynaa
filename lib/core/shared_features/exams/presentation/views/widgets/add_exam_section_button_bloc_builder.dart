@@ -48,12 +48,12 @@ class _AddExamSectionButtonBuilderState
     final entity = Provider.of<ExamEntity>(context, listen: false);
 
     return ExamSectionsModel(
-      entityID: '0',
-      title: widget.titleController.text,
-      url: '',
-      examID: entity.entityID,
-      versionName: entity.versionName,
-      examTitle: entity.title,
-    );
+        entityID: '0',
+        title: widget.titleController.text,
+        url: '',
+        examID: entity.entityID,
+        versionName: entity.versionName,
+        examTitle: entity.title,
+        updatedAt: '');
   }
 }

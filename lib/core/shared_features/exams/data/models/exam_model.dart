@@ -9,6 +9,7 @@ class ExamModel extends ExamEntity with Mappable {
       required super.versionName,
       required super.versionID,
       required super.url,
+      required super.updatedAt,
       super.localFilePath});
 
   @override
@@ -18,6 +19,7 @@ class ExamModel extends ExamEntity with Mappable {
       kUrl: url,
       kVersionID: versionID,
       kVersionName: versionName,
+      kUpdatedAt: updatedAt,
     };
   }
 
@@ -28,6 +30,7 @@ class ExamModel extends ExamEntity with Mappable {
       versionID: map[kVersionID],
       versionName: map[kVersionName],
       url: map[kUrl],
+      updatedAt: map[kUpdatedAt],
     );
   }
 
@@ -39,6 +42,7 @@ class ExamModel extends ExamEntity with Mappable {
       versionName: exam.versionName,
       url: exam.url,
       localFilePath: exam.localFilePath,
+      updatedAt: exam.updatedAt,
     );
   }
 }

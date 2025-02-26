@@ -56,6 +56,7 @@ class UploadLessonButtonBuilder extends StatelessWidget {
       subjectId: addLessonCubit.subjectID!,
       subjectName: addLessonCubit.subjectName!,
       versionName: addLessonCubit.versionName!,
+      updatedAt: DateTime.now().toUtc().toIso8601String(),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -7,8 +8,9 @@ import 'package:atm_app/core/materials/data/data_source/lessons_data_source/less
 import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
@@ -19,20 +21,22 @@ import 'package:tus_client_dart/tus_client_dart.dart';
 import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import '../../../../../core/services/data_base.dart';
-import '../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 
 class AdminLessonsRepoImpl extends LessonsRepo {
   final DataBase dataBase;
   final StorageService storageService;
+  final IDBSyncService idbSyncService;
   final LessonsRemoteDataSource lessonsRemoteDataSource;
   final LessonsLocalDataSource lessonsLocalDataSource;
-
+  final INetworkStateService iNetworkStateService;
   AdminLessonsRepoImpl({
     required this.dataBase,
     required this.lessonsRemoteDataSource,
     required this.storageService,
     required this.lessonsLocalDataSource,
+    required this.idbSyncService,
+    required this.iNetworkStateService,
   });
   @override
   Future<Either<Failures, void>> addTextLesson({
@@ -73,10 +77,14 @@ class AdminLessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, void>> deleteLesson(
       {required LessonEntity lesson}) async {
     try {
-      getit
-          .get<DBSyncService<LessonEntity>>()
-          .deleteItemFile(item: lesson, deletedItemType: Entities.lessons);
-      await dataBase.deleteData(path: DbEnpoints.lessons, uid: lesson.entityID);
+      idbSyncService.deleteInBauckground([lesson], Entities.lessons);
+      await dataBase.updateData(
+        path: DbEnpoints.lessons,
+        uid: lesson.entityID,
+        data: {
+          kIsDeleted: true,
+        },
+      );
       return right(null);
     } on PostgrestException catch (e) {
       log(e.toString());
@@ -96,7 +104,12 @@ class AdminLessonsRepoImpl extends LessonsRepo {
       List<LessonEntity> lesson;
       lesson = await lessonsLocalDataSource.fetchLessons(
           versionID: versionID, subjectID: subjectID);
-      if (lesson.isNotEmpty) return right(lesson);
+      if (lesson.isNotEmpty) {
+        if (await iNetworkStateService.isOnline()) {
+          unawaited(lessonsRemoteDataSource.syncDB(subjectID: subjectID));
+          return right(lesson);
+        }
+      }
       lesson = await lessonsRemoteDataSource.fetchLessons(
           subjectID: subjectID, versionID: versionID);
       return right(lesson);

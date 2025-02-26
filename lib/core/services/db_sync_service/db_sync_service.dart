@@ -55,7 +55,6 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
     if (updatedData.isNotEmpty) {
       final List<Entity> items = mapToListOfEntity(updatedData, entityType);
       //update last time versions fetched from remote in settings
-      updateLastFetchedItemsTime(itemType: entityType);
 
       iLocalDbService.putAll<E>(
         items: items,
@@ -67,6 +66,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
       final List<Entity> items = mapToListOfEntity(deletedItems, entityType);
       deleteInBauckground(items, entityType);
     }
+    updateLastFetchedItemsTime(itemType: entityType);
   }
 
   @override
@@ -127,7 +127,11 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
 
           await localStorageService.deleteCachedFile(
               item.url!, deletedItemType);
-
+          await updateLocalDB(
+            id: item.entityID,
+            eventType: PostgressEventType.delete,
+            collectionType: Entities.lessons,
+          );
           //await updateLocalDataSource(lesson, PostgressEventType.delete);
           // _lessonUpdatesController.add(updatedLesson);
         }

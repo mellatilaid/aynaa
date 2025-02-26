@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
@@ -39,13 +40,13 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
         mapToListOfEntity<LessonEntity>(data, Entities.lessons);
 
     if (lessons.isNotEmpty) {
-      iLocalDbService.putAll(
+      iLocalDbService.putAll<LessonEntity>(
         items: lessons,
         collentionType: Entities.lessons,
       );
       storageSyncService.donwloadInBauckground(lessons, Entities.lessons);
     }
-
+    updateLastFetchedItemsTime(itemType: Entities.lessons);
     return lessons;
   }
 
@@ -53,16 +54,16 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   Future<void> syncDB({required String subjectID}) async {
     final settings = await iLocalSettingsService.getSettings();
     storageSyncService.syncDB<LessonEntity>(
-      path: DbEnpoints.subjects,
-      entityType: Entities.subjects,
+      path: DbEnpoints.lessons,
+      entityType: Entities.lessons,
       updtatedItemsQuery: {
-        kVersionID: subjectID,
+        kSubjectID: subjectID,
         kUpdatedAt: {
-          DbFilterTypes.greaterThan: settings!.lastTimeSubjectsFetched
+          DbFilterTypes.greaterThan: settings!.lastTimeLessonssFetched
         }
       },
-      deletedItemsQuery: {kVersionID: subjectID, kIsDeleted: true},
-      lastTimeItemsFetched: settings.lastTimeVersionsFetched!,
+      deletedItemsQuery: {kSubjectID: subjectID, kIsDeleted: true},
+      lastTimeItemsFetched: settings.lastTimeLessonssFetched!,
     );
   }
 }
