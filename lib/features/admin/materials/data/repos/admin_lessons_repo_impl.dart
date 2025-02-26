@@ -129,9 +129,39 @@ class AdminLessonsRepoImpl extends LessonsRepo {
 
   @override
   Future<Either<Failures, void>> updateLesson(
-      {required String lessonID, required Map<String, dynamic> data}) {
-    // TODO: implement updateLesson
-    throw UnimplementedError();
+      {required LessonEntity lesson, String? filePath}) async {
+    try {
+      final LessonModel lessonModel = LessonModel.fromLessonEntity(lesson);
+      final data = lessonModel.toMap();
+
+      if (filePath != null) {
+        //final fileName = path.basename(filePath);
+        final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
+        final fullPath = await storageService.updateFile(
+          bucketName: lesson.versionName,
+          filePath: filePath,
+          fileName: fileName,
+        );
+        // data[kPickedFilePath] = filePath;
+
+        data[kUrl] = fullPath;
+      }
+      // data[kOldUrl] = lesson.url;
+      await dataBase.updateData(
+        path: DbEnpoints.lessons,
+        data: data,
+        uid: lesson.entityID,
+      );
+      return const Right(null);
+      /*final String bucketId = await storageService.createBucket(versionName);
+      return Right(bucketId);*/
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override

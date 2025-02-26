@@ -10,7 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../core/utils/set_up_service_locator.dart';
 import '../../../../../core/widgets/custom_speed_dial_child.dart';
-import '../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import '../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import '../../../const/remote_db_const.dart';
 import '../../../helper/user_profile.dart';
 import 'widgets/add_file_lesson_bottom_sheet.dart';
@@ -37,7 +37,7 @@ class LessonsView extends StatelessWidget {
         floatingActionButton: (globalUserRole != null &&
                 globalUserRole == kAdminRole)
             ? Builder(builder: (fabContext) {
-                fabContext.read<AddLessonCubit>().resetState();
+                fabContext.read<LessonCubit>().resetState();
                 return FloatingAddOptionsSpeedDial(
                   speedDials: [
                     customSpeedDialChild(
@@ -53,7 +53,9 @@ class LessonsView extends StatelessWidget {
                           builder: (context) {
                             return BlocProvider.value(
                               value: fabContext.read<FetchLessonsCubit>(),
-                              child: const AddTextLessonBottomSheet(
+                              child: AddTextLessonBottomSheet(
+                                fetchLessonsCubit:
+                                    fabContext.read<FetchLessonsCubit>(),
                                 isTextOnly: true,
                               ),
                             );

@@ -116,7 +116,7 @@ class StudentLessonsRepoImpl extends LessonsRepo {
 
   @override
   Future<Either<Failures, void>> updateLesson(
-      {required String lessonID, required Map<String, dynamic> data}) {
+      {required LessonEntity lesson, String? filePath}) {
     // TODO: implement updateLesson
     throw UnimplementedError();
   }

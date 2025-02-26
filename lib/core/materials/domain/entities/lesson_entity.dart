@@ -41,4 +41,24 @@ class LessonEntity with Entity {
     this.localFilePath,
     this.oldUrl,
   });
+
+  LessonEntity copyWith({
+    String? title,
+    String? updatedAt,
+    String? description,
+  }) {
+    return LessonEntity(
+      entityID: entityID,
+      name: title ?? name,
+      subjectId: subjectId,
+      subjectName: subjectName,
+      aynaaVersionId: aynaaVersionId,
+      url: url,
+      oldUrl: oldUrl,
+      versionName: versionName,
+      localFilePath: localFilePath,
+      updatedAt: updatedAt ?? this.updatedAt,
+      description: description ?? this.description,
+    );
+  }
 }

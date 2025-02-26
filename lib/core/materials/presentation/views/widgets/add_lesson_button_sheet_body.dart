@@ -1,4 +1,5 @@
-import 'package:atm_app/core/materials/presentation/views/widgets/lesson_media_content_builder.dart';
+import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/presentation/views/subject_image_preview_builder.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/uplaod_lesson_button_bloc_builder.dart';
 import 'package:flutter/material.dart';
 
@@ -6,10 +7,21 @@ import '../../../../../../core/widgets/invisibla_text_field.dart';
 
 class AddLessonBottomSheetBody extends StatefulWidget {
   final bool isTextOnly;
+  final bool isEditMode;
+  final LessonEntity? lessonEntity;
   const AddLessonBottomSheetBody({
     super.key,
-    required this.isTextOnly,
+    this.isTextOnly = true,
+    this.isEditMode = false,
+    this.lessonEntity,
   });
+
+  factory AddLessonBottomSheetBody.edit({required LessonEntity lesson}) {
+    return AddLessonBottomSheetBody(
+      lessonEntity: lesson,
+      isEditMode: true,
+    );
+  }
 
   @override
   State<AddLessonBottomSheetBody> createState() =>
@@ -26,11 +38,10 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    void updateButtonState() {
-      final hasTitle = _titleController.text.trim().isNotEmpty;
-      final hasContent = _contentController.text.trim().isNotEmpty;
-      _isButtonEnabled.value =
-          hasTitle && hasContent; // Enable button only if both fields have text
+    if (widget.isEditMode && widget.lessonEntity != null) {
+      _titleController.text = widget.lessonEntity!.name;
+      _contentController.text = widget.lessonEntity!.description;
+      selectedFile = widget.lessonEntity!.localFilePath;
     }
 
     _titleController.addListener(() {
@@ -39,6 +50,13 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
     _contentController.addListener(() {
       updateButtonState(); // Enable or disable the button
     });
+  }
+
+  void updateButtonState() {
+    final hasTitle = _titleController.text.trim().isNotEmpty;
+    final hasContent = _contentController.text.trim().isNotEmpty;
+    _isButtonEnabled.value =
+        hasTitle && hasContent; // Enable button only if both fields have text
   }
 
   @override
@@ -67,8 +85,13 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      LessonMediaContentBuilder(
+                      ImageContentBuilder(
                         filePath: selectedFile,
+                        onImageChanged: (newPath) {
+                          setState(() => selectedFile = newPath);
+
+                          updateButtonState();
+                        },
                       ),
                       const SizedBox(height: 16),
                       InvisibleTextField(
@@ -103,6 +126,10 @@ class _AddLessonBottomSheetBodyState extends State<AddLessonBottomSheetBody> {
                 valueListenable: _isButtonEnabled,
                 builder: (context, value, child) {
                   return UploadLessonButtonBuilder(
+                    formKey: _formKey,
+                    isEditMode: widget.isEditMode,
+                    filePath: selectedFile ?? '',
+                    lessonEntity: widget.lessonEntity,
                     isButtonEnabled: value,
                     lessonTitle: _titleController,
                     lessonContent: _contentController,

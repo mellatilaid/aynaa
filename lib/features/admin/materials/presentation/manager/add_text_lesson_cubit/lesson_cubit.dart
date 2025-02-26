@@ -5,29 +5,40 @@ import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-part 'add_lesson_state.dart';
+part 'lesson_state.dart';
 
-class AddLessonCubit extends Cubit<AddLessonState> {
+class LessonCubit extends Cubit<LessonState> {
   final LessonsRepo lessonsRepo;
-  AddLessonCubit(this.lessonsRepo) : super(AddLessonInitial());
+  LessonCubit(this.lessonsRepo) : super(LessonInitial());
   String? _versionID;
   String? _subjectID;
   String? _versionName;
   String? _subjectName;
   String? _filePath;
   Future<void> addLesson({required LessonEntity lesson}) async {
-    emit(AddLessonLoading());
+    emit(LessonLoading());
     final result =
         await lessonsRepo.addTextLesson(lesson: lesson, filePath: _filePath);
     result.fold((failure) {
-      emit(AddLessonFailure(errMessage: failure.errMessage));
+      emit(LessonFailure(errMessage: failure.errMessage));
     }, (success) {
-      emit(AddLessonSuccuss());
+      emit(LessonSuccuss());
+    });
+  }
+
+  Future<void> updateLesson({required LessonEntity lesson}) async {
+    emit(LessonLoading());
+    final result =
+        await lessonsRepo.updateLesson(lesson: lesson, filePath: _filePath);
+    result.fold((failure) {
+      emit(LessonFailure(errMessage: failure.errMessage));
+    }, (success) {
+      emit(LessonSuccuss());
     });
   }
 
   void resetState() {
-    emit(AddLessonInitial());
+    emit(LessonInitial());
   }
 
   void setVersionIDAndName(String versionID, String versionName) {

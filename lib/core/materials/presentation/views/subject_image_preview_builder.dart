@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'widgets/lesson_media_preview.dart';
 
-class SubjectImageContentBuilder extends StatelessWidget {
+class ImageContentBuilder extends StatelessWidget {
   final String? filePath;
   final ValueChanged<String?> onImageChanged;
-  const SubjectImageContentBuilder({
+  const ImageContentBuilder({
     super.key,
     required this.filePath,
     required this.onImageChanged,

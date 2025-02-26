@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/classes/pick_file.dart';
-import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 
 class NewSubjectBottomSheet extends StatelessWidget {
   final bool isEditMode;
@@ -39,7 +39,7 @@ class NewSubjectBottomSheet extends StatelessWidget {
       child: BlocBuilder<SubjectCubit, SubjectState>(
         builder: (context, state) {
           if (state is SubjectSuccuss) {
-            final versionID = context.read<AddLessonCubit>().versionID;
+            final versionID = context.read<LessonCubit>().versionID;
 
             fetchSubjectsCubit.fetchSubjects(versionID: state.versionID);
             Future.microtask(() {

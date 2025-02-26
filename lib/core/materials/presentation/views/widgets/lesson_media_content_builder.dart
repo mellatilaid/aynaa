@@ -1,4 +1,4 @@
-import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +17,7 @@ class LessonMediaContentBuilder extends StatelessWidget {
     return BlocConsumer<PickFileCubit, PickFileState>(
       listener: (context, state) {
         if (state is PickFileLoaded) {
-          BlocProvider.of<AddLessonCubit>(context)
+          BlocProvider.of<LessonCubit>(context)
               .setFilePath(state.filePath.path);
         }
       },

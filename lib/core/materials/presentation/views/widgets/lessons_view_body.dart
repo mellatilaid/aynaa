@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/set_up_service_locator.dart';
-import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'lessons_list_view.dart';
 
 class LessonsViewBody extends StatefulWidget {
@@ -34,7 +34,7 @@ class _LessonsViewBodyState extends State<LessonsViewBody> {
   }
 
   _getVersionID() {
-    final versionID = context.read<AddLessonCubit>().versionID;
+    final versionID = context.read<LessonCubit>().versionID;
     return versionID!;
   }
 

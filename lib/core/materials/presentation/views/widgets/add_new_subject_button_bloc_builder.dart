@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -83,8 +83,8 @@ class _AddNewSubjectButtonBlocBuilderState
   }
 
   (String versionID, String versionName) _getVersioninfo() {
-    final versionID = context.read<AddLessonCubit>().versionID;
-    final versionName = context.read<AddLessonCubit>().versionName;
+    final versionID = context.read<LessonCubit>().versionID;
+    final versionName = context.read<LessonCubit>().versionName;
     return (versionID!, versionName!);
   }
 }

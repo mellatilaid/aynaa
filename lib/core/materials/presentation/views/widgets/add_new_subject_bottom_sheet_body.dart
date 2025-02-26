@@ -76,7 +76,7 @@ class _AddSubjectBottomSheetBodyState extends State<AddSubjectBottomSheetBody> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SubjectImageContentBuilder(
+                      ImageContentBuilder(
                         filePath: selectedFile,
                         onImageChanged: (newPath) {
                           setState(() => selectedFile = newPath);

@@ -4,7 +4,7 @@ import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/admin_material_app.dart';
-import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:atm_app/features/auth/presentation/manager/sign_out_cubit/sign_out_cubit.dart';
 import 'package:device_preview/device_preview.dart';
@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AddLessonCubit(getit.get<LessonsRepo>()),
+          create: (context) => LessonCubit(getit.get<LessonsRepo>()),
         ),
         BlocProvider(
           create: (context) => SignOutCubit(authRepo: getit.get<AuthRepo>()),
@@ -100,7 +100,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       ),
     );
     return BlocProvider(
-      create: (context) => AddLessonCubit(getit.get<LessonsRepo>()),
+      create: (context) => LessonCubit(getit.get<LessonsRepo>()),
       child: MaterialApp.router(
         routerConfig: AppRouter.router,
         title: 'Flutter Demo',

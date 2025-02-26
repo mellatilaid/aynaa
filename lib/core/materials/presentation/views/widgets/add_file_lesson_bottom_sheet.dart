@@ -3,7 +3,7 @@ import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/add_file_lesson_bottom_sheet_body.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/add_file_lesson_cubit/add_file_lesson_cubit.dart';
-import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/fetch_lessons_cubit/fetch_lessons_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +38,12 @@ class _AddFileLessonBottomSheetState extends State<AddFileLessonBottomSheet> {
       child: FractionallySizedBox(
         heightFactor:
             0.8, // Adjust this for the height you need (e.g., 90% of the screen)
-        child: BlocListener<AddLessonCubit, AddLessonState>(
+        child: BlocListener<LessonCubit, LessonState>(
           listener: (context, state) {
-            if (state is AddLessonFailure) {
+            if (state is LessonFailure) {
               context.pop();
               showScaffoldMessage(context, state.errMessage);
-            } else if (state is AddLessonSuccuss) {
+            } else if (state is LessonSuccuss) {
               Future.microtask(() {
                 if (!context.mounted) return;
                 context.pop();
@@ -63,12 +63,12 @@ class _AddFileLessonBottomSheetState extends State<AddFileLessonBottomSheet> {
       child: FractionallySizedBox(
         heightFactor:
             0.8, // Adjust this for the height you need (e.g., 90% of the screen)
-        child: BlocListener<AddLessonCubit, AddLessonState>(
+        child: BlocListener<LessonCubit, LessonState>(
           listener: (context, state) {
-            if (state is AddLessonFailure) {
+            if (state is LessonFailure) {
               context.pop();
               showScaffoldMessage(context, state.errMessage);
-            } else if (state is AddLessonSuccuss) {
+            } else if (state is LessonSuccuss) {
               Future.microtask(() {
                 if (!context.mounted) return;
                 context.pop();
@@ -86,12 +86,12 @@ class _AddFileLessonBottomSheetState extends State<AddFileLessonBottomSheet> {
   }
 
   _getVersionID() {
-    final versionID = context.read<AddLessonCubit>().versionID;
+    final versionID = context.read<LessonCubit>().versionID;
     return versionID!;
   }
 
   _getSubjectID() {
-    final subjectID = context.read<AddLessonCubit>().subjectID;
+    final subjectID = context.read<LessonCubit>().subjectID;
     return subjectID!;
   }
 }

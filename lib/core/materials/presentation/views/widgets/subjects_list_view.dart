@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/utils/app_route.dart';
-import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/add_lesson_cubit.dart';
+import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'custom_subject_card.dart';
 
 class SubjectsListView extends StatelessWidget {
@@ -29,7 +29,7 @@ class SubjectsListView extends StatelessWidget {
               extra: subjects[index],
             );
             log(subjects[index].entityID);
-            BlocProvider.of<AddLessonCubit>(context).setSubjectIDAndName(
+            BlocProvider.of<LessonCubit>(context).setSubjectIDAndName(
               subjects[index].entityID,
               subjects[index].name,
             );
