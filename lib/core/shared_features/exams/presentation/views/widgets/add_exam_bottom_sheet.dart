@@ -1,3 +1,4 @@
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/exam_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
@@ -12,8 +13,14 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../core/classes/pick_file.dart';
 
 class AddExamBottomSheet extends StatelessWidget {
+  final bool isEditMode;
+  final ExamEntity? exam;
+  final FetchExamsCubit fetchExamsCubit;
   const AddExamBottomSheet({
     super.key,
+    this.exam,
+    required this.fetchExamsCubit,
+    this.isEditMode = false,
   });
 
   @override
@@ -30,8 +37,7 @@ class AddExamBottomSheet extends StatelessWidget {
       child: BlocBuilder<ExamCubit, ExamState>(
         builder: (context, state) {
           if (state is ExamSuccuss) {
-            BlocProvider.of<FetchExamsCubit>(context)
-                .fetchExams(versionID: state.id);
+            fetchExamsCubit.fetchExams(versionID: state.id);
             Future.microtask(() {
               if (!context.mounted) return;
               context.pop();
@@ -39,7 +45,9 @@ class AddExamBottomSheet extends StatelessWidget {
           } else if (state is ExamFailure) {
             showScaffoldMessage(context, state.errMessage);
           }
-          return const AddExamBottomSheetBody();
+          return isEditMode
+              ? AddExamBottomSheetBody.edit(exam: exam!)
+              : const AddExamBottomSheetBody();
         },
       ),
     );

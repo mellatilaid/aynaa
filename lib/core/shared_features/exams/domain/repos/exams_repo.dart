@@ -10,6 +10,6 @@ abstract class ExamsRepo {
   Future<Either<Failures, String>> addExam(
       {required ExamEntity exam, String? filePath});
   Future<Either<Failures, void>> deleteExam({required ExamEntity exam});
-  Future<Either<Failures, void>> updateExam(
-      {required String examID, required Map<String, dynamic> data});
+  Future<Either<Failures, String>> updateExam(
+      {required ExamEntity exam, String? filePath});
 }

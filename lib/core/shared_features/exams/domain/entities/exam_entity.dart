@@ -36,6 +36,22 @@ class ExamEntity with Entity {
     this.oldUrl,
   });
 
+  ExamEntity copyWith({
+    String? title,
+    String? updatedAt,
+  }) {
+    return ExamEntity(
+      entityID: entityID,
+      title: title ?? this.title,
+      versionID: versionID,
+      url: url,
+      oldUrl: oldUrl,
+      versionName: versionName,
+      localFilePath: localFilePath,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   @override
   // TODO: implement name
   String? get name => title;

@@ -107,9 +107,8 @@ class SubjectsView extends StatelessWidget {
                               isScrollControlled: true,
                               context: context,
                               builder: (context) {
-                                return BlocProvider.value(
-                                  value: examsCubit,
-                                  child: const AddExamBottomSheet(),
+                                return AddExamBottomSheet(
+                                  fetchExamsCubit: examsCubit,
                                 );
                               });
                         },

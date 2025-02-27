@@ -22,6 +22,18 @@ class ExamCubit extends Cubit<ExamState> {
     });
   }
 
+  Future<void> updateExam({required ExamEntity exam}) async {
+    emit(ExamLoading());
+
+    final resault = await examsRepo.updateExam(exam: exam, filePath: _filePath);
+
+    resault.fold((failure) {
+      emit(ExamFailure(errMessage: failure.errMessage));
+    }, (succuss) {
+      emit(ExamSuccuss(id: succuss));
+    });
+  }
+
   Future<void> deleteExam({required ExamEntity exam}) async {
     emit(ExamLoading());
 

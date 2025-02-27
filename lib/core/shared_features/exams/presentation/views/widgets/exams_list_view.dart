@@ -1,5 +1,7 @@
 import 'package:atm_app/core/materials/presentation/views/widgets/custom_subject_card.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/exam_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_bottom_sheet.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +27,19 @@ class ExamsListView extends StatelessWidget {
               BlocProvider.of<ExamCubit>(context)
                   .deleteExam(exam: exams[index]);
             },
-            onEdit: () {},
+            onEdit: () {
+              final fetchExamsCubit = context.read<FetchExamsCubit>();
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return AddExamBottomSheet(
+                      fetchExamsCubit: fetchExamsCubit,
+                      isEditMode: true,
+                      exam: exams[index],
+                    );
+                  });
+            },
             item: exams[index],
           );
         });
