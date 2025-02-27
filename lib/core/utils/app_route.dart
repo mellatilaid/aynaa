@@ -35,7 +35,7 @@ abstract class AppRouter {
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
-        path: '/ddd',
+        path: '/log',
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(

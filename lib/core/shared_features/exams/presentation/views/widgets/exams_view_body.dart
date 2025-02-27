@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exams_list_view.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/core/widgets/empty_widget.dart';
 import 'package:atm_app/core/widgets/failure_message_widget.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:flutter/widgets.dart';
@@ -28,7 +30,7 @@ class _ExamsViewBodyState extends State<ExamsViewBody> {
       BlocProvider.of<FetchExamsCubit>(context)
           .fetchExams(versionID: widget.versionsEntity.entityID);
     } else {
-      getit.get<LocalDbService>().clear();
+      getit.get<ILocalDbService>().clear<ExamEntity>();
     }
   }
 
@@ -37,6 +39,9 @@ class _ExamsViewBodyState extends State<ExamsViewBody> {
     return BlocBuilder<FetchExamsCubit, FetchExamsState>(
       builder: (context, state) {
         if (state is FetchExamsSuccuss) {
+          if (state.exams.isEmpty) {
+            return const EmptyWidget();
+          }
           return ExamsListView(exams: state.exams);
         } else if (state is FetchExamsLoading) {
           return const LoadingWidget();

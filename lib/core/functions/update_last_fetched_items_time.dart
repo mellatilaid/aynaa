@@ -26,6 +26,12 @@ updateLastFetchedItemsTime({required Entities itemType}) async {
           .get<ILocalSettingsService>()
           .updateSettings(settingsEntity: settings);
       break;
+    case Entities.exam:
+      settings!.lastTimeExamsFetched = DateTime.now().toUtc().toIso8601String();
+      await getit
+          .get<ILocalSettingsService>()
+          .updateSettings(settingsEntity: settings);
+      break;
     default:
   }
 }

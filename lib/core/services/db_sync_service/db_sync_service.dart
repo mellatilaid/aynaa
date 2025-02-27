@@ -80,7 +80,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
   @override
   void deleteInBauckground(List<Entity> items, Entities deletedItemType) {
     for (final item in items) {
-      if (item.localFilePath == null) continue;
+      if (item.url == null) continue;
       unawaited(deleteItemFile(item: item, deletedItemType: deletedItemType));
     }
   }
@@ -136,7 +136,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
           // _lessonUpdatesController.add(updatedLesson);
         }
         break;
-      case Entities.subjects:
+      case Entities.subjects || Entities.exam:
         final parts = path.split(item.url!);
         final fileName = parts[1];
         if (ProfileStorageImpl.userRole == kAdminRole) {
@@ -150,7 +150,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         await updateLocalDB(
           id: item.entityID,
           eventType: PostgressEventType.delete,
-          collectionType: Entities.subjects,
+          collectionType: deletedItemType,
         );
         break;
       case Entities.versions:
@@ -166,7 +166,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         await updateLocalDB(
           eventType: PostgressEventType.delete,
           id: item.entityID,
-          collectionType: Entities.versions,
+          collectionType: deletedItemType,
         );
 
         break;

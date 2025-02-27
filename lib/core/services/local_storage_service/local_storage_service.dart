@@ -117,7 +117,7 @@ class LocalStorageService implements ILocalStorageService {
           await file.delete();
         }
         break;
-      case Entities.subjects:
+      case Entities.subjects || Entities.exam:
         await _init(filePath: filePath);
         final parts = p.split(filePath);
         final dir = Directory(

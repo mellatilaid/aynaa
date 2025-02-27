@@ -10,11 +10,13 @@ class SettingsEntity {
   String? lastTimeVersionsFetched;
   String? lastTimeSubjectsFetched;
   String? lastTimeLessonssFetched;
+  String? lastTimeExamsFetched;
 
   SettingsEntity({
     required this.entityID,
     required this.lastTimeVersionsFetched,
     required this.lastTimeSubjectsFetched,
     required this.lastTimeLessonssFetched,
+    required this.lastTimeExamsFetched,
   });
 }

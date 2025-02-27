@@ -1,6 +1,8 @@
 import 'package:atm_app/core/materials/presentation/views/widgets/custom_subject_card.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/exam_cubit.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../domain/entities/exam_entity.dart';
@@ -19,7 +21,10 @@ class ExamsListView extends StatelessWidget {
               extra: exams[index],
               AppRouter.examSectionsView,
             ),
-            onDelete: () {},
+            onDelete: () {
+              BlocProvider.of<ExamCubit>(context)
+                  .deleteExam(exam: exams[index]);
+            },
             onEdit: () {},
             item: exams[index],
           );

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/add_exam_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/exam_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,16 +26,16 @@ class AddExamButtonBlocBuilder extends StatefulWidget {
 class _AddExamButtonBlocBuilderState extends State<AddExamButtonBlocBuilder> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddExamCubit, AddExamState>(
+    return BlocBuilder<ExamCubit, ExamState>(
       builder: (context, state) {
         return CustomActionButtonType2(
-          isLoading: state is AddExamLoading ? true : false,
+          isLoading: state is ExamLoading ? true : false,
           title: 'حفظ',
           onPressed: () {
             if (widget.formKey.currentState!.validate()) {
               final ExamEntity exam = _getExamModel();
 
-              BlocProvider.of<AddExamCubit>(context).addExam(exam: exam);
+              BlocProvider.of<ExamCubit>(context).addExam(exam: exam);
             }
           },
           backGroundColor: kPrimaryColor,
@@ -56,7 +56,7 @@ class _AddExamButtonBlocBuilderState extends State<AddExamButtonBlocBuilder> {
       versionName: versionInfo.$2,
       versionID: versionInfo.$1,
       localFilePath: null,
-      updatedAt: '',
+      updatedAt: DateTime.now().toUtc().toIso8601String(),
     );
   }
 

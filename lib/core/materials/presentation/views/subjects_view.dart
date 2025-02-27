@@ -4,6 +4,7 @@ import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dar
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/exam_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_bottom_sheet.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
@@ -43,6 +44,12 @@ class SubjectsView extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               DeleteSubjectCubit(subjectsRepo: getit.get<SubjectsRepo>()),
+        ),
+        BlocProvider(
+          create: (context) => ExamCubit(
+            examsRepo: getit.get<ExamsRepo>(),
+            // iLocalDbService: getit.get<ILocalDbService>(),
+          ),
         ),
       ],
       child: DefaultTabController(

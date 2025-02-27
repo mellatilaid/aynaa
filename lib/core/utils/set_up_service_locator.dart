@@ -37,12 +37,14 @@ import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_s
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_remote_data_source_impl.dart';
+import 'package:atm_app/features/admin/exams/data/repos/admin_exam_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
@@ -95,6 +97,7 @@ setUpCoreServiceLocator() async {
             lastTimeVersionsFetched: null,
             lastTimeSubjectsFetched: null,
             lastTimeLessonssFetched: null,
+            lastTimeExamsFetched: null,
           ),
         ),
     );
@@ -213,7 +216,9 @@ setUpServiceLocator({required UserRole userRole}) {
       );
       registerIfNotExists<ExamsLocalDataSource>(
         AdminExamsLocalDataSourceImpl(
-            iLocalDbService: getit.get<ILocalDbService>()),
+          iLocalDbService: getit.get<ILocalDbService>(),
+          idbSyncService: getit.get<IDBSyncService>(),
+        ),
       );
       registerIfNotExists<ExamSectionsLocalDataSource>(
         AdminExamSectionsLocalDataSourceImpl(
@@ -251,6 +256,8 @@ setUpServiceLocator({required UserRole userRole}) {
         AdminExamsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
+          iLocalSettingsService: getit.get<ILocalSettingsService>(),
+          idbSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<ExamSectionsRemoteDataSource>(
@@ -295,13 +302,17 @@ setUpServiceLocator({required UserRole userRole}) {
             lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
             lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
       );
-      /* registerIfNotExists<ExamsRepo>(
+      registerIfNotExists<ExamsRepo>(
         AdminExamRepoImpl(
-            dataBase: getit.get<DataBase>(),
-            storageService: getit.get<StorageService>(),
-            examsRemoteDataSource: getit.get<ExamsRemoteDataSource>(),
-            examsLocalDataSource: getit.get<ExamsLocalDataSource>()),
+          dataBase: getit.get<DataBase>(),
+          storageService: getit.get<StorageService>(),
+          iNetworkStateService: getit.get<INetworkStateService>(),
+          examsRemoteDataSource: getit.get<ExamsRemoteDataSource>(),
+          examsLocalDataSource: getit.get<ExamsLocalDataSource>(),
+          idbSyncService: getit.get<IDBSyncService>(),
+        ),
       );
+      /*
       registerIfNotExists<ExamSectionsRepo>(
         AdminExamSectionsRepoImpl(
             dataBase: getit.get<DataBase>(),
