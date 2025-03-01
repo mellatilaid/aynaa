@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/exam_sections_data_source/exam_sections_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/models/exam_sections_model.dart';
@@ -21,10 +25,13 @@ class AdminExamSectionsRepoImpl extends ExamSectionsRepo {
   final StorageService storageService;
   final ExamSectionsLocalDataSource localDataSource;
   final ExamSectionsRemoteDataSource remoteDataSource;
-
+  final IDBSyncService idbSyncService;
+  final INetworkStateService iNetworkStateService;
   AdminExamSectionsRepoImpl({
     required this.dataBase,
     required this.storageService,
+    required this.iNetworkStateService,
+    required this.idbSyncService,
     required this.localDataSource,
     required this.remoteDataSource,
   });
@@ -63,22 +70,41 @@ class AdminExamSectionsRepoImpl extends ExamSectionsRepo {
 
   @override
   Future<Either<Failures, void>> deleteExamSection(
-      {required ExamEntity examSection}) {
-    // TODO: implement deleteExamSection
-    throw UnimplementedError();
+      {required ExamSectionsEntity examSection}) async {
+    try {
+      idbSyncService.deleteInBauckground([examSection], Entities.examSections);
+      await dataBase.updateData(
+        path: DbEnpoints.examSections,
+        uid: examSection.entityID,
+        data: {
+          kIsDeleted: true,
+        },
+      );
+      return right(null);
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } on StorageException catch (e) {
+      return Left(ServerFailure.fromStorage(e: e));
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override
   Future<Either<Failures, List<ExamSectionsEntity>>> fetchExamSections(
       {required String examID}) async {
     try {
-      final List<ExamSectionsEntity> items;
-      /*final List<ExamEntity> localVersions =
-          await examsLocalDataSource.fetchExams();
-      log(localVersions.length.toString());
-      if (localVersions.isNotEmpty) {
-        return right(localVersions);
-      }*/
+      List<ExamSectionsEntity> items;
+      items = await localDataSource.fetchExamSections(examID: examID);
+
+      if (items.isNotEmpty) {
+        if (await iNetworkStateService.isOnline()) {
+          unawaited(remoteDataSource.syncSections(examID: examID));
+        }
+        return right(items);
+      }
       items = await remoteDataSource.fetchExamSections(examID: examID);
 
       return right(items);

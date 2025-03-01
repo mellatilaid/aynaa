@@ -1,19 +1,22 @@
+import 'package:atm_app/core/functions/build_preview.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
-import 'package:atm_app/core/widgets/custom_image_frame.dart';
+import 'package:atm_app/core/widgets/three_dots_menu.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../const/remote_db_const.dart';
 
 class ExamSectionCard extends StatelessWidget {
   final ExamSectionsEntity item;
-  final VoidCallback? onTap; // Action when the card is tapped
-  final VoidCallback? onDelete;
+  final VoidCallback onTap; // Action when the card is tapped
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
   const ExamSectionCard({
     super.key,
     required this.item,
-    this.onTap,
-    this.onDelete,
+    required this.onTap,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -30,10 +33,7 @@ class ExamSectionCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                CustomImageFame(
-                    child: Image.network(
-                        'https://th.bing.com/th/id/OIF.pcNaAfX3KRzgW75SU51big?w=289&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7')),
-                // buildPreview(filePath: item.localFilePath),
+                buildPreview(filePath: item.localFilePath),
                 // Background image
                 if (item.isLocked && ProfileStorageImpl.userRole != kAdminRole)
                   Container(
@@ -68,14 +68,22 @@ class ExamSectionCard extends StatelessWidget {
             ),
             (ProfileStorageImpl.userRole == kAdminRole)
                 ? Positioned(
-                    top: 0,
+                    top: 9,
                     left: 0,
-                    child: IconButton(
-                        onPressed: onDelete,
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        )),
+                    child: ThreeDotsMenu(
+                      onDelete: onDelete,
+                      onEdit: onEdit,
+                      popItems: [
+                        genericPopUpMenuItem(
+                          value: 'تعديل',
+                          icon: const Icon(Icons.edit, color: Colors.blue),
+                        ),
+                        genericPopUpMenuItem(
+                          value: 'حذف',
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
+                    ),
                   )
                 : const SizedBox.shrink(),
           ],

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../features/admin/materials/presentation/manager/pick_file_cubit/pick_file_cubit.dart';
-import '../../manager/add_exam_section_cubit/add_exam_section_cubit.dart';
+import '../../manager/exam_section_cubit/exam_section_cubit.dart';
 
 class ExamSectionImageContentBuilder extends StatelessWidget {
   final String? filePath;
@@ -17,7 +17,7 @@ class ExamSectionImageContentBuilder extends StatelessWidget {
     return BlocConsumer<PickFileCubit, PickFileState>(
       listener: (context, state) {
         if (state is PickFileLoaded) {
-          BlocProvider.of<AddExamSectionCubit>(context)
+          BlocProvider.of<ExamSectionCubit>(context)
               .setFilePath(state.filePath.path);
         }
       },

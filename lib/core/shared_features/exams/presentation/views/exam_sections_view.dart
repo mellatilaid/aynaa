@@ -1,6 +1,7 @@
-import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_section_cubit/exam_section_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exam_sections_cubit/fetch_exam_sections_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_section_bottom_sheet.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exam_sections_view_body.dart';
@@ -15,18 +16,27 @@ class ExamSectionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FetchExamSectionsCubit(
-        examSectionsRepo: getit.get<ExamSectionsRepo>(),
-        isarStorageService: getit.get<LocalDbService>(),
-      )..fetchExams(
-          id: examEntity.entityID,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => FetchExamSectionsCubit(
+            examSectionsRepo: getit.get<ExamSectionsRepo>(),
+            iLocalDBService: getit.get<ILocalDbService>(),
+          ),
         ),
+        BlocProvider(
+          create: (context) => ExamSectionCubit(
+            examSectionsRepo: getit.get<ExamSectionsRepo>(),
+          ),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           leading: const BackButton(),
         ),
-        body: const ExamSectionsViewBody(),
+        body: ExamSectionsViewBody(
+          examEntity: examEntity,
+        ),
         floatingActionButton: Builder(
           builder: (fabContext) {
             return FloatingActionButton(
@@ -47,14 +57,6 @@ class ExamSectionsView extends StatelessWidget {
                             child: const AddExamSectionBottomSheet()),
                       );
                     });
-                /*showDialog(
-                      context: context,
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: aynaaVersionCubit,
-                          child: const AddAynaaVersionAlertDialog(),
-                        );
-                      });*/
               },
               child: const Icon(Icons.add),
             );

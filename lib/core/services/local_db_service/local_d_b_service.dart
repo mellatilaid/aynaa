@@ -8,6 +8,7 @@ import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -69,7 +70,7 @@ class LocalDbService extends ILocalDbService {
   @override
   Future<void> putAll<E>({
     required List<dynamic> items,
-    required Entities collentionType,
+    Entities? collentionType,
   }) async {
     try {
       final collection = _isar.collection<E>();
@@ -150,6 +151,11 @@ class LocalDbService extends ILocalDbService {
         return result;
       case Entities.questions:
       case Entities.examSections:
+        final result = await _isar.examSectionsEntitys
+            .filter()
+            .examIDEqualTo(query[kExamID])
+            .findAll();
+        return result;
     }
   }
 
@@ -211,6 +217,14 @@ class LocalDbService extends ILocalDbService {
 
       case Entities.questions:
       case Entities.examSections:
+        Stream<void> stream = _isar.examSectionsEntitys.watchLazy();
+        yield* stream.asyncMap((_) async {
+          return await _isar.examSectionsEntitys
+              .where()
+              .filter()
+              .examIDEqualTo(id!)
+              .findAll() as List<T>;
+        });
     }
   }
 

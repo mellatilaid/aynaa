@@ -1,8 +1,10 @@
 import 'package:atm_app/core/functions/custom_alert_dialog.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/exam_section_card.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_section_cubit/exam_section_cubit.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ExamSectionsListView extends StatefulWidget {
@@ -65,6 +67,11 @@ class _ExamSectionsListViewState extends State<ExamSectionsListView> {
                 _unlockNextSection(index, sectionScore);
               }
             },
+            onDelete: () =>
+                BlocProvider.of<ExamSectionCubit>(context).deleteExamSection(
+              examSection: widget.sections[index],
+            ),
+            onEdit: () {},
             item: widget.sections[index],
           );
         });

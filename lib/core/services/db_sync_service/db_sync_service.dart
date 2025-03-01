@@ -16,6 +16,7 @@ import 'package:atm_app/core/services/local_storage_service/i_local_storage_serv
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:path/path.dart' as path;
 
 class DBSyncService<T extends Entity> extends IDBSyncService {
@@ -115,7 +116,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
   Future<void> deleteItemFile(
       {required Entity item, required Entities deletedItemType}) async {
     switch (deletedItemType) {
-      case Entities.lessons:
+      case Entities.lessons || Entities.examSections:
         if (item.localFilePath != null && item.url != null) {
           final fileName = item.url!.replaceFirst('${item.versionName}/', '');
           if (ProfileStorageImpl.userRole == kAdminRole) {
@@ -130,7 +131,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
           await updateLocalDB(
             id: item.entityID,
             eventType: PostgressEventType.delete,
-            collectionType: Entities.lessons,
+            collectionType: deletedItemType,
           );
           //await updateLocalDataSource(lesson, PostgressEventType.delete);
           // _lessonUpdatesController.add(updatedLesson);
@@ -195,6 +196,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
             await iLocalDbService.put<ExamEntity>(item: item);
           case Entities.questions:
           case Entities.examSections:
+            await iLocalDbService.put<ExamSectionsEntity>(item: item);
         }
         break;
       case PostgressEventType.delete:
@@ -209,6 +211,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
             await iLocalDbService.delete<ExamEntity>(id: id!);
           case Entities.questions:
           case Entities.examSections:
+            await iLocalDbService.delete<ExamSectionsEntity>(id: id!);
         }
         break;
       default:

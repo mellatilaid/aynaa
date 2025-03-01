@@ -1,10 +1,10 @@
 import 'package:atm_app/core/const/app_const.dart';
-import 'package:atm_app/core/helper/user_profile.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/exam_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_cubit/exam_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exams_cubit/fetch_exams_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_bottom_sheet.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
@@ -76,8 +76,7 @@ class SubjectsView extends StatelessWidget {
               ),
             ],
           ),
-          floatingActionButton: (globalUserRole != null &&
-                  globalUserRole == kAdminRole)
+          floatingActionButton: (ProfileStorageImpl.userRole == kAdminRole)
               ? Builder(builder: (fabContext) {
                   return FloatingAddOptionsSpeedDial(
                     speedDials: [

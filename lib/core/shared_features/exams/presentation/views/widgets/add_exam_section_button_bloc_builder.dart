@@ -1,9 +1,10 @@
 import 'package:atm_app/core/shared_features/exams/data/models/exam_sections_model.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_section_cubit/add_exam_section_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_section_cubit/exam_section_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path/path.dart' as Path;
 import 'package:provider/provider.dart';
 
 import '../../../../../../core/const/app_const.dart';
@@ -24,15 +25,15 @@ class _AddExamSectionButtonBuilderState
     extends State<AddExamSectionButtonBuilder> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddExamSectionCubit, AddExamSectionState>(
+    return BlocBuilder<ExamSectionCubit, ExamSectionState>(
       builder: (context, state) {
         return CustomActionButtonType2(
-          isLoading: state is AddExamSectionLoading ? true : false,
+          isLoading: state is ExamSectionLoading ? true : false,
           onPressed: () {
             if (widget.formKey.currentState!.validate()) {
               widget.formKey.currentState!.save();
 
-              BlocProvider.of<AddExamSectionCubit>(context)
+              BlocProvider.of<ExamSectionCubit>(context)
                   .addExamSection(examSection: _toExamSectionEntity());
             }
           },
@@ -46,14 +47,15 @@ class _AddExamSectionButtonBuilderState
 
   _toExamSectionEntity() {
     final entity = Provider.of<ExamEntity>(context, listen: false);
-
+    final entityName = Path.split(entity.url!);
     return ExamSectionsModel(
-        entityID: '0',
-        title: widget.titleController.text,
-        url: '',
-        examID: entity.entityID,
-        versionName: entity.versionName,
-        examTitle: entity.title,
-        updatedAt: '');
+      entityID: '0',
+      title: widget.titleController.text,
+      url: '',
+      examID: entity.entityID,
+      versionName: entity.versionName,
+      examTitle: entityName[1],
+      updatedAt: DateTime.now().toUtc().toIso8601String(),
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/manager/add_exam_cubit/exam_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_cubit/exam_cubit.dart';
 import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

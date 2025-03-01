@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/common/settings_entity.dart';
@@ -37,6 +39,8 @@ import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_s
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_remote_data_source_impl.dart';
@@ -45,6 +49,7 @@ import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/
 import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/repos/admin_exam_repo_impl.dart';
+import 'package:atm_app/features/admin/exams/data/repos/admin_exam_sections_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
@@ -78,14 +83,24 @@ setUpCoreServiceLocator() async {
     ..registerSingleton<StorageService>(SupaBaseStorage())
     ..registerSingleton<DataBase>(SupabaseDb())
     ..registerSingleton<ProfileStorage>(ProfileStorageImpl()).loadUserProfile()
-    ..registerSingletonAsync<Isar>(() async => await _isarInit())
+    ..registerSingletonAsync<Isar>(() async {
+      try {
+        final isar = await _isarInit();
+        print('Isar initialized from GetIt callback'); // Add this line
+        return isar;
+      } catch (e) {
+        print('Error in GetIt Isar initialization: $e');
+        rethrow;
+      }
+    })
     ..registerSingleton<AuthRepo>(AuthRepoImpl(
         authServices: SupabaseAuthService(),
         dataBase: SupabaseDb(),
         profileStorage: getit.get<ProfileStorage>()))
     ..registerSingleton<INetworkStateService>(NetworkStateService());
-
+  print('Waiting for Isar instance...');
   await getit.getAsync<Isar>();
+  print('Isar instance retrieved.');
   getit
     ..registerFactory<ILocalDbService>(() => LocalDbService(getit()))
     ..registerSingleton<RealtimeSyncService>(RealtimeSyncService())
@@ -98,6 +113,7 @@ setUpCoreServiceLocator() async {
             lastTimeSubjectsFetched: null,
             lastTimeLessonssFetched: null,
             lastTimeExamsFetched: null,
+            lastTimeSectionsFetched: null,
           ),
         ),
     );
@@ -223,6 +239,7 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<ExamSectionsLocalDataSource>(
         AdminExamSectionsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
+          idbSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<QuestionsLocalDataSource>(
@@ -263,7 +280,9 @@ setUpServiceLocator({required UserRole userRole}) {
       registerIfNotExists<ExamSectionsRemoteDataSource>(
         AdminExamSectionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
+          idbSyncService: getit.get<IDBSyncService>(),
           iLocalDbService: getit.get<ILocalDbService>(),
+          iLocalSettingsService: getit.get<ILocalSettingsService>(),
         ),
       );
       registerIfNotExists<QuestionsRemoteDataSource>(
@@ -312,14 +331,17 @@ setUpServiceLocator({required UserRole userRole}) {
           idbSyncService: getit.get<IDBSyncService>(),
         ),
       );
-      /*
+
       registerIfNotExists<ExamSectionsRepo>(
         AdminExamSectionsRepoImpl(
-            dataBase: getit.get<DataBase>(),
-            storageService: getit.get<StorageService>(),
-            remoteDataSource: getit.get<ExamSectionsRemoteDataSource>(),
-            localDataSource: getit.get<ExamSectionsLocalDataSource>()),
-      );
+          dataBase: getit.get<DataBase>(),
+          storageService: getit.get<StorageService>(),
+          remoteDataSource: getit.get<ExamSectionsRemoteDataSource>(),
+          idbSyncService: getit.get<IDBSyncService>(),
+          localDataSource: getit.get<ExamSectionsLocalDataSource>(),
+          iNetworkStateService: getit.get<INetworkStateService>(),
+        ),
+      ); /*
       registerIfNotExists<QuestionRepo>(
         AdminQuestionRepoImpl(
             dataBase: getit.get<DataBase>(),
@@ -398,20 +420,29 @@ setUpServiceLocator({required UserRole userRole}) {
 }
 
 Future<Isar> _isarInit() async {
-  final dir = await getApplicationDocumentsDirectory();
-  final isar = await Isar.open(
-    [
-      AynaaVersionsEntitySchema,
-      LessonEntitySchema,
-      SubjectsEntitySchema,
-      DeletedItmesEntitySchema,
-      ExamEntitySchema,
-      SettingsEntitySchema,
-    ],
-    directory: dir.path,
-  );
+  try {
+    print('Getting application documents directory...');
+    final dir = await getApplicationDocumentsDirectory();
+    print('Application documents directory: ${dir.path}');
 
-  return isar;
+    final isar = await Isar.open(
+      [
+        AynaaVersionsEntitySchema,
+        LessonEntitySchema,
+        SubjectsEntitySchema,
+        DeletedItmesEntitySchema,
+        ExamEntitySchema,
+        SettingsEntitySchema,
+        ExamSectionsEntitySchema
+      ],
+      directory: dir.path,
+    );
+    log('Isar instance created.');
+    return isar;
+  } catch (e, stackTrace) {
+    log('Error creating Isar instance: $e', stackTrace: stackTrace);
+    rethrow;
+  }
 }
 
 /*setUpServiceLocator({required UserRole userRole}) {

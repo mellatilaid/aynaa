@@ -10,7 +10,7 @@ abstract class ILocalDbService {
   Future<String> getIsarPath();
   Future<void> putAll<E>({
     required List<dynamic> items,
-    required Entities collentionType,
+    Entities? collentionType,
   });
 
   Future<void> put<E>({required dynamic item});

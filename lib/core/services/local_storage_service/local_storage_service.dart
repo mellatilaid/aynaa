@@ -107,7 +107,7 @@ class LocalStorageService implements ILocalStorageService {
   Future<void> deleteCachedFile(
       String filePath, Entities deletedItemType) async {
     switch (deletedItemType) {
-      case Entities.lessons:
+      case Entities.lessons || Entities.examSections:
         await _init(filePath: filePath);
 
         final file =
