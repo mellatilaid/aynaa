@@ -46,6 +46,9 @@ class _AddExamSectionButtonBuilderState
   }
 
   _toExamSectionEntity() {
+    //get the subject entity from the provider
+    //the new lesson takes the subject name from the url so when
+    //subject name update the storage path still the same
     final entity = Provider.of<ExamEntity>(context, listen: false);
     final entityName = Path.split(entity.url!);
     return ExamSectionsModel(

@@ -40,8 +40,10 @@ import 'package:atm_app/core/shared_features/exams/data/data_source/questions_da
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
+import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_local_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_local_data_source_impl.dart';
@@ -50,6 +52,7 @@ import 'package:atm_app/features/admin/exams/data/data_source/questions_data_sou
 import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_remote_data_source_impl.dart';
 import 'package:atm_app/features/admin/exams/data/repos/admin_exam_repo_impl.dart';
 import 'package:atm_app/features/admin/exams/data/repos/admin_exam_sections_repo_impl.dart';
+import 'package:atm_app/features/admin/exams/data/repos/admin_question_repo_impl.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
 import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
@@ -114,6 +117,7 @@ setUpCoreServiceLocator() async {
             lastTimeLessonssFetched: null,
             lastTimeExamsFetched: null,
             lastTimeSectionsFetched: null,
+            lastTimeQuestionsFetched: null,
           ),
         ),
     );
@@ -243,7 +247,9 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<QuestionsLocalDataSource>(
-        AdminQuestionsLocalDataSourceImpl(),
+        AdminQuestionsLocalDataSourceImpl(
+          iLocalDbService: getit.get<ILocalDbService>(),
+        ),
       );
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
         AdminVersionsRemoteDataSourceImpl(
@@ -289,6 +295,8 @@ setUpServiceLocator({required UserRole userRole}) {
         AdminQuestionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
+          idbSyncService: getit.get<IDBSyncService>(),
+          iLocalSettingsService: getit.get<ILocalSettingsService>(),
         ),
       );
 
@@ -341,14 +349,17 @@ setUpServiceLocator({required UserRole userRole}) {
           localDataSource: getit.get<ExamSectionsLocalDataSource>(),
           iNetworkStateService: getit.get<INetworkStateService>(),
         ),
-      ); /*
+      );
       registerIfNotExists<QuestionRepo>(
         AdminQuestionRepoImpl(
-            dataBase: getit.get<DataBase>(),
-            storageService: getit.get<StorageService>(),
-            remoteDataSource: getit.get<QuestionsRemoteDataSource>(),
-            localDataSource: getit.get<QuestionsLocalDataSource>()),
-      );*/
+          dataBase: getit.get<DataBase>(),
+          storageService: getit.get<StorageService>(),
+          remoteDataSource: getit.get<QuestionsRemoteDataSource>(),
+          localDataSource: getit.get<QuestionsLocalDataSource>(),
+          idbSyncService: getit.get<IDBSyncService>(),
+          iNetworkStateService: getit.get<INetworkStateService>(),
+        ),
+      );
 
       break;
     case UserRole.student:
@@ -433,7 +444,8 @@ Future<Isar> _isarInit() async {
         DeletedItmesEntitySchema,
         ExamEntitySchema,
         SettingsEntitySchema,
-        ExamSectionsEntitySchema
+        ExamSectionsEntitySchema,
+        QuestionEntitySchema,
       ],
       directory: dir.path,
     );

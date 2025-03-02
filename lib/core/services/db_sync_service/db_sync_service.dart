@@ -17,6 +17,7 @@ import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
 import 'package:path/path.dart' as path;
 
 class DBSyncService<T extends Entity> extends IDBSyncService {
@@ -171,9 +172,14 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         );
 
         break;
-      case Entities.exam:
+
       case Entities.questions:
-      case Entities.examSections:
+        await updateLocalDB(
+          eventType: PostgressEventType.delete,
+          id: item.entityID,
+          collectionType: deletedItemType,
+        );
+        break;
     }
   }
 
@@ -210,6 +216,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
           case Entities.exam:
             await iLocalDbService.delete<ExamEntity>(id: id!);
           case Entities.questions:
+            await iLocalDbService.delete<QuestionEntity>(id: id!);
           case Entities.examSections:
             await iLocalDbService.delete<ExamSectionsEntity>(id: id!);
         }

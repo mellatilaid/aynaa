@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/add_questions_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/questions_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_question_dialog_body.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_question_dialog_bottom_nar_bar.dart';
 import 'package:atm_app/core/widgets/scaffold_message.dart';
@@ -36,7 +36,7 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
 
   _onAddQuestion() {
     final List<QuestionEntity> questions =
-        Provider.of<AddQuestionsCubit>(context, listen: false).questions;
+        Provider.of<QuestionsCubit>(context, listen: false).questions;
     log('questions length is ${questions.length}');
     if (_questionController.text.isEmpty ||
         _answerController.text.isEmpty ||
@@ -47,7 +47,7 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
         behavior: SnackBarBehavior.floating,
       );
     } else {
-      Provider.of<AddQuestionsCubit>(context, listen: false)
+      Provider.of<QuestionsCubit>(context, listen: false)
           .setQuestion(_toQuestionEntity());
       _clearControllers();
     }
@@ -55,7 +55,7 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
 
   _onSave() {
     final List<QuestionEntity> questions =
-        Provider.of<AddQuestionsCubit>(context, listen: false).questions;
+        Provider.of<QuestionsCubit>(context, listen: false).questions;
 
     if (questions.isEmpty) {
       showScaffoldMessage(
@@ -64,7 +64,7 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
         behavior: SnackBarBehavior.floating,
       );
     } else {
-      Provider.of<AddQuestionsCubit>(context, listen: false).addExamSection();
+      Provider.of<QuestionsCubit>(context, listen: false).addExamSection();
     }
   }
 
@@ -94,6 +94,7 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
       question: _questionController.text,
       answer: _answerController.text,
       options: options,
+      updatedAt: DateTime.now().toUtc().toIso8601String(),
     );
   }
 

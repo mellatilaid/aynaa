@@ -2,4 +2,5 @@ import 'package:atm_app/core/shared_features/exams/domain/entities/question_enti
 
 abstract class QuestionsRemoteDataSource {
   Future<List<QuestionEntity>> fetchQuestions({required String sectionID});
+  Future<void> syncQuestions({required String sectionID});
 }

@@ -5,25 +5,39 @@ import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.da
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-part 'add_questions_state.dart';
+part 'questions_state.dart';
 
-class AddQuestionsCubit extends Cubit<AddQuestionsState> {
+class QuestionsCubit extends Cubit<QuestionsState> {
   final QuestionRepo questionRepo;
-  AddQuestionsCubit({required this.questionRepo})
-      : super(AddQuestionsInitial());
+  QuestionsCubit({required this.questionRepo}) : super(QuestionsInitial());
 
   List<QuestionEntity> _questions = [];
   Future<void> addExamSection() async {
-    emit(AddQuestionsLoading());
+    emit(QuestionsLoading());
     log(_questions.length.toString());
     final resault = await questionRepo.addQuestion(
       questions: _questions,
     );
 
     resault.fold((failure) {
-      emit(AddQuestionsFailure(errMessage: failure.errMessage));
+      emit(QuestionsFailure(errMessage: failure.errMessage));
     }, (questionsID) {
-      emit(AddQuestionsSuccuss(questionID: questionsID));
+      emit(QuestionsSuccuss(questionID: questionsID));
+      _questions = [];
+    });
+  }
+
+  Future<void> deleteQuestion({required QuestionEntity question}) async {
+    emit(QuestionsLoading());
+
+    final resault = await questionRepo.deleteQuestion(
+      question: question,
+    );
+
+    resault.fold((failure) {
+      emit(QuestionsFailure(errMessage: failure.errMessage));
+    }, (succuss) {
+      emit(DeleteQuestionSuccuss());
       _questions = [];
     });
   }

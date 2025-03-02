@@ -7,6 +7,7 @@ import 'package:atm_app/features/admin/materials/presentation/manager/fetch_less
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../core/utils/set_up_service_locator.dart';
 import '../../../../../core/widgets/custom_speed_dial_child.dart';
@@ -53,10 +54,13 @@ class LessonsView extends StatelessWidget {
                           builder: (context) {
                             return BlocProvider.value(
                               value: fabContext.read<FetchLessonsCubit>(),
-                              child: AddTextLessonBottomSheet(
-                                fetchLessonsCubit:
-                                    fabContext.read<FetchLessonsCubit>(),
-                                isTextOnly: true,
+                              child: Provider(
+                                create: (context) => subjectsEntity,
+                                child: AddTextLessonBottomSheet(
+                                  fetchLessonsCubit:
+                                      fabContext.read<FetchLessonsCubit>(),
+                                  isTextOnly: true,
+                                ),
                               ),
                             );
                           },

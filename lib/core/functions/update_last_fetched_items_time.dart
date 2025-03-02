@@ -39,6 +39,13 @@ updateLastFetchedItemsTime<T>({required Entities itemType}) async {
           .get<ILocalSettingsService>()
           .updateSettings(settingsEntity: settings);
       break;
+    case Entities.questions:
+      settings!.lastTimeQuestionsFetched =
+          DateTime.now().toUtc().toIso8601String();
+      await getit
+          .get<ILocalSettingsService>()
+          .updateSettings(settingsEntity: settings);
+      break;
     default:
   }
 }

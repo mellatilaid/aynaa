@@ -9,6 +9,7 @@ import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -150,6 +151,11 @@ class LocalDbService extends ILocalDbService {
             .findAll();
         return result;
       case Entities.questions:
+        final result = await _isar.questionEntitys
+            .filter()
+            .sectionIDEqualTo(query[kSectionID])
+            .findAll();
+        return result;
       case Entities.examSections:
         final result = await _isar.examSectionsEntitys
             .filter()
@@ -216,6 +222,14 @@ class LocalDbService extends ILocalDbService {
         });
 
       case Entities.questions:
+        Stream<void> stream = _isar.questionEntitys.watchLazy();
+        yield* stream.asyncMap((_) async {
+          return await _isar.questionEntitys
+              .where()
+              .filter()
+              .sectionIDEqualTo(id!)
+              .findAll() as List<T>;
+        });
       case Entities.examSections:
         Stream<void> stream = _isar.examSectionsEntitys.watchLazy();
         yield* stream.asyncMap((_) async {

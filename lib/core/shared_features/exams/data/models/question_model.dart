@@ -9,6 +9,7 @@ class QuestionModel extends QuestionEntity with Mappable {
     required super.question,
     required super.answer,
     required super.options,
+    required super.updatedAt,
   });
 
   @override
@@ -18,6 +19,7 @@ class QuestionModel extends QuestionEntity with Mappable {
       kQuestion: question,
       kAnswer: answer,
       kOptions: options,
+      kUpdatedAt: updatedAt,
     };
   }
 
@@ -28,6 +30,7 @@ class QuestionModel extends QuestionEntity with Mappable {
       question: map[kQuestion],
       answer: map[kAnswer],
       options: List<String>.from(map[kOptions]),
+      updatedAt: map[kUpdatedAt],
     );
   }
 
@@ -38,6 +41,7 @@ class QuestionModel extends QuestionEntity with Mappable {
       question: question.question,
       answer: question.answer,
       options: question.options,
+      updatedAt: question.updatedAt,
     );
   }
 }

@@ -1,13 +1,16 @@
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/widgets/custom_action_button_type2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
 import '../../../../../../core/const/app_const.dart';
 import '../../../../../features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 
-class UploadLessonButtonBuilder extends StatelessWidget {
+class UploadLessonButtonBuilder extends StatefulWidget {
   final TextEditingController lessonTitle;
   final TextEditingController lessonContent;
   final String filePath;
@@ -28,6 +31,12 @@ class UploadLessonButtonBuilder extends StatelessWidget {
   });
 
   @override
+  State<UploadLessonButtonBuilder> createState() =>
+      _UploadLessonButtonBuilderState();
+}
+
+class _UploadLessonButtonBuilderState extends State<UploadLessonButtonBuilder> {
+  @override
   Widget build(BuildContext context) {
     // log('the file path is ${file?.path}');
     return BlocBuilder<LessonCubit, LessonState>(
@@ -35,30 +44,31 @@ class UploadLessonButtonBuilder extends StatelessWidget {
         return CustomActionButtonType2(
           isLoading: state is LessonLoading ? true : false,
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          onPressed: isButtonEnabled ? () => _handleSubmission(context) : null,
+          onPressed:
+              widget.isButtonEnabled ? () => _handleSubmission(context) : null,
           backGroundColor: kPrimaryColor,
           icon: const FaIcon(
             FontAwesomeIcons.upload,
             color: Colors.white,
           ),
-          title: isEditMode ? 'تحديث المادة' : 'اضافة مادة',
+          title: widget.isEditMode ? 'تحديث المادة' : 'اضافة مادة',
         );
       },
     );
   }
 
   void _handleSubmission(BuildContext context) {
-    if (!formKey.currentState!.validate()) return;
+    if (!widget.formKey.currentState!.validate()) return;
 
     final cubit = context.read<LessonCubit>();
 
-    if (isEditMode && lessonEntity != null) {
-      final updatedSubject = lessonEntity!.copyWith(
-        title: lessonTitle.text.trim(),
-        description: lessonContent.text.trim(),
+    if (widget.isEditMode && widget.lessonEntity != null) {
+      final updatedSubject = widget.lessonEntity!.copyWith(
+        title: widget.lessonTitle.text.trim(),
+        description: widget.lessonContent.text.trim(),
         updatedAt: DateTime.now().toUtc().toIso8601String(),
       );
-      cubit.setFilePath(filePath);
+      cubit.setFilePath(widget.filePath);
 
       cubit.updateLesson(
         lesson: updatedSubject,
@@ -66,19 +76,24 @@ class UploadLessonButtonBuilder extends StatelessWidget {
     } else {
       final addLessonBloc = context.read<LessonCubit>();
       final lesson = _toLessonEnitiy(addLessonCubit: addLessonBloc);
-      cubit.setFilePath(filePath);
+      cubit.setFilePath(widget.filePath);
       cubit.addLesson(lesson: lesson);
     }
   }
 
   _toLessonEnitiy({required LessonCubit addLessonCubit}) {
+    //get the subject entity from the provider
+    //the new lesson takes the subject name from the url so when
+    //subject name update the storage path still the same
+    final entity = Provider.of<SubjectsEntity>(context, listen: false);
+    final parts = path.split(entity.url);
     return LessonEntity(
       entityID: '',
-      name: lessonTitle.text,
-      description: lessonContent.text,
+      name: widget.lessonTitle.text,
+      description: widget.lessonContent.text,
       aynaaVersionId: addLessonCubit.versionID!,
       subjectId: addLessonCubit.subjectID!,
-      subjectName: addLessonCubit.subjectName!,
+      subjectName: parts[1],
       versionName: addLessonCubit.versionName!,
       updatedAt: DateTime.now().toUtc().toIso8601String(),
     );

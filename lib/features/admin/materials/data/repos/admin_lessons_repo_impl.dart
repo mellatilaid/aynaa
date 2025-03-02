@@ -50,6 +50,7 @@ class AdminLessonsRepoImpl extends LessonsRepo {
 
       if (filePath != null) {
         final fileName = path.basename(filePath);
+
         final fullPath = await storageService.uploadFile(
           bucketName: lesson.versionName,
           filePath: filePath,

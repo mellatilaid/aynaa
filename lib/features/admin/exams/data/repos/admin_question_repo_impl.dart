@@ -1,7 +1,12 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
@@ -15,11 +20,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AdminQuestionRepoImpl extends QuestionRepo {
   final DataBase dataBase;
   final StorageService storageService;
+  final INetworkStateService iNetworkStateService;
   final QuestionsRemoteDataSource remoteDataSource;
   final QuestionsLocalDataSource localDataSource;
+  final IDBSyncService idbSyncService;
   AdminQuestionRepoImpl({
     required this.dataBase,
+    required this.idbSyncService,
     required this.storageService,
+    required this.iNetworkStateService,
     required this.localDataSource,
     required this.remoteDataSource,
   });
@@ -33,7 +42,7 @@ class AdminQuestionRepoImpl extends QuestionRepo {
 
         await dataBase.setDate(path: DbEnpoints.questions, data: data);
       }
-      return Right(questions.first.entityID.toString());
+      return Right(questions.first.sectionID.toString());
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {
@@ -50,22 +59,44 @@ class AdminQuestionRepoImpl extends QuestionRepo {
 
   @override
   Future<Either<Failures, void>> deleteQuestion(
-      {required QuestionEntity question}) {
-    // TODO: implement deleteQuestion
-    throw UnimplementedError();
+      {required QuestionEntity question}) async {
+    try {
+      idbSyncService.deleteInBauckground(
+        [question],
+        Entities.questions,
+      );
+      await dataBase.updateData(
+        path: DbEnpoints.questions,
+        uid: question.entityID,
+        data: {
+          kIsDeleted: true,
+        },
+      );
+
+      return const Right(null);
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 
   @override
   Future<Either<Failures, List<QuestionEntity>>> fetchQuestions(
       {required String sectionID}) async {
     try {
-      final List<QuestionEntity> items;
-      /*final List<ExamEntity> localVersions =
-          await examsLocalDataSource.fetchExams();
-      log(localVersions.length.toString());
-      if (localVersions.isNotEmpty) {
-        return right(localVersions);
-      }*/
+      List<QuestionEntity> items;
+
+      items = await localDataSource.fetchQuestions(sectionID: sectionID);
+
+      if (items.isNotEmpty) {
+        if (await iNetworkStateService.isOnline()) {
+          unawaited(remoteDataSource.syncQuestions(sectionID: sectionID));
+        }
+        return right(items);
+      }
       items = await remoteDataSource.fetchQuestions(sectionID: sectionID);
 
       return right(items);

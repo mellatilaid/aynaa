@@ -1,7 +1,7 @@
-import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/add_questions_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/questions_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fethc_questions_cubit/fetch_questions_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_question_dialog.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/quiz_view_body.dart';
@@ -16,11 +16,19 @@ class QuizView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FetchQuestionsCubit(
-        questionsRepo: getit.get<QuestionRepo>(),
-        isarStorageService: getit.get<LocalDbService>(),
-      )..fetchQuestions(id: examSectionsEntity.entityID),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => FetchQuestionsCubit(
+            questionsRepo: getit.get<QuestionRepo>(),
+            iLocalDbService: getit.get<ILocalDbService>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) =>
+              QuestionsCubit(questionRepo: getit.get<QuestionRepo>()),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           leading: const BackButton(),
@@ -35,16 +43,21 @@ class QuizView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
               ),
               onPressed: () {
+                final fetchQuestionsCubit =
+                    fabContext.read<FetchQuestionsCubit>();
                 showGeneralDialog(
                   context: context,
                   barrierDismissible: true,
                   barrierLabel: "Full Screen Dialog",
                   pageBuilder: (context, animation, secondaryAnimation) {
-                    return Provider<AddQuestionsCubit>(
-                      create: (context) => AddQuestionsCubit(
+                    return Provider<QuestionsCubit>(
+                      create: (context) => QuestionsCubit(
                           questionRepo: getit.get<QuestionRepo>()),
-                      child: AddQuestionsDialog(
-                        examSectionsEntity: examSectionsEntity,
+                      child: Provider.value(
+                        value: fetchQuestionsCubit,
+                        child: AddQuestionsDialog(
+                          examSectionsEntity: examSectionsEntity,
+                        ),
                       ),
                     );
                   },
