@@ -1,13 +1,26 @@
+import 'package:atm_app/core/materials/presentation/views/subject_image_preview_builder.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_exam_section_button_bloc_builder.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/exam_section_image_builder.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/widgets/invisibla_text_field.dart';
+import '../../../../shared_features/exams/domain/entities/exam_sections_entity.dart';
 
 class AddExamSectionBottomSheetBody extends StatefulWidget {
+  final bool isEditMode;
+  final ExamSectionsEntity? examSection;
   const AddExamSectionBottomSheetBody({
     super.key,
+    this.isEditMode = false,
+    this.examSection,
   });
+
+  factory AddExamSectionBottomSheetBody.editMode(
+      ExamSectionsEntity examSection) {
+    return AddExamSectionBottomSheetBody(
+      isEditMode: true,
+      examSection: examSection,
+    );
+  }
 
   @override
   State<AddExamSectionBottomSheetBody> createState() =>
@@ -24,6 +37,13 @@ class _AddExamSectionBottomSheetBodyState
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    if (widget.isEditMode && widget.examSection != null) {
+      _titleController.text = widget.examSection!.title;
+
+      selectedFile = widget.examSection!.localFilePath;
+    }
+
     _titleController.addListener(() {
       final hasText = _titleController.text.trim().isNotEmpty;
       _isButtonEnabled.value = hasText; // Enable or disable the button
@@ -55,8 +75,11 @@ class _AddExamSectionBottomSheetBodyState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ExamSectionImageContentBuilder(
+                      ImageContentBuilder(
                         filePath: selectedFile,
+                        onImageChanged: (newPath) {
+                          setState(() => selectedFile = newPath);
+                        },
                       ),
                       const SizedBox(height: 16),
                       InvisibleTextField(
@@ -83,8 +106,12 @@ class _AddExamSectionBottomSheetBodyState
                 valueListenable: _isButtonEnabled,
                 builder: (context, value, child) {
                   return AddExamSectionButtonBuilder(
+                    isButtonEnabled: value,
                     formKey: _formKey, // Pass the form key to the button
                     titleController: _titleController,
+                    examSection: widget.examSection,
+                    isEditMode: widget.isEditMode,
+                    filePath: selectedFile ?? '',
                   );
                 },
               ),

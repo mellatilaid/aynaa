@@ -121,9 +121,40 @@ class AdminExamSectionsRepoImpl extends ExamSectionsRepo {
   }
 
   @override
-  Future<Either<Failures, void>> updateExamSection(
-      {required String examID, required Map<String, dynamic> data}) {
-    // TODO: implement updateExamSection
-    throw UnimplementedError();
+  Future<Either<Failures, String>> updateExamSection(
+      {required ExamSectionsEntity section, String? filePath}) async {
+    try {
+      final lessonModel = ExamSectionsModel.fromEntity(section);
+      final data = lessonModel.toMap();
+
+      if (filePath != null) {
+        //final fileName = path.basename(filePath);
+        final fileName =
+            section.url!.replaceFirst('${section.versionName}/', '');
+        final fullPath = await storageService.updateFile(
+          bucketName: section.versionName,
+          filePath: filePath,
+          fileName: fileName,
+        );
+        // data[kPickedFilePath] = filePath;
+
+        data[kUrl] = fullPath;
+      }
+      // data[kOldUrl] = lesson.url;
+      await dataBase.updateData(
+        path: DbEnpoints.examSections,
+        data: data,
+        uid: section.entityID,
+      );
+      return Right(section.examID);
+      /*final String bucketId = await storageService.createBucket(versionName);
+      return Right(bucketId);*/
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 }

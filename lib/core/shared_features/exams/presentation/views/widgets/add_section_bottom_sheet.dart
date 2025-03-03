@@ -1,5 +1,6 @@
 import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/add_exam_section_bottom_sheet_body.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_section_cubit/exam_section_cubit.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exam_sections_cubit/fetch_exam_sections_cubit.dart';
@@ -11,8 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AddExamSectionBottomSheet extends StatelessWidget {
+  final bool isEditMode;
+  final ExamSectionsEntity? examSection;
+  final FetchExamSectionsCubit fetchExamSectionsCubit;
   const AddExamSectionBottomSheet({
     super.key,
+    required this.fetchExamSectionsCubit,
+    this.isEditMode = false,
+    this.examSection,
   });
 
   @override
@@ -30,8 +37,7 @@ class AddExamSectionBottomSheet extends StatelessWidget {
       child: BlocListener<ExamSectionCubit, ExamSectionState>(
         listener: (context, state) {
           if (state is ExamSectionSuccess) {
-            BlocProvider.of<FetchExamSectionsCubit>(context)
-                .fetchExamSections(id: state.id);
+            fetchExamSectionsCubit.fetchExamSections(id: state.id);
             Future.microtask(() {
               if (!context.mounted) return;
               context.pop();
@@ -41,7 +47,9 @@ class AddExamSectionBottomSheet extends StatelessWidget {
             showScaffoldMessage(context, state.errMessage);
           }
         },
-        child: const AddExamSectionBottomSheetBody(),
+        child: (isEditMode)
+            ? AddExamSectionBottomSheetBody.editMode(examSection!)
+            : const AddExamSectionBottomSheetBody(),
       ),
     );
   }

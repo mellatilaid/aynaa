@@ -1,5 +1,6 @@
 import 'package:atm_app/core/shared_features/exams/data/models/exam_sections_model.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_section_cubit/exam_section_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,10 +12,21 @@ import '../../../../../../core/const/app_const.dart';
 import '../../../../../../core/widgets/custom_action_button_type2.dart';
 
 class AddExamSectionButtonBuilder extends StatefulWidget {
+  final bool isButtonEnabled;
   final TextEditingController titleController;
   final GlobalKey<FormState> formKey;
-  const AddExamSectionButtonBuilder(
-      {super.key, required this.titleController, required this.formKey});
+  final bool isEditMode;
+  final String filePath;
+  final ExamSectionsEntity? examSection;
+  const AddExamSectionButtonBuilder({
+    super.key,
+    required this.isButtonEnabled,
+    required this.titleController,
+    required this.formKey,
+    this.examSection,
+    this.isEditMode = false,
+    required this.filePath,
+  });
 
   @override
   State<AddExamSectionButtonBuilder> createState() =>
@@ -29,20 +41,36 @@ class _AddExamSectionButtonBuilderState
       builder: (context, state) {
         return CustomActionButtonType2(
           isLoading: state is ExamSectionLoading ? true : false,
-          onPressed: () {
-            if (widget.formKey.currentState!.validate()) {
-              widget.formKey.currentState!.save();
-
-              BlocProvider.of<ExamSectionCubit>(context)
-                  .addExamSection(examSection: _toExamSectionEntity());
-            }
-          },
+          onPressed:
+              widget.isButtonEnabled ? () => _handleSubmission(context) : null,
           icon: const FaIcon(FontAwesomeIcons.floppyDisk),
-          title: 'حفظ',
+          title: widget.isEditMode ? 'تعديل' : 'حفظ',
           backGroundColor: kPrimaryColor,
         );
       },
     );
+  }
+
+  void _handleSubmission(BuildContext context) {
+    if (!widget.formKey.currentState!.validate()) return;
+
+    final cubit = context.read<ExamSectionCubit>();
+
+    if (widget.isEditMode && widget.examSection != null) {
+      final updatedSection = widget.examSection!.copyWith(
+        title: widget.titleController.text.trim(),
+        updatedAt: DateTime.now().toUtc().toIso8601String(),
+      );
+      cubit.setFilePath(widget.filePath);
+
+      cubit.updateSection(
+        examSection: updatedSection,
+      );
+    } else {
+      final section = _toExamSectionEntity();
+      cubit.setFilePath(widget.filePath);
+      cubit.addExamSection(examSection: section);
+    }
   }
 
   _toExamSectionEntity() {

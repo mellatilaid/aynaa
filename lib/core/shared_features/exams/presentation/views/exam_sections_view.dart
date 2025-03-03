@@ -55,9 +55,9 @@ class ExamSectionsView extends StatelessWidget {
                                 fabContext.read<FetchExamSectionsCubit>();
                             return Provider<ExamEntity>(
                               create: (context) => examEntity,
-                              child: Provider.value(
-                                  value: fetchSectionsCubit,
-                                  child: const AddExamSectionBottomSheet()),
+                              child: AddExamSectionBottomSheet(
+                                fetchExamSectionsCubit: fetchSectionsCubit,
+                              ),
                             );
                           });
                     },

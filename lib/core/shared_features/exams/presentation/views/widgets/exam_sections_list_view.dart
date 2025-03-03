@@ -5,6 +5,8 @@ import 'package:atm_app/core/materials/presentation/views/widgets/exam_section_c
 import 'package:atm_app/core/shared_features/exams/data/data_source/exam_sections_data_source/exam_sections_local_data_source.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_section_cubit/exam_section_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/manager/fetch_exam_sections_cubit/fetch_exam_sections_cubit.dart';
+import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/add_section_bottom_sheet.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +79,19 @@ class _ExamSectionsListViewState extends State<ExamSectionsListView> {
                 BlocProvider.of<ExamSectionCubit>(context).deleteExamSection(
               examSection: widget.sections[index],
             ),
-            onEdit: () {},
+            onEdit: () {
+              final fetchSectionsCubit = context.read<FetchExamSectionsCubit>();
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return AddExamSectionBottomSheet(
+                      fetchExamSectionsCubit: fetchSectionsCubit,
+                      isEditMode: true,
+                      examSection: widget.sections[index],
+                    );
+                  });
+            },
             item: widget.sections[index],
           );
         });

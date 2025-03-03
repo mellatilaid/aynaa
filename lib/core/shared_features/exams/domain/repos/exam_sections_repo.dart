@@ -12,6 +12,6 @@ abstract class ExamSectionsRepo {
       {required ExamSectionsEntity examSection, String? filePath});
   Future<Either<Failures, void>> deleteExamSection(
       {required ExamSectionsEntity examSection});
-  Future<Either<Failures, void>> updateExamSection(
-      {required String examID, required Map<String, dynamic> data});
+  Future<Either<Failures, String>> updateExamSection(
+      {required ExamSectionsEntity section, String? filePath});
 }

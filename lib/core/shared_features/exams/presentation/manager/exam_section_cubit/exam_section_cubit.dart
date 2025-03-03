@@ -25,6 +25,21 @@ class ExamSectionCubit extends Cubit<ExamSectionState> {
     });
   }
 
+  Future<void> updateSection({required ExamSectionsEntity examSection}) async {
+    emit(ExamSectionLoading());
+
+    final resault = await examSectionsRepo.updateExamSection(
+      section: examSection,
+      filePath: _filePath,
+    );
+
+    resault.fold((failure) {
+      emit(ExamSectionFailure(errMessage: failure.errMessage));
+    }, (examID) {
+      emit(ExamSectionSuccess(id: examID));
+    });
+  }
+
   Future<void> deleteExamSection(
       {required ExamSectionsEntity examSection}) async {
     emit(ExamSectionLoading());

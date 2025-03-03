@@ -44,6 +44,27 @@ class ExamSectionsEntity with Entity {
     this.totalQuestions = 0,
   });
 
+  ExamSectionsEntity copyWith({
+    String? title,
+    String? updatedAt,
+  }) {
+    return ExamSectionsEntity(
+      entityID: entityID,
+      title: title ?? this.title,
+      examTitle: examTitle,
+      versionName: versionName,
+      updatedAt: updatedAt ?? this.updatedAt,
+      url: url,
+      oldUrl: oldUrl,
+      examID: examID,
+      localFilePath: localFilePath,
+      isDeleted: isDeleted,
+      isLocked: isLocked,
+      score: score,
+      totalQuestions: totalQuestions,
+    );
+  }
+
   @override
   // TODO: implement name
   String? get name => title;
