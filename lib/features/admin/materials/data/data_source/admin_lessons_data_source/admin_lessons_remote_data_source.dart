@@ -33,7 +33,7 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
     final List<Map<String, dynamic>> data =
         await dataBase.getData(path: DbEnpoints.lessons, query: {
       kSubjectID: subjectID,
-      kVersionID: versionID,
+      kIsDeleted: false,
     });
 
     List<LessonEntity> lessons =

@@ -1,4 +1,6 @@
+import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/exam_section_cubit/exam_section_cubit.dart';
@@ -37,31 +39,33 @@ class ExamSectionsView extends StatelessWidget {
         body: ExamSectionsViewBody(
           examEntity: examEntity,
         ),
-        floatingActionButton: Builder(
-          builder: (fabContext) {
-            return FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              onPressed: () {
-                showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) {
-                      final fetchSectionsCubit =
-                          fabContext.read<FetchExamSectionsCubit>();
-                      return Provider<ExamEntity>(
-                        create: (context) => examEntity,
-                        child: Provider.value(
-                            value: fetchSectionsCubit,
-                            child: const AddExamSectionBottomSheet()),
-                      );
-                    });
-              },
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
+        floatingActionButton: (ProfileStorageImpl.userRole == kAdminRole)
+            ? Builder(
+                builder: (fabContext) {
+                  return FloatingActionButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    onPressed: () {
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            final fetchSectionsCubit =
+                                fabContext.read<FetchExamSectionsCubit>();
+                            return Provider<ExamEntity>(
+                              create: (context) => examEntity,
+                              child: Provider.value(
+                                  value: fetchSectionsCubit,
+                                  child: const AddExamSectionBottomSheet()),
+                            );
+                          });
+                    },
+                    child: const Icon(Icons.add),
+                  );
+                },
+              )
+            : null,
       ),
     );
   }

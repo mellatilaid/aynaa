@@ -3,6 +3,8 @@ import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections
 
 abstract class ExamSectionsLocalDataSource {
   Future<List<ExamSectionsEntity>> fetchExamSections({required String examID});
+  Future<void> updateCachedSection({required ExamSectionsEntity section});
+
   Future<void> handleUpdate(
       {ExamSectionsEntity? item,
       String? id,

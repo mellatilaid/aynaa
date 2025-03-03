@@ -107,16 +107,29 @@ class AdminQuestionRepoImpl extends QuestionRepo {
   }
 
   @override
-  Future<Either<Failures, String>> saveExam(
-      {required QuestionEntity question}) {
-    // TODO: implement saveExam
-    throw UnimplementedError();
-  }
+  Future<Either<Failures, String>> updateQuestions(
+      {required List<QuestionEntity> questions}) async {
+    try {
+      for (var question in questions) {
+        final model = QuestionModel.fromEntity(question);
+        final data = model.toMap();
 
-  @override
-  Future<Either<Failures, void>> updateExam(
-      {required String questionID, required Map<String, dynamic> data}) {
-    // TODO: implement updateExam
-    throw UnimplementedError();
+        await dataBase.updateData(
+          path: DbEnpoints.questions,
+          data: data,
+          uid: question.entityID,
+        );
+      }
+
+      return Right(questions.first.sectionID.toString());
+      /*final String bucketId = await storageService.createBucket(versionName);
+      return Right(bucketId);*/
+    } on PostgrestException catch (e) {
+      log(e.toString());
+      return Left(ServerFailure.fromSupaDataBase(e: e));
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errMessage: e.toString()));
+    }
   }
 }

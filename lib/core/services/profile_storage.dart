@@ -20,7 +20,7 @@ class ProfileStorageImpl implements ProfileStorage {
   static const _userProfile = 'user_profile';
   static const _userRole = 'user_role';
   UserEntity? _user;
-  static String userRole = kAdminRole;
+  static String userRole = kStudentRole;
   @override
   UserEntity? get userProfile => _user;
 

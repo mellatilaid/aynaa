@@ -22,7 +22,9 @@ class ExamSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (item.isLocked) ? null : onTap,
+      onTap: (item.isLocked && ProfileStorageImpl.userRole != kAdminRole)
+          ? null
+          : onTap,
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(
@@ -37,6 +39,7 @@ class ExamSectionCard extends StatelessWidget {
                 // Background image
                 if (item.isLocked && ProfileStorageImpl.userRole != kAdminRole)
                   Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     color: Colors.black.withValues(alpha: .5), // Dark overlay
                     child: const Center(
                       child: Icon(Icons.lock, size: 40, color: Colors.white),

@@ -1,4 +1,7 @@
+import 'package:atm_app/core/const/remote_db_const.dart';
+import 'package:atm_app/core/functions/show_full_screen_dialog.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/questions_cubit.dart';
@@ -36,74 +39,36 @@ class QuizView extends StatelessWidget {
         body: QuizViewBody(
           id: examSectionsEntity.entityID,
         ),
-        floatingActionButton: Builder(
-          builder: (fabContext) {
-            return FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              onPressed: () {
-                final fetchQuestionsCubit =
-                    fabContext.read<FetchQuestionsCubit>();
-                showGeneralDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  barrierLabel: "Full Screen Dialog",
-                  pageBuilder: (context, animation, secondaryAnimation) {
-                    return Provider<QuestionsCubit>(
-                      create: (context) => QuestionsCubit(
-                          questionRepo: getit.get<QuestionRepo>()),
-                      child: Provider.value(
-                        value: fetchQuestionsCubit,
-                        child: AddQuestionsDialog(
-                          examSectionsEntity: examSectionsEntity,
+        floatingActionButton: (ProfileStorageImpl.userRole == kAdminRole)
+            ? Builder(
+                builder: (fabContext) {
+                  return FloatingActionButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    onPressed: () {
+                      final fetchQuestionsCubit =
+                          fabContext.read<FetchQuestionsCubit>();
+                      final questionsCubit = fabContext.read<QuestionsCubit>();
+                      fullScreenDialog(
+                        context,
+                        child: Provider.value(
+                          value: questionsCubit,
+                          child: Provider.value(
+                            value: fetchQuestionsCubit,
+                            child: AddQuestionsDialog(
+                              examSectionsEntity: examSectionsEntity,
+                            ),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  transitionBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    return SlideTransition(
-                      position: Tween<Offset>(
-                              begin: const Offset(0, 1),
-                              end: const Offset(0, 0))
-                          .animate(animation),
-                      child: child,
-                    );
-                  },
-                );
-                /*showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return BlocProvider.value(
-                                        value: aynaaVersionCubit,
-                                        child: const AddAynaaVersionAlertDialog(),
-                                      );
-                                    });*/
-              },
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
+                      );
+                    },
+                    child: const Icon(Icons.add),
+                  );
+                },
+              )
+            : null,
       ),
     );
   }
 }
-
-/* showGeneralDialog(
-                context: context,
-                barrierDismissible: true,
-                barrierLabel: "Full Screen Dialog",
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return const FullScreenDialog();
-                },
-                transitionBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return SlideTransition(
-                    position: Tween<Offset>(
-                            begin: const Offset(0, 1), end: const Offset(0, 0))
-                        .animate(animation),
-                    child: child,
-                  );
-                },
-              );*/

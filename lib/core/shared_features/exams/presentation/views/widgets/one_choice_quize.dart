@@ -1,11 +1,10 @@
-import 'package:atm_app/core/services/profile_storage.dart';
+import 'dart:developer';
+
 import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/views/widgets/custom_progress_indicator.dart';
 import 'package:atm_app/core/widgets/custom_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../../const/remote_db_const.dart';
 
 class OneChoiceQuize extends StatefulWidget {
   final List<QuestionEntity> questions;
@@ -20,9 +19,10 @@ class _OneChoiceQuizeState extends State<OneChoiceQuize> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
   final Map<int, String?> _selectedAnswers = {}; // Stores user's answers
-
+  Map<int, int> scores = {};
   void _nextQuestion() {
     if (_currentIndex < widget.questions.length - 1) {
+      log(widget.questions[_currentIndex].answer);
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -48,7 +48,7 @@ class _OneChoiceQuizeState extends State<OneChoiceQuize> {
         .where((entry) => entry.value == widget.questions[entry.key].answer)
         .length;
 
-    context.pop(correctAnswers);
+    context.pop<List<int>>([correctAnswers, widget.questions.length]);
   }
 
   @override
@@ -89,10 +89,7 @@ class _OneChoiceQuizeState extends State<OneChoiceQuize> {
                     ...question.options.map((option) => RadioListTile<String>(
                           title: Text(option),
                           value: option,
-                          groupValue:
-                              (ProfileStorageImpl.userRole == kAdminRole)
-                                  ? question.answer
-                                  : _selectedAnswers[index],
+                          groupValue: _selectedAnswers[index],
                           onChanged: (value) {
                             setState(
                               () {

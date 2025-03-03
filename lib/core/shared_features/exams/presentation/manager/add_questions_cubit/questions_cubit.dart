@@ -12,10 +12,25 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   QuestionsCubit({required this.questionRepo}) : super(QuestionsInitial());
 
   List<QuestionEntity> _questions = [];
-  Future<void> addExamSection() async {
+  Future<void> addQuestions() async {
     emit(QuestionsLoading());
     log(_questions.length.toString());
     final resault = await questionRepo.addQuestion(
+      questions: _questions,
+    );
+
+    resault.fold((failure) {
+      emit(QuestionsFailure(errMessage: failure.errMessage));
+    }, (questionsID) {
+      emit(QuestionsSuccuss(questionID: questionsID));
+      _questions = [];
+    });
+  }
+
+  Future<void> updateQuestions() async {
+    emit(QuestionsLoading());
+    log(_questions.length.toString());
+    final resault = await questionRepo.updateQuestions(
       questions: _questions,
     );
 
@@ -45,6 +60,10 @@ class QuestionsCubit extends Cubit<QuestionsState> {
   void setQuestion(QuestionEntity question) {
     _questions.add(question);
     log('question length is ${_questions.length}');
+  }
+
+  void resetState() {
+    emit(QuestionsInitial());
   }
 
   get questions => _questions;

@@ -62,6 +62,9 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         items: items,
         collentionType: entityType,
       );
+      if (entityType == Entities.questions) {
+        return;
+      }
       donwloadInBauckground(items, entityType);
     }
     if (deletedItems.isNotEmpty) {

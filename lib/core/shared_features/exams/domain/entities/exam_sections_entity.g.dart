@@ -58,23 +58,33 @@ const ExamSectionsEntitySchema = CollectionSchema(
       name: r'oldUrl',
       type: IsarType.string,
     ),
-    r'title': PropertySchema(
+    r'score': PropertySchema(
       id: 8,
+      name: r'score',
+      type: IsarType.long,
+    ),
+    r'title': PropertySchema(
+      id: 9,
       name: r'title',
       type: IsarType.string,
     ),
+    r'totalQuestions': PropertySchema(
+      id: 10,
+      name: r'totalQuestions',
+      type: IsarType.long,
+    ),
     r'updatedAt': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'updatedAt',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -160,10 +170,12 @@ void _examSectionsEntitySerialize(
   writer.writeString(offsets[5], object.localFilePath);
   writer.writeString(offsets[6], object.name);
   writer.writeString(offsets[7], object.oldUrl);
-  writer.writeString(offsets[8], object.title);
-  writer.writeString(offsets[9], object.updatedAt);
-  writer.writeString(offsets[10], object.url);
-  writer.writeString(offsets[11], object.versionName);
+  writer.writeLong(offsets[8], object.score);
+  writer.writeString(offsets[9], object.title);
+  writer.writeLong(offsets[10], object.totalQuestions);
+  writer.writeString(offsets[11], object.updatedAt);
+  writer.writeString(offsets[12], object.url);
+  writer.writeString(offsets[13], object.versionName);
 }
 
 ExamSectionsEntity _examSectionsEntityDeserialize(
@@ -180,10 +192,12 @@ ExamSectionsEntity _examSectionsEntityDeserialize(
     isLocked: reader.readBoolOrNull(offsets[4]) ?? true,
     localFilePath: reader.readStringOrNull(offsets[5]),
     oldUrl: reader.readStringOrNull(offsets[7]),
-    title: reader.readString(offsets[8]),
-    updatedAt: reader.readString(offsets[9]),
-    url: reader.readStringOrNull(offsets[10]),
-    versionName: reader.readString(offsets[11]),
+    score: reader.readLongOrNull(offsets[8]) ?? 0,
+    title: reader.readString(offsets[9]),
+    totalQuestions: reader.readLongOrNull(offsets[10]) ?? 0,
+    updatedAt: reader.readString(offsets[11]),
+    url: reader.readStringOrNull(offsets[12]),
+    versionName: reader.readString(offsets[13]),
   );
   object.id = id;
   return object;
@@ -213,12 +227,16 @@ P _examSectionsEntityDeserializeProp<P>(
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 11:
+      return (reader.readString(offset)) as P;
+    case 12:
+      return (reader.readStringOrNull(offset)) as P;
+    case 13:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1369,6 +1387,62 @@ extension ExamSectionsEntityQueryFilter
   }
 
   QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      scoreEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'score',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      scoreGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'score',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      scoreLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'score',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      scoreBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'score',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
       titleEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1500,6 +1574,62 @@ extension ExamSectionsEntityQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'title',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      totalQuestionsEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'totalQuestions',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      totalQuestionsGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'totalQuestions',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      totalQuestionsLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'totalQuestions',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterFilterCondition>
+      totalQuestionsBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'totalQuestions',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -2052,6 +2182,20 @@ extension ExamSectionsEntityQuerySortBy
   }
 
   QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      sortByScore() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'score', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      sortByScoreDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'score', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
       sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -2062,6 +2206,20 @@ extension ExamSectionsEntityQuerySortBy
       sortByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      sortByTotalQuestions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalQuestions', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      sortByTotalQuestionsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalQuestions', Sort.desc);
     });
   }
 
@@ -2237,6 +2395,20 @@ extension ExamSectionsEntityQuerySortThenBy
   }
 
   QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      thenByScore() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'score', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      thenByScoreDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'score', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
       thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -2247,6 +2419,20 @@ extension ExamSectionsEntityQuerySortThenBy
       thenByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      thenByTotalQuestions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalQuestions', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QAfterSortBy>
+      thenByTotalQuestionsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalQuestions', Sort.desc);
     });
   }
 
@@ -2353,9 +2539,23 @@ extension ExamSectionsEntityQueryWhereDistinct
   }
 
   QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QDistinct>
+      distinctByScore() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'score');
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QDistinct>
       distinctByTitle({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, ExamSectionsEntity, QDistinct>
+      distinctByTotalQuestions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'totalQuestions');
     });
   }
 
@@ -2440,9 +2640,22 @@ extension ExamSectionsEntityQueryProperty
     });
   }
 
+  QueryBuilder<ExamSectionsEntity, int, QQueryOperations> scoreProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'score');
+    });
+  }
+
   QueryBuilder<ExamSectionsEntity, String, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
+    });
+  }
+
+  QueryBuilder<ExamSectionsEntity, int, QQueryOperations>
+      totalQuestionsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'totalQuestions');
     });
   }
 

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
 import 'package:atm_app/core/shared_features/exams/presentation/manager/add_questions_cubit/questions_cubit.dart';
@@ -10,11 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddQuestionsDialog extends StatefulWidget {
-  final ExamSectionsEntity examSectionsEntity;
+  final ExamSectionsEntity? examSectionsEntity;
+  final bool isEditMode;
+  final QuestionEntity? questionEntity;
+
   const AddQuestionsDialog({
     super.key,
-    required this.examSectionsEntity,
+    this.examSectionsEntity,
+    this.isEditMode = false,
+    this.questionEntity,
   });
+
+  factory AddQuestionsDialog.edit({required QuestionEntity questionEntity}) {
+    return AddQuestionsDialog(
+      isEditMode: true,
+      questionEntity: questionEntity,
+    );
+  }
 
   @override
   State<AddQuestionsDialog> createState() => _AddQuestionsDialogState();
@@ -24,6 +34,17 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
   final TextEditingController _questionController = TextEditingController();
   final TextEditingController _answerController = TextEditingController();
   final TextEditingController _optionsController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.isEditMode) {
+      _questionController.text = widget.questionEntity!.question;
+      _answerController.text = widget.questionEntity!.answer;
+      _optionsController.text = widget.questionEntity!.options.join(',');
+    }
+  }
 
   @override
   void dispose() {
@@ -37,7 +58,9 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
   _onAddQuestion() {
     final List<QuestionEntity> questions =
         Provider.of<QuestionsCubit>(context, listen: false).questions;
-    log('questions length is ${questions.length}');
+
+    //if is edit mode and the question is not changed do not add it
+
     if (_questionController.text.isEmpty ||
         _answerController.text.isEmpty ||
         _optionsController.text.isEmpty) {
@@ -49,6 +72,10 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
     } else {
       Provider.of<QuestionsCubit>(context, listen: false)
           .setQuestion(_toQuestionEntity());
+      //if is edit mode do not clear the controllers
+      if (widget.isEditMode) {
+        return;
+      }
       _clearControllers();
     }
   }
@@ -60,11 +87,31 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
     if (questions.isEmpty) {
       showScaffoldMessage(
         context,
-        'لم تضف اي سؤال',
+        widget.isEditMode ? 'لم يتم تعديل اي سؤال' : 'لم تضف اي سؤال',
         behavior: SnackBarBehavior.floating,
       );
     } else {
-      Provider.of<QuestionsCubit>(context, listen: false).addExamSection();
+      Provider.of<QuestionsCubit>(context, listen: false).addQuestions();
+    }
+  }
+
+  _onEdit() {
+    if (widget.isEditMode &&
+        _questionController.text.trim() == widget.questionEntity?.question &&
+        _answerController.text.trim() == widget.questionEntity?.answer &&
+        _optionsController.text.trim() ==
+            widget.questionEntity?.options.join(',')) {
+      showScaffoldMessage(
+        context,
+        'يجب  تعديل السؤال أو الاجابة أو الخيارات',
+        behavior: SnackBarBehavior.floating,
+      );
+    } else {
+      //add the updated question to the questions list in the cubit
+      //update the questions
+      Provider.of<QuestionsCubit>(context, listen: false)
+          .setQuestion(_toQuestionEntity());
+      Provider.of<QuestionsCubit>(context, listen: false).updateQuestions();
     }
   }
 
@@ -80,17 +127,29 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
         optionsController: _optionsController,
       ),
       bottomNavigationBar: AddQuestionDialogBottomNavBar(
+        isEditMode: widget.isEditMode,
         onAddQuestion: _onAddQuestion,
         onSave: _onSave,
+        onEditQuestion: _onEdit,
       ),
     );
   }
 
   _toQuestionEntity() {
-    final List<String> options = _optionsController.text.split(',');
+    final List<String> options =
+        _optionsController.text.split(',').map((e) => e.trim()).toList();
+
+    if (widget.isEditMode) {
+      return widget.questionEntity!.copyWith(
+        question: _questionController.text,
+        answer: _answerController.text,
+        options: options,
+        updatedAt: DateTime.now().toUtc().toIso8601String(),
+      );
+    }
     return QuestionEntity(
       entityID: '0',
-      sectionID: widget.examSectionsEntity.entityID,
+      sectionID: widget.examSectionsEntity!.entityID,
       question: _questionController.text,
       answer: _answerController.text,
       options: options,

@@ -45,4 +45,10 @@ class AdminExamSectionsLocalDataSourceImpl extends ExamSectionsLocalDataSource {
       default:
     }
   }
+
+  @override
+  Future<void> updateCachedSection(
+      {required ExamSectionsEntity section}) async {
+    await iLocalDbService.put<ExamSectionsEntity>(item: section);
+  }
 }

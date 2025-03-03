@@ -24,7 +24,8 @@ class ExamSectionsEntity with Entity {
   bool isLocked;
   @override
   String updatedAt;
-
+  int score;
+  int totalQuestions;
   @override
   bool isDeleted;
   ExamSectionsEntity({
@@ -39,6 +40,8 @@ class ExamSectionsEntity with Entity {
     this.localFilePath,
     this.isDeleted = false,
     this.isLocked = true,
+    this.score = 0,
+    this.totalQuestions = 0,
   });
 
   @override

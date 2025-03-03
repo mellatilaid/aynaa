@@ -25,6 +25,22 @@ class QuestionEntity with Entity {
     required this.updatedAt,
   });
 
+  QuestionEntity copyWith({
+    String? question,
+    String? answer,
+    List<String>? options,
+    String? updatedAt,
+  }) {
+    return QuestionEntity(
+      entityID: entityID,
+      sectionID: sectionID,
+      question: question ?? this.question,
+      answer: answer ?? this.answer,
+      options: options ?? this.options,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   @override
   String? localFilePath;
 
