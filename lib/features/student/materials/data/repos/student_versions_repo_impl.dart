@@ -15,14 +15,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/helper/enums.dart';
 import '../../../../../core/materials/domain/repos/versions_repo.dart';
-import '../../../../../core/services/background_services.dart';
+import '../../../../../core/services/db_sync_service/db_sync_service.dart';
 
 class StudentVersionsRepoImpl extends VersionsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
-  final BackgroundServices backgroundServices;
+  final DBSyncService backgroundServices;
   StudentVersionsRepoImpl({
     required this.remoteDataSource,
     required this.dataBase,
@@ -93,7 +93,7 @@ class StudentVersionsRepoImpl extends VersionsRepo {
       //await storageService.deleteBucket(aynaaVersion.versionName);
       backgroundServices.deleteItemFile(
         item: aynaaVersion,
-        deletedItemType: DeletedItemType.version,
+        deletedItemType: Entities.versions,
       );
       await dataBase.deleteData(
         path: DbEnpoints.aynaaVersions,

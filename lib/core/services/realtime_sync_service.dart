@@ -2,16 +2,11 @@ import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
 import 'package:atm_app/core/materials/data/models/lesson_model.dart';
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/services/background_services.dart';
+import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -75,6 +70,10 @@ class RealtimeSyncService {
       table: DbEnpoints.lessons,
       handler: _handleLessonChange,
     );
+    _subscribeToTable(
+      table: DbEnpoints.exams,
+      handler: _handleExamsChange,
+    );
   }
 
   void _subscribeToTable({
@@ -99,20 +98,20 @@ class RealtimeSyncService {
   void _handleVersionChange(PostgresChangePayload payload) {
     switch (payload.eventType) {
       case PostgresChangeEvent.insert:
-        final entity = AynaaVersionsModel.fromMap(payload.newRecord);
+        final entity = AynaaVersionsModel.fromJson(payload.newRecord);
         log(payload.toString());
         log('iserted subject to remote id is ${entity.entityID}');
-        getit.get<VersionsLocalDataSource>().handleUpdate(
+        /* getit.get<VersionsLocalDataSource>().handleUpdate(
             version: entity, eventType: PostgressEventType.insert);
         getit
-            .get<BackgroundServices<AynaaVersionsEntity>>()
-            .startBackgroundDownloads([entity]);
+            .get<StorageSyncService<AynaaVersionsEntity>>()
+            .donwloadInBauckground([entity], CollentionType.versions);*/
         break;
       case PostgresChangeEvent.delete:
-        getit.get<VersionsLocalDataSource>().handleUpdate(
+        /*getit.get<VersionsLocalDataSource>().handleUpdate(
               id: payload.oldRecord[kUuid],
               eventType: PostgressEventType.delete,
-            );
+            );*/
         break;
       default:
     }
@@ -126,11 +125,11 @@ class RealtimeSyncService {
         final entity = SubjectsModel.fromMap(payload.newRecord);
         log(payload.toString());
         log('iserted subject to remote id is ${entity.entityID}');
-        getit.get<SubjectsLocalDataSource>().handleUpdate(
+        /* getit.get<SubjectsLocalDataSource>().handleUpdate(
             subject: entity, eventType: PostgressEventType.insert);
         getit
-            .get<BackgroundServices<SubjectsEntity>>()
-            .startBackgroundDownloads([entity]);
+            .get<DBSyncService<SubjectsEntity>>()
+            .donwloadInBauckground([entity], Entities.subjects);*/
         break;
       case PostgresChangeEvent.delete:
         getit.get<SubjectsLocalDataSource>().handleUpdate(
@@ -148,19 +147,42 @@ class RealtimeSyncService {
       case PostgresChangeEvent.insert:
         final entity = LessonModel.fromMap(payload.newRecord);
         log(payload.toString());
-        getit
+        /* getit
             .get<LessonsLocalDataSource>()
             .handleUpdate(lesson: entity, eventType: PostgressEventType.insert);
         getit
-            .get<BackgroundServices<LessonEntity>>()
-            .startBackgroundDownloads([entity]);
+            .get<DBSyncService<LessonEntity>>()
+            .donwloadInBauckground([entity], Entities.lessons);*/
         break;
       case PostgresChangeEvent.delete:
-        getit.get<LessonsLocalDataSource>().handleUpdate(
+        /*   getit.get<LessonsLocalDataSource>().handleUpdate(
               id: payload.oldRecord[kUuid],
               eventType: PostgressEventType.delete,
-            );
+            );*/
 
+        break;
+      default:
+    }
+  }
+
+  void _handleExamsChange(PostgresChangePayload payload) {
+    switch (payload.eventType) {
+      case PostgresChangeEvent.insert:
+        final entity = ExamModel.fromMap(payload.newRecord);
+        log(payload.toString());
+        log('iserted subject to remote id is ${entity.entityID}');
+        /* getit
+            .get<ExamsLocalDataSource>()
+            .handleUpdate(exam: entity, eventType: PostgressEventType.insert);
+        getit
+            .get<DBSyncService<ExamEntity>>()
+            .donwloadInBauckground([entity], Entities.exam);*/
+        break;
+      case PostgresChangeEvent.delete:
+        /*getit.get<ExamsLocalDataSource>().handleUpdate(
+              id: payload.oldRecord[kUuid],
+              eventType: PostgressEventType.delete,
+            );*/
         break;
       default:
     }

@@ -6,4 +6,6 @@ abstract class AuthRepo {
   Future<Either<Failures, UserEntity>> signInWithGoogle();
   Future<Either<Failures, UserEntity>> signInWithEmailAndPassword();
   Future<Either<Failures, UserEntity>> signInWithFacebook();
+  Future<Either<Failures, void>> signOut();
+  bool isLoggedIn();
 }

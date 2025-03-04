@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
-import 'package:atm_app/core/entities/entitiy.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_storage_service.dart';
@@ -51,7 +51,7 @@ class BaseHiveCache<T> implements LocalCacheService<T> {
   dynamic propertyAccessor<T>(T item, String propertyName) {
     switch (item) {
       case SubjectsEntity():
-        return item.versionID;
+        return item.versionName;
       case LessonEntity():
         switch (propertyName) {
           case kSubjectID:

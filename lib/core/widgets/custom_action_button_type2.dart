@@ -15,7 +15,10 @@ class CustomActionButtonType2 extends StatelessWidget {
     required this.backGroundColor,
     this.isLoading = false,
     this.padding = EdgeInsets.zero,
-    this.icon = const FaIcon(FontAwesomeIcons.upload),
+    this.icon = const FaIcon(
+      FontAwesomeIcons.arrowUpRightDots,
+      color: Colors.white,
+    ),
   });
 
   @override
@@ -41,7 +44,7 @@ class CustomActionButtonType2 extends StatelessWidget {
                 children: [
                   icon,
                   const SizedBox(
-                    width: 8,
+                    width: 16,
                   ),
                   Text(
                     title,

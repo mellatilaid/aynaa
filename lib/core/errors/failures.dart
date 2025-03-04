@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class Failures {
@@ -38,6 +40,8 @@ class ServerFailure extends Failures {
         default:
           return ServerFailure(errMessage: 'خطأ غير معروف: ${e.message}');
       }
+    } else if (e is HandshakeException) {
+      return ServerFailure(errMessage: 'there is an internet problem');
     } else {
       return ServerFailure(errMessage: 'خطأ غير معروف: ${e.toString()}');
     }

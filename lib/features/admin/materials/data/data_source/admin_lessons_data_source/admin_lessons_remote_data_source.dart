@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
 import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/services/background_services.dart';
-import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/utils/db_filter_types.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/functions/map_to_list_of_entity.dart';
@@ -15,16 +15,16 @@ import '../../../../../../core/helper/enums.dart';
 import '../../../../../../core/services/data_base.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
-class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
+class AdminLessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
-  final IsarStorageService isarStorageService;
-  final StorageService storageService;
-  final FileCacheManager fileCacheManager;
-  LessonsRemoteDataSourceImpl({
+  final ILocalDbService iLocalDbService;
+  final ILocalSettingsService iLocalSettingsService;
+  final IDBSyncService storageSyncService;
+  AdminLessonsRemoteDataSourceImpl({
     required this.dataBase,
-    required this.isarStorageService,
-    required this.storageService,
-    required this.fileCacheManager,
+    required this.iLocalDbService,
+    required this.storageSyncService,
+    required this.iLocalSettingsService,
   });
   @override
   Future<List<LessonEntity>> fetchLessons(
@@ -33,23 +33,38 @@ class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
     final List<Map<String, dynamic>> data =
         await dataBase.getData(path: DbEnpoints.lessons, query: {
       kSubjectID: subjectID,
-      kVersionID: versionID,
+      kIsDeleted: false,
     });
 
     List<LessonEntity> lessons =
-        mapToListOfEntity<LessonEntity>(data, Entities.lesson);
+        mapToListOfEntity<LessonEntity>(data, Entities.lessons);
 
     if (lessons.isNotEmpty) {
-      isarStorageService.putAll(
+      iLocalDbService.putAll<LessonEntity>(
         items: lessons,
-        collentionType: CollentionType.lessons,
+        collentionType: Entities.lessons,
       );
-      getit
-          .get<BackgroundServices<LessonEntity>>()
-          .startBackgroundDownloads(lessons);
+      storageSyncService.donwloadInBauckground(lessons, Entities.lessons);
     }
-
+    updateLastFetchedItemsTime(itemType: Entities.lessons);
     return lessons;
+  }
+
+  @override
+  Future<void> syncDB({required String subjectID}) async {
+    final settings = await iLocalSettingsService.getSettings();
+    storageSyncService.syncDB<LessonEntity>(
+      path: DbEnpoints.lessons,
+      entityType: Entities.lessons,
+      updtatedItemsQuery: {
+        kSubjectID: subjectID,
+        kUpdatedAt: {
+          DbFilterTypes.greaterThan: settings!.lastTimeLessonssFetched
+        }
+      },
+      deletedItemsQuery: {kSubjectID: subjectID, kIsDeleted: true},
+      lastTimeItemsFetched: settings.lastTimeLessonssFetched!,
+    );
   }
 }
 

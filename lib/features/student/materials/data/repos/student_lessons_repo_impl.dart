@@ -18,8 +18,8 @@ import 'package:tus_client_dart/tus_client_dart.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
-import '../../../../../core/services/background_services.dart';
 import '../../../../../core/services/data_base.dart';
+import '../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../core/utils/db_enpoints.dart';
 
 class StudentLessonsRepoImpl extends LessonsRepo {
@@ -73,8 +73,9 @@ class StudentLessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, void>> deleteLesson(
       {required LessonEntity lesson}) async {
     try {
-      getit.get<BackgroundServices<LessonEntity>>().deleteItemFile(
-          item: lesson, deletedItemType: DeletedItemType.lesson);
+      getit
+          .get<DBSyncService<LessonEntity>>()
+          .deleteItemFile(item: lesson, deletedItemType: Entities.lessons);
       await dataBase.deleteData(path: DbEnpoints.lessons, uid: lesson.entityID);
       return right(null);
     } on PostgrestException catch (e) {
@@ -115,7 +116,7 @@ class StudentLessonsRepoImpl extends LessonsRepo {
 
   @override
   Future<Either<Failures, void>> updateLesson(
-      {required String lessonID, required Map<String, dynamic> data}) {
+      {required LessonEntity lesson, String? filePath}) {
     // TODO: implement updateLesson
     throw UnimplementedError();
   }

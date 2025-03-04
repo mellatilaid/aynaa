@@ -1,34 +1,23 @@
-import 'package:atm_app/core/entities/entitiy.dart';
-import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
-import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/services/file_cach_manager.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/utils/set_up_service_locator.dart';
-import 'package:path/path.dart' as path;
 
-import '../const/remote_db_const.dart';
-import '../utils/db_enpoints.dart';
 
-abstract class DeleteItemsService<T> {
+/*abstract class DeleteItemsService<T> {
   Future<void> deleteItemPermanently(
-      {required DeletedItemType deletedItemType});
+      {required Entities deletedItemType});
   Future<void> deleteItemFromRemote();
   Future<void> deleteItemFromLocal();
   Future<void> markItemAsDeleted(
-      {required Entity item, required DeletedItemType deletedItemType});
+      {required Entity item, required Entities deletedItemType});
 }
 
 class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   final DataBase dataBase;
   final StorageService storageService;
 
-  final IsarStorageService isarStorageService;
+  final ILocalDbService iLocalDbService;
   DeleteItemsServiceImpl({
     required this.dataBase,
     required this.storageService,
-    required this.isarStorageService,
+    required this.iLocalDbService,
   });
 
   late Entity _item;
@@ -38,13 +27,10 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   Future<void> deleteItemPermanently(
       {required DeletedItemType deletedItemType}) async {
     _deletedItemType = deletedItemType;
-    deletedItems = await isarStorageService.getAll(
-      collentionType: CollentionType.deletedItmes,
-    ) as List<DeletedItmesEntity>;
+    deletedItems = await iLocalDbService.getAll<DeletedItmesEntity>();
     for (var item in deletedItems) {
-      _item = await isarStorageService.get(
+      _item = await iLocalDbService.get(
         id: item.itemID,
-        collentionType: CollentionType.subjects,
       );
       await Future.wait([
         deleteItemFromRemote(),
@@ -68,7 +54,7 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
 
   @override
   Future<void> deleteItemFromLocal() async {
-    await getit.get<FileCacheManager>().deleteCachedFile(
+    await getit.get<ILocalStorageService>().deleteCachedFile(
           _getFileName(),
           _deletedItemType,
         );
@@ -78,19 +64,16 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
   _deleteRelatedItems() async {
     switch (_deletedItemType) {
       case DeletedItemType.subject:
-        final relatedLessons = isarStorageService.filter(
-            collentionType: CollentionType.lessons,
+        final relatedLessons = iLocalDbService.filter(
+            collentionType: Entities.lessons,
             query: {kSubjectID: _item.entityID});
         if (relatedLessons.isEmpty) {
-          isarStorageService.delete(
-              id: _item.entityID, collentionType: CollentionType.subjects);
-          isarStorageService.delete(
-              id: _item.entityID, collentionType: CollentionType.deletedItmes);
+          iLocalDbService.delete(id: _item.entityID);
+          iLocalDbService.delete(id: _item.entityID);
         } else {
           final deletedLessonsIds = relatedLessons.map((e) => e.id).toList();
-          isarStorageService.deleteAll(
+          iLocalDbService.deleteAll(
             ids: deletedLessonsIds,
-            collentionType: CollentionType.lessons,
           );
         }
         break;
@@ -113,9 +96,9 @@ class DeleteItemsServiceImpl<T> extends DeleteItemsService {
       {required Entity item, required DeletedItemType deletedItemType}) async {
     _item = item;
     _deletedItemType = deletedItemType;
-    await isarStorageService.markAsDeleted(
+    await iLocalDbService.markAsDeleted(
       id: item.entityID,
-      collentionType: CollentionType.subjects,
+      collentionType: Entities.subjects,
     );
     deleteItemPermanently(deletedItemType: deletedItemType);
     /*final itemDeleted = DeletedItmesEntity(id, false, false);
@@ -277,4 +260,4 @@ class DeleteItemsServiceImpl extends DeleteItemsService {
     }
   }
 }
-*/
+*/*/

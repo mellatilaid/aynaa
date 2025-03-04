@@ -1,4 +1,4 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:isar/isar.dart';
 
 part 'subjects_entity.g.dart';
@@ -10,22 +10,49 @@ class SubjectsEntity with Entity {
   @Index(unique: true)
   final String entityID;
   final String subjectName;
-  final String versionID;
-  bool isDeleted = false;
   @override
   final String versionName;
   @override
+  bool isDeleted = false;
+
+  final String versionID;
+  @override
   final String url;
   @override
+  String? oldUrl;
+  @override
   late String? localFilePath;
+  String updatedAt;
+  String? pickedFilePath;
   SubjectsEntity({
     required this.entityID,
     required this.subjectName,
-    required this.versionID,
-    required this.url,
     required this.versionName,
+    required this.url,
+    this.oldUrl,
+    required this.versionID,
     this.localFilePath,
+    required this.updatedAt,
+    this.pickedFilePath,
   });
+
+  SubjectsEntity copyWith({
+    String? title,
+    String? updatedAt,
+    String? oldUrl,
+  }) {
+    return SubjectsEntity(
+      entityID: entityID,
+      subjectName: title ?? subjectName,
+      versionID: versionID,
+      url: url,
+      oldUrl: oldUrl,
+      versionName: versionName,
+      localFilePath: localFilePath,
+      updatedAt: updatedAt ?? this.updatedAt,
+      pickedFilePath: pickedFilePath,
+    );
+  }
 
   @override
   // TODO: implement name

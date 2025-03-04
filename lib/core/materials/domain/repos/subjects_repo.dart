@@ -8,10 +8,10 @@ abstract class SubjectsRepo {
 
   Future<Either<Failures, List<SubjectsEntity>>> fetchSubjects(
       {required String versionID});
-  Future<Either<Failures, void>> addSubject(
+  Future<Either<Failures, String>> addSubject(
       {required SubjectsEntity subject, String? filePath});
   Future<Either<Failures, void>> deleteSubject(
       {required SubjectsEntity subject});
-  Future<Either<Failures, void>> updateSubject(
-      {required String subjectID, required Map<String, dynamic> data});
+  Future<Either<Failures, String>> updateSubject(
+      {required SubjectsEntity subject, String? filePath});
 }

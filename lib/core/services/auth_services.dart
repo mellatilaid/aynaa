@@ -6,4 +6,5 @@ abstract class AuthServices {
   Future<User> signInWithFacebook();
   Future<void> deleteUserFromAuth({required User user});
   Future<void> signOut();
+  bool isLoggedIn();
 }

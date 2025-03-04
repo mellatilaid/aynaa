@@ -5,7 +5,7 @@ import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 dynamic propertyAccessor<T>(T item, String propertyName) {
   switch (item) {
     case SubjectsEntity():
-      return item.versionID;
+      return item.versionName;
     case LessonEntity():
       switch (propertyName) {
         case kSubjectID:

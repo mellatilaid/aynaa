@@ -32,33 +32,48 @@ const LessonEntitySchema = CollectionSchema(
       name: r'entityID',
       type: IsarType.string,
     ),
-    r'localFilePath': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 3,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'localFilePath': PropertySchema(
+      id: 4,
       name: r'localFilePath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
+    r'oldUrl': PropertySchema(
+      id: 6,
+      name: r'oldUrl',
+      type: IsarType.string,
+    ),
     r'subjectId': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'subjectId',
       type: IsarType.string,
     ),
     r'subjectName': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'subjectName',
       type: IsarType.string,
     ),
+    r'updatedAt': PropertySchema(
+      id: 9,
+      name: r'updatedAt',
+      type: IsarType.string,
+    ),
     r'url': PropertySchema(
-      id: 7,
+      id: 10,
       name: r'url',
       type: IsarType.string,
     ),
     r'versionName': PropertySchema(
-      id: 8,
+      id: 11,
       name: r'versionName',
       type: IsarType.string,
     )
@@ -107,8 +122,15 @@ int _lessonEntityEstimateSize(
     }
   }
   bytesCount += 3 + object.name.length * 3;
+  {
+    final value = object.oldUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.subjectId.length * 3;
   bytesCount += 3 + object.subjectName.length * 3;
+  bytesCount += 3 + object.updatedAt.length * 3;
   {
     final value = object.url;
     if (value != null) {
@@ -128,12 +150,15 @@ void _lessonEntitySerialize(
   writer.writeString(offsets[0], object.aynaaVersionId);
   writer.writeString(offsets[1], object.description);
   writer.writeString(offsets[2], object.entityID);
-  writer.writeString(offsets[3], object.localFilePath);
-  writer.writeString(offsets[4], object.name);
-  writer.writeString(offsets[5], object.subjectId);
-  writer.writeString(offsets[6], object.subjectName);
-  writer.writeString(offsets[7], object.url);
-  writer.writeString(offsets[8], object.versionName);
+  writer.writeBool(offsets[3], object.isDeleted);
+  writer.writeString(offsets[4], object.localFilePath);
+  writer.writeString(offsets[5], object.name);
+  writer.writeString(offsets[6], object.oldUrl);
+  writer.writeString(offsets[7], object.subjectId);
+  writer.writeString(offsets[8], object.subjectName);
+  writer.writeString(offsets[9], object.updatedAt);
+  writer.writeString(offsets[10], object.url);
+  writer.writeString(offsets[11], object.versionName);
 }
 
 LessonEntity _lessonEntityDeserialize(
@@ -146,12 +171,15 @@ LessonEntity _lessonEntityDeserialize(
     aynaaVersionId: reader.readString(offsets[0]),
     description: reader.readString(offsets[1]),
     entityID: reader.readString(offsets[2]),
-    localFilePath: reader.readStringOrNull(offsets[3]),
-    name: reader.readString(offsets[4]),
-    subjectId: reader.readString(offsets[5]),
-    subjectName: reader.readString(offsets[6]),
-    url: reader.readStringOrNull(offsets[7]),
-    versionName: reader.readString(offsets[8]),
+    isDeleted: reader.readBoolOrNull(offsets[3]) ?? false,
+    localFilePath: reader.readStringOrNull(offsets[4]),
+    name: reader.readString(offsets[5]),
+    oldUrl: reader.readStringOrNull(offsets[6]),
+    subjectId: reader.readString(offsets[7]),
+    subjectName: reader.readString(offsets[8]),
+    updatedAt: reader.readString(offsets[9]),
+    url: reader.readStringOrNull(offsets[10]),
+    versionName: reader.readString(offsets[11]),
   );
   object.id = id;
   return object;
@@ -171,16 +199,22 @@ P _lessonEntityDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
-    case 7:
       return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
+      return (reader.readString(offset)) as P;
+    case 10:
+      return (reader.readStringOrNull(offset)) as P;
+    case 11:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -843,6 +877,16 @@ extension LessonEntityQueryFilter
   }
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      isDeletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       localFilePathIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1131,6 +1175,159 @@ extension LessonEntityQueryFilter
   }
 
   QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'oldUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> oldUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> oldUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'oldUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'oldUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition> oldUrlMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'oldUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      oldUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'oldUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
       subjectIdEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1397,6 +1594,142 @@ extension LessonEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'subjectName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updatedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'updatedAt',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'updatedAt',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterFilterCondition>
+      updatedAtIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'updatedAt',
         value: '',
       ));
     });
@@ -1735,6 +2068,18 @@ extension LessonEntityQuerySortBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1760,6 +2105,18 @@ extension LessonEntityQuerySortBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortBySubjectId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.asc);
@@ -1782,6 +2139,18 @@ extension LessonEntityQuerySortBy
       sortBySubjectNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> sortByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
 
@@ -1864,6 +2233,18 @@ extension LessonEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByLocalFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localFilePath', Sort.asc);
@@ -1889,6 +2270,18 @@ extension LessonEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByOldUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByOldUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'oldUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenBySubjectId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.asc);
@@ -1911,6 +2304,18 @@ extension LessonEntityQuerySortThenBy
       thenBySubjectNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QAfterSortBy> thenByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
 
@@ -1964,6 +2369,12 @@ extension LessonEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByLocalFilePath(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1979,6 +2390,13 @@ extension LessonEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByOldUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'oldUrl', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctBySubjectId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1990,6 +2408,13 @@ extension LessonEntityQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'subjectName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<LessonEntity, LessonEntity, QDistinct> distinctByUpdatedAt(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updatedAt', caseSensitive: caseSensitive);
     });
   }
 
@@ -2035,6 +2460,12 @@ extension LessonEntityQueryProperty
     });
   }
 
+  QueryBuilder<LessonEntity, bool, QQueryOperations> isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
+    });
+  }
+
   QueryBuilder<LessonEntity, String?, QQueryOperations>
       localFilePathProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -2048,6 +2479,12 @@ extension LessonEntityQueryProperty
     });
   }
 
+  QueryBuilder<LessonEntity, String?, QQueryOperations> oldUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'oldUrl');
+    });
+  }
+
   QueryBuilder<LessonEntity, String, QQueryOperations> subjectIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subjectId');
@@ -2057,6 +2494,12 @@ extension LessonEntityQueryProperty
   QueryBuilder<LessonEntity, String, QQueryOperations> subjectNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subjectName');
+    });
+  }
+
+  QueryBuilder<LessonEntity, String, QQueryOperations> updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updatedAt');
     });
   }
 

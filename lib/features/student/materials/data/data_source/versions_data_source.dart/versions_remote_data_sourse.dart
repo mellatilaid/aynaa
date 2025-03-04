@@ -2,17 +2,18 @@ import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 
 import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
-import '../../../../../../core/services/background_services.dart';
+import '../../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 
-class VersionsRemoteDataSourceImpl implements AynaaVersionsRemoteDataSource {
+class StudentVersionsRemoteDataSourceImpl
+    implements AynaaVersionsRemoteDataSource {
   final DataBase dataBase;
-  final IsarStorageService isarStorageService;
-  VersionsRemoteDataSourceImpl({
+  final LocalDbService isarStorageService;
+  StudentVersionsRemoteDataSourceImpl({
     required this.dataBase,
     required this.isarStorageService,
   });
@@ -22,12 +23,18 @@ class VersionsRemoteDataSourceImpl implements AynaaVersionsRemoteDataSource {
         await dataBase.getData(path: DbEnpoints.aynaaVersions);
 
     List<AynaaVersionsEntity> versions =
-        mapToListOfEntity(aynaaVersions, Entities.version);
+        mapToListOfEntity(aynaaVersions, Entities.versions);
     isarStorageService.putAll(
-        items: versions, collentionType: CollentionType.versions);
+        items: versions, collentionType: Entities.versions);
     getit
-        .get<BackgroundServices<AynaaVersionsEntity>>()
-        .startBackgroundDownloads(versions);
+        .get<DBSyncService<AynaaVersionsEntity>>()
+        .donwloadInBauckground(versions);
     return versions;
+  }
+
+  @override
+  Future<void> syncVersions() {
+    // TODO: implement syncVersions
+    throw UnimplementedError();
   }
 }

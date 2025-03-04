@@ -21,5 +21,5 @@ abstract class LessonsRepo {
   Future<Either<Failures, void>> deleteLesson({required LessonEntity lesson});
 
   Future<Either<Failures, void>> updateLesson(
-      {required String lessonID, required Map<String, dynamic> data});
+      {required LessonEntity lesson, String? filePath});
 }

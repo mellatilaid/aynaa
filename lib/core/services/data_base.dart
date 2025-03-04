@@ -3,6 +3,8 @@ abstract class DataBase {
     required String path,
     String? uID,
     Map<String, dynamic>? query,
+    String? columns,
+    // FilterComparison? filterComparison,
   });
   Future<void> setDate({
     required String path,

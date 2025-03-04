@@ -30,4 +30,13 @@ class UserModel extends UserEntity {
   toMap() {
     return {kUuid: uid, kUserName: name, kUserEmail: email, kUserRole: role};
   }
+
+  static Map<String, dynamic> toMapStatic({required UserEntity userEntity}) {
+    return {
+      kUuid: userEntity.uid,
+      kUserName: userEntity.name,
+      kUserEmail: userEntity.email,
+      kUserRole: userEntity.role,
+    };
+  }
 }

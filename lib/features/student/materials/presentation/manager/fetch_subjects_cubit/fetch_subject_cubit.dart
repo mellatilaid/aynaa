@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -15,7 +15,7 @@ part 'fetch_subject_state.dart';
 
 class FetchSubjectCubit extends Cubit<FetchSubjectState> {
   final SubjectsRepo subjectsRepo;
-  final IsarStorageService isarStorageService;
+  final LocalDbService isarStorageService;
   StreamSubscription? _subscription;
   @override
   bool isClosed = false;
@@ -39,8 +39,7 @@ class FetchSubjectCubit extends Cubit<FetchSubjectState> {
     required String id,
   }) {
     isarStorageService
-        .watchAll<SubjectsEntity>(
-            collectionType: CollentionType.subjects, id: id)
+        .watchAll<SubjectsEntity>(collectionType: Entities.subjects, id: id)
         .listen((items) {
       if (isClosed) return;
 

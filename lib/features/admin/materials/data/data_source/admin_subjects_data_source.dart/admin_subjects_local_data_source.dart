@@ -4,24 +4,24 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
-
-import '../../../../../../core/services/background_services.dart';
-import '../../../../../../core/utils/set_up_service_locator.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
 class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
-  final IsarStorageService isarStorageService;
-  AdminSubjectsLocalDataSourceImpl({required this.isarStorageService});
+  final ILocalDbService iLocalDbService;
+  final IDBSyncService iDBSyncService;
+  AdminSubjectsLocalDataSourceImpl({
+    required this.iLocalDbService,
+    required this.iDBSyncService,
+  });
   @override
   Future<List<SubjectsEntity>> fetchSubjects(
       {required String versionID}) async {
-    final subjects = await isarStorageService.filter(
-      collentionType: CollentionType.subjects,
+    final subjects = await iLocalDbService.filter(
+      collentionType: Entities.subjects,
       query: {kVersionID: versionID},
     );
-    getit
-        .get<BackgroundServices<SubjectsEntity>>()
-        .startBackgroundDownloads(subjects);
+    iDBSyncService.donwloadInBauckground(subjects, Entities.subjects);
     return subjects as List<SubjectsEntity>;
   }
 
@@ -37,8 +37,7 @@ class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
       required PostgressEventType eventType}) async {
     switch (eventType) {
       case PostgressEventType.insert:
-        await isarStorageService.put(
-            item: subject, collentionType: CollentionType.subjects);
+        await iLocalDbService.put<SubjectsEntity>(item: subject);
         /* final newLessons = await isarStorageService.filter(
           collentionType: CollentionType.lessons,
           query: {
@@ -49,8 +48,7 @@ class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
         _controller.add(newLessons);*/
         break;
       case PostgressEventType.delete:
-        await isarStorageService.delete(
-            id: id!, collentionType: CollentionType.subjects);
+        await iLocalDbService.delete<SubjectsEntity>(id: id!);
         /*final newLessons = await isarStorageService.filter(
           collentionType: CollentionType.lessons,
           query: {
@@ -70,9 +68,9 @@ class AdminSubjectsLocalDataSourceImpl implements SubjectsLocalDataSource {
 
   @override
   Future<void> deleteSubject({required String subjectID}) async {
-    await isarStorageService.markAsDeleted(
+    await iLocalDbService.markAsDeleted(
       id: subjectID,
-      collentionType: CollentionType.subjects,
+      collentionType: Entities.subjects,
     );
   }
 }

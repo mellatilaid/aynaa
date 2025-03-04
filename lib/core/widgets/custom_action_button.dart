@@ -1,16 +1,15 @@
 import 'package:atm_app/core/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomActionButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final FaIcon icon;
+  final VoidCallback? onPressed;
+  final Widget? icon;
   final String label;
   final bool isLoading;
   const CustomActionButton(
       {super.key,
       required this.onPressed,
-      required this.icon,
+      this.icon,
       required this.label,
       this.isLoading = false});
 

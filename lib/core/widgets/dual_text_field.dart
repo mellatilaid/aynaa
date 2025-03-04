@@ -6,14 +6,19 @@ class DualActionTextField extends StatefulWidget {
   const DualActionTextField({
     super.key,
     required TextEditingController controller,
-    required this.hintText,
+    this.hintText,
     this.errMessage = 'يرجى إدخال الحقل',
+    this.label,
+    this.maxLines,
+    this.manLines,
   }) : _controller = controller;
 
   final TextEditingController _controller;
   final String errMessage;
-  final String hintText;
-
+  final String? hintText;
+  final Widget? label;
+  final int? maxLines;
+  final int? manLines;
   @override
   State<DualActionTextField> createState() => _DualActionTextFieldState();
 }
@@ -47,6 +52,8 @@ class _DualActionTextFieldState extends State<DualActionTextField> {
     return TextFormField(
       controller: widget._controller,
       textDirection: _textDirection,
+      maxLines: widget.maxLines,
+      minLines: widget.manLines,
       //if the text field is user in adding new folder
       //call the validator function otherwise not
       validator: (value) {
@@ -57,6 +64,7 @@ class _DualActionTextFieldState extends State<DualActionTextField> {
       },
       decoration: InputDecoration(
         hintText: widget.hintText,
+        label: widget.label,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(

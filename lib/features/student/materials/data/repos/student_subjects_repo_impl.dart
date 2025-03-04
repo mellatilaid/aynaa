@@ -6,7 +6,7 @@ import 'package:atm_app/core/materials/data/data_source/subjects_data_source/sub
 import 'package:atm_app/core/materials/data/models/subjects_model.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
-import 'package:atm_app/core/services/background_services.dart';
+import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -22,7 +22,7 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
   final StorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
-  final BackgroundServices backgroundDownloadService;
+  final DBSyncService backgroundDownloadService;
   StudentSubjectsRepoImpl({
     required this.dataBase,
     required this.storageService,
@@ -31,7 +31,7 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
     required this.backgroundDownloadService,
   });
   @override
-  Future<Either<Failures, void>> addSubject(
+  Future<Either<Failures, String>> addSubject(
       {required SubjectsEntity subject, String? filePath}) async {
     try {
       final SubjectsModel subjectsModel =
@@ -48,7 +48,7 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
         data[kUrl] = fullPath;
       }
       await dataBase.setDate(path: DbEnpoints.subjects, data: data);
-      return const Right(null);
+      return const Right('');
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {
@@ -66,7 +66,7 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
     try {
       backgroundDownloadService.deleteItemFile(
         item: subject,
-        deletedItemType: DeletedItemType.subject,
+        deletedItemType: Entities.subjects,
       );
       await dataBase.deleteData(
         path: DbEnpoints.subjects,
@@ -109,9 +109,10 @@ class StudentSubjectsRepoImpl extends SubjectsRepo {
   }
 
   @override
-  Future<Either<Failures, void>> updateSubject(
-      {required String subjectID, required Map<String, dynamic> data}) {
+  Future<Either<Failures, String>> updateSubject(
+      {required SubjectsEntity subject, String? filePath}) async {
     // TODO: implement updateSubject
+    return right('');
     throw UnimplementedError();
   }
 }

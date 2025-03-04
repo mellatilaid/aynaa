@@ -1,4 +1,4 @@
-import 'package:atm_app/core/entities/entitiy.dart';
+import 'package:atm_app/core/common/entitiy.dart';
 import 'package:isar/isar.dart';
 
 part 'lesson_entity.g.dart';
@@ -13,6 +13,8 @@ class LessonEntity with Entity {
   String name;
   @override
   final String? url;
+  @override
+  String? oldUrl;
   String description;
   final String aynaaVersionId;
   final String subjectId;
@@ -21,6 +23,10 @@ class LessonEntity with Entity {
   final String subjectName;
   @override
   String? localFilePath;
+  @override
+  String updatedAt;
+  @override
+  bool isDeleted;
   LessonEntity({
     required this.entityID,
     required this.name,
@@ -30,6 +36,29 @@ class LessonEntity with Entity {
     required this.subjectId,
     required this.versionName,
     required this.subjectName,
+    required this.updatedAt,
+    this.isDeleted = false,
     this.localFilePath,
+    this.oldUrl,
   });
+
+  LessonEntity copyWith({
+    String? title,
+    String? updatedAt,
+    String? description,
+  }) {
+    return LessonEntity(
+      entityID: entityID,
+      name: title ?? name,
+      subjectId: subjectId,
+      subjectName: subjectName,
+      aynaaVersionId: aynaaVersionId,
+      url: url,
+      oldUrl: oldUrl,
+      versionName: versionName,
+      localFilePath: localFilePath,
+      updatedAt: updatedAt ?? this.updatedAt,
+      description: description ?? this.description,
+    );
+  }
 }

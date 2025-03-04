@@ -3,16 +3,19 @@ import 'dart:async';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/services/isar_storage_service.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 
 class AdminVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
-  final IsarStorageService isarStorageService;
-  AdminVersionsLocalDataSourceImpl({required this.isarStorageService});
+  final ILocalDbService iLocalDbService;
+  final IDBSyncService iStorageSyncService;
+  AdminVersionsLocalDataSourceImpl(
+      {required this.iLocalDbService, required this.iStorageSyncService});
   @override
   Future<List<AynaaVersionsEntity>> fetchVersion() async {
-    final versions = await isarStorageService.getAll(
-        collentionType: CollentionType.versions);
-    return versions as List<AynaaVersionsEntity>;
+    final versions = await iLocalDbService.getAll<AynaaVersionsEntity>();
+    iStorageSyncService.donwloadInBauckground(versions, Entities.versions);
+    return versions;
   }
 
   final _controller = StreamController<List<AynaaVersionsEntity>>.broadcast();
@@ -27,8 +30,7 @@ class AdminVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
       required PostgressEventType eventType}) async {
     switch (eventType) {
       case PostgressEventType.insert:
-        await isarStorageService.put(
-            item: version, collentionType: CollentionType.versions);
+        await iLocalDbService.put<AynaaVersionsEntity>(item: version);
         /* final newLessons = await isarStorageService.filter(
           collentionType: CollentionType.lessons,
           query: {
@@ -39,8 +41,7 @@ class AdminVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
         _controller.add(newLessons);*/
         break;
       case PostgressEventType.delete:
-        await isarStorageService.delete(
-            id: id!, collentionType: CollentionType.versions);
+        await iLocalDbService.delete<AynaaVersionsEntity>(id: id!);
         /*final newLessons = await isarStorageService.filter(
           collentionType: CollentionType.lessons,
           query: {
