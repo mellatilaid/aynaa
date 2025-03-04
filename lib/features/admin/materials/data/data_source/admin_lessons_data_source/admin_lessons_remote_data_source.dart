@@ -15,12 +15,12 @@ import '../../../../../../core/helper/enums.dart';
 import '../../../../../../core/services/data_base.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
-class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
+class AdminLessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
   final DataBase dataBase;
   final ILocalDbService iLocalDbService;
   final ILocalSettingsService iLocalSettingsService;
   final IDBSyncService storageSyncService;
-  LessonsRemoteDataSourceImpl({
+  AdminLessonsRemoteDataSourceImpl({
     required this.dataBase,
     required this.iLocalDbService,
     required this.storageSyncService,

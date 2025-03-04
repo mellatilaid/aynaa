@@ -1,3 +1,4 @@
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/materials/presentation/views/widgets/add_new_subject_bottom_sheet_body.dart';
@@ -48,6 +49,8 @@ class NewSubjectBottomSheet extends StatelessWidget {
             });
           } else if (state is SubjectFailure) {
             showScaffoldMessage(context, state.errMessage);
+          } else if (state is NoInternetState) {
+            showScaffoldMessage(context, kNoInternet);
           }
           return (isEditMode)
               ? AddSubjectBottomSheetBody.edit(subject: subjectsEntity!)

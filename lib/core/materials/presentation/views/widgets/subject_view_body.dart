@@ -47,9 +47,9 @@ class _SubjectsViewBodyState extends State<SubjectsViewBody> {
             return const EmptyWidget();
           }
           return SubjectsListView(subjects: state.subjects);
-        } else {
-          return Container();
         }
+
+        return Container();
       },
     );
   }
