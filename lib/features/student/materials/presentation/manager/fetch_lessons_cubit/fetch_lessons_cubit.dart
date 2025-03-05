@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
+import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
+import 'package:atm_app/features/common/versions/domain/repos/lessons_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../../core/helper/enums.dart';
-import '../../../../../../core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import '../../../../../../core/services/local_db_service/local_d_b_service.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
+import '../../../../../common/versions/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 
 part 'fetch_lessons_state.dart';
 

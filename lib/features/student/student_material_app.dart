@@ -1,11 +1,11 @@
-import 'package:atm_app/features/admin/materials/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../core/materials/domain/repos/lessons_repo.dart';
 import '../../core/utils/app_route.dart';
 import '../../core/utils/set_up_service_locator.dart';
+import '../common/versions/domain/repos/lessons_repo.dart';
+import '../common/versions/presentation/manager/add_text_lesson_cubit/lesson_cubit.dart';
 
 class StudentMaterialApp extends StatelessWidget {
   const StudentMaterialApp({

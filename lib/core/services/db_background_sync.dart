@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';

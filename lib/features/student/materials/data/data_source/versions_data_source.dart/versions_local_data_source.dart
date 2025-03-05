@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_local_data_source.dart';
+import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
 
 class StudentVersionsLocalDataSourceImpl implements VersionsLocalDataSource {
   final ILocalDbService iLocalDbService;

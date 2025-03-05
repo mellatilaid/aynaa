@@ -1,21 +1,21 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
-import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
+import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_local_data_source.dart';
+import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/data/models/aynaa_versions_model.dart';
+import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
 import '../../../../../core/helper/enums.dart';
-import '../../../../../core/materials/domain/repos/versions_repo.dart';
 import '../../../../../core/services/db_sync_service/db_sync_service.dart';
+import '../../../../common/versions/domain/repos/versions_repo.dart';
 
 class StudentVersionsRepoImpl extends VersionsRepo {
   final DataBase dataBase;

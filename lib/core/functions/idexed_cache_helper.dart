@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
 
 Map<String, Map<String, List<LessonEntity>>> indexCache = {};
 //Map<String, dynamic>

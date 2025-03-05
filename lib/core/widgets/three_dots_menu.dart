@@ -1,7 +1,8 @@
 import 'package:atm_app/core/widgets/loading_widget.dart';
-import 'package:atm_app/features/admin/materials/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../features/common/versions/presentation/manager/delete_version_cubit/delete_version_cubit.dart';
 
 class ThreeDotsMenu extends StatelessWidget {
   final List<PopupMenuEntry<String>> popItems;

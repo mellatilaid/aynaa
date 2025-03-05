@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
-import 'package:atm_app/core/materials/data/models/lesson_model.dart';
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/features/common/versions/data/data_source/lessons_data_source/lessons_local_data_source.dart';
+import 'package:atm_app/features/common/versions/data/models/lesson_model.dart';
+import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
+import 'package:atm_app/features/common/versions/domain/repos/lessons_repo.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
@@ -17,10 +17,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tus_client_dart/tus_client_dart.dart';
 
 import '../../../../../core/const/remote_db_const.dart';
-import '../../../../../core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import '../../../../../core/services/data_base.dart';
 import '../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../core/utils/db_enpoints.dart';
+import '../../../../common/versions/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 
 class StudentLessonsRepoImpl extends LessonsRepo {
   final DataBase dataBase;

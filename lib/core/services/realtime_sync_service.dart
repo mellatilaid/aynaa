@@ -2,13 +2,13 @@ import 'dart:developer';
 
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
-import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
-import 'package:atm_app/core/materials/data/models/lesson_model.dart';
-import 'package:atm_app/core/materials/data/models/subjects_model.dart';
-import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/features/common/exams/data/models/exam_model.dart';
+import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_local_data_source.dart';
+import 'package:atm_app/features/common/versions/data/models/aynaa_versions_model.dart';
+import 'package:atm_app/features/common/versions/data/models/lesson_model.dart';
+import 'package:atm_app/features/common/versions/data/models/subjects_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /*class RealtimeSyncService {

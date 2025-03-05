@@ -1,20 +1,20 @@
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
-import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/views/exam_sections_view.dart';
-import 'package:atm_app/core/shared_features/exams/presentation/views/quiz_view.dart';
 import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
+import 'package:atm_app/features/common/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/features/common/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/features/common/exams/presentation/views/exam_sections_view.dart';
+import 'package:atm_app/features/common/exams/presentation/views/quiz_view.dart';
+import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/splash_view/presentation/views/splash_view.dart';
 import 'package:atm_app/features/student/student_bottom_nav_view.dart';
 import 'package:go_router/go_router.dart';
 
-import '../materials/presentation/views/lesson_detail_view.dart';
-import '../materials/presentation/views/lessons_view.dart';
-import '../materials/presentation/views/subjects_view.dart';
-import '../materials/presentation/views/upload_file_test.dart';
+import '../../features/common/versions/presentation/views/lesson_detail_view.dart';
+import '../../features/common/versions/presentation/views/lessons_view.dart';
+import '../../features/common/versions/presentation/views/subjects_view.dart';
+import '../../features/common/versions/presentation/views/upload_file_test.dart';
 
 abstract class AppRouter {
   static const String adminHomeView = '/home';

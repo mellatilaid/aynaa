@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
-import 'package:atm_app/core/materials/data/models/subjects_model.dart';
-import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
 import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
+import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_local_data_source.dart';
+import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/data/models/subjects_model.dart';
+import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
+import 'package:atm_app/features/common/versions/domain/repos/subjects_repo.dart';
 import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';

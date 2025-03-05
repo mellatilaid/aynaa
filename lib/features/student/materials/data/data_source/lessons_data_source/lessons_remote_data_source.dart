@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
 import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/services/local_storage_service/i_local_storage_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/features/common/versions/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/functions/map_to_list_of_entity.dart';

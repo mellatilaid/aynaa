@@ -1,13 +1,13 @@
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
+import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
 
-import '../../../../../../core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
 import '../../../../../../core/services/db_sync_service/db_sync_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
+import '../../../../../common/versions/data/data_source/versions_data_source/versions_remote_data_source.dart';
 
 class StudentVersionsRemoteDataSourceImpl
     implements AynaaVersionsRemoteDataSource {

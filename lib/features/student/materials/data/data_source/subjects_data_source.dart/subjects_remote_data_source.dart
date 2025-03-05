@@ -1,8 +1,8 @@
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
-import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
-import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
+import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/helper/enums.dart';

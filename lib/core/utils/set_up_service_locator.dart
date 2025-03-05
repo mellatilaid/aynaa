@@ -4,19 +4,6 @@ import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/common/settings_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_local_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_remote_data_source.dart';
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/deleted_itmes_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
-import 'package:atm_app/core/materials/domain/repos/lessons_repo.dart';
-import 'package:atm_app/core/materials/domain/repos/subjects_repo.dart';
-import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
@@ -32,36 +19,34 @@ import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/services/supabase_DB.dart';
 import 'package:atm_app/core/services/supabase_auth_service.dart';
 import 'package:atm_app/core/services/supabase_storage.dart';
-import 'package:atm_app/core/shared_features/exams/data/data_source/exam_sections_data_source/exam_sections_local_data_source.dart';
-import 'package:atm_app/core/shared_features/exams/data/data_source/exam_sections_data_source/exam_sections_remote_data_source.dart';
-import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
-import 'package:atm_app/core/shared_features/exams/data/data_source/exams_data_source/exams_remote_data_source.dart';
-import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
-import 'package:atm_app/core/shared_features/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
-import 'package:atm_app/core/shared_features/exams/domain/entities/exam_entity.dart';
-import 'package:atm_app/core/shared_features/exams/domain/entities/exam_sections_entity.dart';
-import 'package:atm_app/core/shared_features/exams/domain/entities/question_entity.dart';
-import 'package:atm_app/core/shared_features/exams/domain/repos/exam_sections_repo.dart';
-import 'package:atm_app/core/shared_features/exams/domain/repos/exams_repo.dart';
-import 'package:atm_app/core/shared_features/exams/domain/repos/question_repo.dart';
-import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_local_data_source_impl.dart';
-import 'package:atm_app/features/admin/exams/data/data_source/exam_sections_data_source/admin_exam_sections_remote_data_source_impl.dart';
-import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_local_data_source_impl.dart';
-import 'package:atm_app/features/admin/exams/data/data_source/exams_data_source/admin_exams_remote_data_source_impl.dart';
-import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_local_data_source_impl.dart';
-import 'package:atm_app/features/admin/exams/data/data_source/questions_data_source/admin_questions_remote_data_source_impl.dart';
-import 'package:atm_app/features/admin/exams/data/repos/admin_exam_repo_impl.dart';
-import 'package:atm_app/features/admin/exams/data/repos/admin_exam_sections_repo_impl.dart';
-import 'package:atm_app/features/admin/exams/data/repos/admin_question_repo_impl.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_local_data_source.dart';
-import 'package:atm_app/features/admin/materials/data/data_source/admin_versions_data_source.dart/admin_versions_remote_data_sourse.dart';
-import 'package:atm_app/features/admin/materials/data/repos/admin_lessons_repo_impl.dart';
-import 'package:atm_app/features/admin/materials/data/repos/admin_subjects_repo_impl.dart';
-import 'package:atm_app/features/admin/materials/data/repos/admin_versions_repo_impl.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
+import 'package:atm_app/features/common/exams/data/data_source/exam_sections_data_source/exam_sections_local_data_source.dart';
+import 'package:atm_app/features/common/exams/data/data_source/exam_sections_data_source/exam_sections_remote_data_source.dart';
+import 'package:atm_app/features/common/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
+import 'package:atm_app/features/common/exams/data/data_source/exams_data_source/exams_remote_data_source.dart';
+import 'package:atm_app/features/common/exams/data/data_source/questions_data_source/questions_local_data_source.dart';
+import 'package:atm_app/features/common/exams/data/data_source/questions_data_source/questions_remote_data_source.dart';
+import 'package:atm_app/features/common/exams/data/repos/exam_repo_impl.dart';
+import 'package:atm_app/features/common/exams/domain/entities/exam_entity.dart';
+import 'package:atm_app/features/common/exams/domain/entities/exam_sections_entity.dart';
+import 'package:atm_app/features/common/exams/domain/entities/question_entity.dart';
+import 'package:atm_app/features/common/exams/domain/repos/exam_sections_repo.dart';
+import 'package:atm_app/features/common/exams/domain/repos/exams_repo.dart';
+import 'package:atm_app/features/common/exams/domain/repos/question_repo.dart';
+import 'package:atm_app/features/common/versions/data/data_source/lessons_data_source/lessons_local_data_source.dart';
+import 'package:atm_app/features/common/versions/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_local_data_source.dart';
+import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_local_data_source.dart';
+import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/deleted_itmes_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
+import 'package:atm_app/features/common/versions/domain/repos/lessons_repo.dart';
+import 'package:atm_app/features/common/versions/domain/repos/subjects_repo.dart';
+import 'package:atm_app/features/common/versions/domain/repos/versions_repo.dart';
 import 'package:atm_app/features/student/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/features/student/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
 import 'package:atm_app/features/student/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
@@ -72,8 +57,11 @@ import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../features/admin/materials/data/data_source/admin_lessons_data_source/admin_lessons_remote_data_source.dart';
-import '../../features/admin/materials/data/data_source/admin_subjects_data_source.dart/admin_subjects_remote_data_source.dart';
+import '../../features/common/exams/data/repos/exam_sections_repo_impl.dart';
+import '../../features/common/exams/data/repos/question_repo_impl.dart';
+import '../../features/common/versions/data/repos/admin_subjects_repo_impl.dart';
+import '../../features/common/versions/data/repos/admin_versions_repo_impl.dart';
+import '../../features/common/versions/data/repos/lessons_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_lessons_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_subjects_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_versions_repo_impl.dart';
@@ -145,114 +133,45 @@ setUpServiceLocator({required UserRole userRole}) {
     ),
   );
 
-  /*registerIfNotExists<StorageSyncService<LessonEntity>>(
-    StorageSyncService(
-      iLocalDbService: getit.get<ILocalDbService>(),
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (LessonEntity entity, PostgressEventType eventType) =>
-              getit.get<LessonsLocalDataSource>().handleUpdate(
-                    lesson: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-
-  registerIfNotExists<StorageSyncService<SubjectsEntity>>(
-    StorageSyncService(
-      iLocalDbService: getit.get<ILocalDbService>(),
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (SubjectsEntity entity, PostgressEventType eventType) =>
-              getit.get<SubjectsLocalDataSource>().handleUpdate(
-                    subject: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-
-  registerIfNotExists<StorageSyncService<AynaaVersionsEntity>>(
-    StorageSyncService(
-      iLocalDbService: getit.get<ILocalDbService>(),
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (AynaaVersionsEntity entity, PostgressEventType eventType) =>
-              getit.get<VersionsLocalDataSource>().handleUpdate(
-                    version: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );*/
-
-  /* registerIfNotExists<DBSyncService<ExamEntity>>(
-    DBSyncService(
-      iLocalDbService: getit.get<ILocalDbService>(),
-      localStorageService: getit.get<ILocalStorageService>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (ExamEntity entity, PostgressEventType eventType) =>
-              getit.get<ExamsLocalDataSource>().handleUpdate(
-                    exam: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-  registerIfNotExists<DBSyncService<ExamSectionsEntity>>(
-    DBSyncService(
-      iLocalDbService: getit.get<ILocalDbService>(),
-      localStorageService: getit.get<ILocalStorageService>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (ExamSectionsEntity entity, PostgressEventType eventType) =>
-              getit.get<ExamSectionsLocalDataSource>().handleUpdate(
-                    item: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );*/
-
   switch (userRole) {
     case UserRole.admin:
       registerIfNotExists<VersionsLocalDataSource>(
-        AdminVersionsLocalDataSourceImpl(
+        VersionsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
           iStorageSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<SubjectsLocalDataSource>(
-        AdminSubjectsLocalDataSourceImpl(
+        SubjectsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
           iDBSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<LessonsLocalDataSource>(
-        AdminLessonsLocalDataSourceImpl(
+        LessonsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
           idbSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<ExamsLocalDataSource>(
-        AdminExamsLocalDataSourceImpl(
+        ExamsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
           idbSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<ExamSectionsLocalDataSource>(
-        AdminExamSectionsLocalDataSourceImpl(
+        ExamSectionsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
           idbSyncService: getit.get<IDBSyncService>(),
         ),
       );
       registerIfNotExists<QuestionsLocalDataSource>(
-        AdminQuestionsLocalDataSourceImpl(
+        QuestionsLocalDataSourceImpl(
           iLocalDbService: getit.get<ILocalDbService>(),
         ),
       );
       registerIfNotExists<AynaaVersionsRemoteDataSource>(
-        AdminVersionsRemoteDataSourceImpl(
+        VersionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           localDB: getit.get<ILocalDbService>(),
           iLocalSettingsService: getit.get<ILocalSettingsService>(),
@@ -260,7 +179,7 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<SubjectsRemoteDataSource>(
-        AdminSubjectsRemoteDataSourceImpl(
+        SubjectsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
           storageSyncService: getit.get<IDBSyncService>(),
@@ -276,7 +195,7 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<ExamsRemoteDataSource>(
-        AdminExamsRemoteDataSourceImpl(
+        ExamsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
           iLocalSettingsService: getit.get<ILocalSettingsService>(),
@@ -284,7 +203,7 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<ExamSectionsRemoteDataSource>(
-        AdminExamSectionsRemoteDataSourceImpl(
+        ExamSectionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           idbSyncService: getit.get<IDBSyncService>(),
           iLocalDbService: getit.get<ILocalDbService>(),
@@ -292,7 +211,7 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<QuestionsRemoteDataSource>(
-        AdminQuestionsRemoteDataSourceImpl(
+        QuestionsRemoteDataSourceImpl(
           dataBase: getit.get<DataBase>(),
           iLocalDbService: getit.get<ILocalDbService>(),
           idbSyncService: getit.get<IDBSyncService>(),
@@ -321,7 +240,7 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<LessonsRepo>(
-        AdminLessonsRepoImpl(
+        LessonsRepoImpl(
             dataBase: getit.get<DataBase>(),
             iNetworkStateService: getit.get<INetworkStateService>(),
             storageService: getit.get<StorageService>(),
@@ -330,7 +249,7 @@ setUpServiceLocator({required UserRole userRole}) {
             lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
       );
       registerIfNotExists<ExamsRepo>(
-        AdminExamRepoImpl(
+        ExamRepoImpl(
           dataBase: getit.get<DataBase>(),
           storageService: getit.get<StorageService>(),
           iNetworkStateService: getit.get<INetworkStateService>(),
@@ -341,7 +260,7 @@ setUpServiceLocator({required UserRole userRole}) {
       );
 
       registerIfNotExists<ExamSectionsRepo>(
-        AdminExamSectionsRepoImpl(
+        ExamSectionsRepoImpl(
           dataBase: getit.get<DataBase>(),
           storageService: getit.get<StorageService>(),
           remoteDataSource: getit.get<ExamSectionsRemoteDataSource>(),
@@ -351,7 +270,7 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<QuestionRepo>(
-        AdminQuestionRepoImpl(
+        QuestionRepoImpl(
           dataBase: getit.get<DataBase>(),
           storageService: getit.get<StorageService>(),
           remoteDataSource: getit.get<QuestionsRemoteDataSource>(),

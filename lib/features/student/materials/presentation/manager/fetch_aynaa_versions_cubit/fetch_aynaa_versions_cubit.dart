@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/materials/data/data_source/versions_data_source/versions_local_data_source.dart';
-import 'package:atm_app/core/materials/domain/entities/aynaa_versions_entity.dart';
-import 'package:atm_app/core/materials/domain/repos/versions_repo.dart';
 import 'package:atm_app/core/services/local_db_service/local_d_b_service.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
+import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_local_data_source.dart';
+import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
+import 'package:atm_app/features/common/versions/domain/repos/versions_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

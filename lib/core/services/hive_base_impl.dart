@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
-import 'package:atm_app/core/materials/domain/entities/lesson_entity.dart';
-import 'package:atm_app/core/materials/domain/entities/subjects_entity.dart';
 import 'package:atm_app/core/services/local_storage_service.dart';
+import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
+import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../functions/idexed_cache_helper.dart';
