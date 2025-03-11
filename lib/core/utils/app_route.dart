@@ -31,15 +31,15 @@ abstract class AppRouter {
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/lll',
+        path: '/',
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
-        path: '/log',
+        path: signInView,
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(
-        path: '/',
+        path: adminNavBarView,
         builder: (context, state) => const AdminBottomNavView(),
       ),
       GoRoute(
