@@ -48,9 +48,11 @@ class NewSubjectBottomSheet extends StatelessWidget {
               context.pop();
             });
           } else if (state is SubjectFailure) {
+            context.pop();
             showScaffoldMessage(context, state.errMessage);
           } else if (state is NoInternetState) {
-            showScaffoldMessage(context, kNoInternet);
+            context.pop();
+            showScaffoldMessage(context, kNoInternetMessage);
           }
           return (isEditMode)
               ? AddSubjectBottomSheetBody.edit(subject: subjectsEntity!)

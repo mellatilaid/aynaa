@@ -59,9 +59,9 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../features/common/exams/data/repos/exam_sections_repo_impl.dart';
 import '../../features/common/exams/data/repos/question_repo_impl.dart';
-import '../../features/common/versions/data/repos/admin_subjects_repo_impl.dart';
 import '../../features/common/versions/data/repos/admin_versions_repo_impl.dart';
 import '../../features/common/versions/data/repos/lessons_repo_impl.dart';
+import '../../features/common/versions/data/repos/subjects_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_lessons_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_subjects_repo_impl.dart';
 import '../../features/student/materials/data/repos/student_versions_repo_impl.dart';
@@ -230,7 +230,7 @@ setUpServiceLocator({required UserRole userRole}) {
         ),
       );
       registerIfNotExists<SubjectsRepo>(
-        AdminSubjectsRepoImpl(
+        SubjectsRepoImpl(
           dataBase: getit.get<DataBase>(),
           storageService: getit.get<StorageService>(),
           subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),

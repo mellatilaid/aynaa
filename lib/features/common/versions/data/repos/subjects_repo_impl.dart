@@ -20,14 +20,14 @@ import '../../../../../../core/services/data_base.dart';
 import '../../../../../../core/services/storage_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
 
-class AdminSubjectsRepoImpl extends SubjectsRepo {
+class SubjectsRepoImpl extends SubjectsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
   final IDBSyncService iDBSyncService;
   final INetworkStateService iNetworkStateService;
-  AdminSubjectsRepoImpl({
+  SubjectsRepoImpl({
     required this.dataBase,
     required this.storageService,
     required this.subjectsRemoteDataSource,
@@ -40,7 +40,7 @@ class AdminSubjectsRepoImpl extends SubjectsRepo {
       {required SubjectsEntity subject, String? filePath}) async {
     try {
       if (!await iNetworkStateService.isOnline()) {
-        return left(ServerFailure(errMessage: kNoInternet));
+        return left(ServerFailure(errMessage: kNoInternetMessage));
       }
       final SubjectsModel subjectsModel =
           SubjectsModel.fromSubjectEntity(subject);

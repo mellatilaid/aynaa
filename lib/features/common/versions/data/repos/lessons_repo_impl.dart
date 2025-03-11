@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
@@ -44,6 +45,9 @@ class LessonsRepoImpl extends LessonsRepo {
     String? filePath,
   }) async {
     try {
+      if (!await iNetworkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternetMessage));
+      }
       final LessonModel lessonModel = LessonModel.fromLessonEntity(lesson);
 
       final data = lessonModel.toMap();
@@ -78,6 +82,9 @@ class LessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, void>> deleteLesson(
       {required LessonEntity lesson}) async {
     try {
+      if (!await iNetworkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternetMessage));
+      }
       idbSyncService.deleteInBauckground([lesson], Entities.lessons);
       await dataBase.updateData(
         path: DbEnpoints.lessons,
@@ -108,8 +115,11 @@ class LessonsRepoImpl extends LessonsRepo {
       if (lesson.isNotEmpty) {
         if (await iNetworkStateService.isOnline()) {
           unawaited(lessonsRemoteDataSource.syncDB(subjectID: subjectID));
-          return right(lesson);
         }
+        return right(lesson);
+      }
+      if (!await iNetworkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternetMessage));
       }
       lesson = await lessonsRemoteDataSource.fetchLessons(
           subjectID: subjectID, versionID: versionID);
@@ -132,6 +142,9 @@ class LessonsRepoImpl extends LessonsRepo {
   Future<Either<Failures, void>> updateLesson(
       {required LessonEntity lesson, String? filePath}) async {
     try {
+      if (!await iNetworkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternetMessage));
+      }
       final LessonModel lessonModel = LessonModel.fromLessonEntity(lesson);
       final data = lessonModel.toMap();
 

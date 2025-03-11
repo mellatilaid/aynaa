@@ -37,10 +37,10 @@ class _SplashViewBodyState extends State<SplashViewBody> {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        'Hello Aynaa Brothers',
+        'Aynaa App',
         style: TextStyle(
           fontSize: 50,
-          color: Colors.red,
+          color: Colors.blue,
         ),
       ),
     );

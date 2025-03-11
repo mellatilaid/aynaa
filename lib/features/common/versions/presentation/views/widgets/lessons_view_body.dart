@@ -1,5 +1,8 @@
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/widgets/empty_widget.dart';
 import 'package:atm_app/core/widgets/loading_widget.dart';
+import 'package:atm_app/core/widgets/no_internet_widget.dart';
 import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
 import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +22,12 @@ class LessonsViewBody extends StatefulWidget {
 }
 
 class _LessonsViewBodyState extends State<LessonsViewBody> {
+  late String versionID;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    final versionID = _getVersionID();
+    versionID = _getVersionID();
     if (0 == 0) {
       BlocProvider.of<FetchLessonsCubit>(context).fetchLessons(
           subjectID: widget.subjectsEntity.entityID, versionID: versionID);
@@ -43,10 +47,20 @@ class _LessonsViewBodyState extends State<LessonsViewBody> {
     return BlocBuilder<FetchLessonsCubit, FetchLessonsState>(
       builder: (context, state) {
         if (state is FetchLessonsSuccess) {
+          if (state.lessons.isEmpty) {
+            return const EmptyWidget();
+          }
           return LessonsListView(lessons: state.lessons);
         } else if (state is FetchLessonsLoading) {
           return const LoadingWidget();
         } else if (state is FetchLessonsFailure) {
+          if (state.errMessage == kNoInternetMessage) {
+            return NoInternetWidget(
+                onTap: () => BlocProvider.of<FetchLessonsCubit>(context)
+                    .fetchLessons(
+                        subjectID: widget.subjectsEntity.entityID,
+                        versionID: versionID));
+          }
           return ErrorWidget(state.errMessage);
         }
         return Container();

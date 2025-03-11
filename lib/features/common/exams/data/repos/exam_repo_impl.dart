@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
@@ -39,6 +40,9 @@ class ExamRepoImpl extends ExamsRepo {
       {required ExamEntity exam, String? filePath}) async {
     Map<String, dynamic> data = {};
     try {
+      if (!await iNetworkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternetMessage));
+      }
       final model = ExamModel.fromExamEntity(exam);
       data = model.toMap();
       if (filePath != null) {

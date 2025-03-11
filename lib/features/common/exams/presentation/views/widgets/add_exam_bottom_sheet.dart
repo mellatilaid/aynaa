@@ -43,6 +43,8 @@ class AddExamBottomSheet extends StatelessWidget {
               context.pop();
             });
           } else if (state is ExamFailure) {
+            context.pop();
+
             showScaffoldMessage(context, state.errMessage);
           }
           return isEditMode
