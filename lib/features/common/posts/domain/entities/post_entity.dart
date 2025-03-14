@@ -1,15 +1,15 @@
 class PostEntity {
   final String postID;
-  final String title;
+  final String? title;
   final String content;
   final String timeStamp;
-  final String? image;
+  final String? imagePath;
 
   PostEntity({
     required this.postID,
-    required this.title,
+    this.title,
     required this.content,
     required this.timeStamp,
-    this.image,
+    this.imagePath,
   });
 }

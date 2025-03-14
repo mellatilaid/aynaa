@@ -1,5 +1,5 @@
-import 'package:atm_app/core/shared_features/posts/domain/entities/post_entity.dart';
-import 'package:atm_app/core/shared_features/posts/domain/use_cases/add_post_use_case.dart';
+import 'package:atm_app/features/common/posts/domain/entities/post_entity.dart';
+import 'package:atm_app/features/common/posts/domain/use_cases/add_post_use_case.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
