@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/helper/name_encrypte.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
@@ -44,9 +45,9 @@ class ExamSectionsRepoImpl extends ExamSectionsRepo {
       if (filePath != null) {
         final fileName = path.basename(filePath);
         final fullPath = await storageService.uploadFile(
-          bucketName: examSection.versionName,
+          bucketName: encrypteName(examSection.versionName),
           filePath: filePath,
-          fileName: '${examSection.examTitle}/$fileName',
+          fileName: '${encrypteName(examSection.examTitle)}/$fileName',
         );
         data[kUrl] = fullPath;
       }
@@ -129,10 +130,10 @@ class ExamSectionsRepoImpl extends ExamSectionsRepo {
 
       if (filePath != null) {
         //final fileName = path.basename(filePath);
-        final fileName =
-            section.url!.replaceFirst('${section.versionName}/', '');
+        final encryptedName = encrypteName(section.versionName);
+        final fileName = section.url!.replaceFirst('$encryptedName/', '');
         final fullPath = await storageService.updateFile(
-          bucketName: section.versionName,
+          bucketName: encryptedName,
           filePath: filePath,
           fileName: fileName,
         );

@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../domain/repos/versions_repo.dart';
-import 'widgets/aynaa_versions_view_body.dart';
+import 'widgets/versions_view_body.dart';
 
 class VersionsView extends StatelessWidget {
   const VersionsView({super.key});
@@ -38,7 +38,7 @@ class VersionsView extends StatelessWidget {
         appBar: AppBar(
           leading: const SignOutButtonBlocBuilder(),
         ),
-        body: const AynaaVersionsViewBody(),
+        body: const VersionsViewBody(),
         floatingActionButton:
             (globalUserRole != null && globalUserRole == kAdminRole)
                 ? Builder(

@@ -6,6 +6,7 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/helper/name_encrypte.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
@@ -48,9 +49,9 @@ class ExamRepoImpl extends ExamsRepo {
       if (filePath != null) {
         final fileName = path.basename(filePath);
         final fullPath = await storageService.uploadFile(
-          bucketName: exam.versionName,
+          bucketName: encrypteName(exam.versionName),
           filePath: filePath,
-          fileName: '${exam.title}/$fileName',
+          fileName: '${encrypteName(exam.title)}/$fileName',
         );
         data[kUrl] = fullPath;
       }
@@ -137,10 +138,10 @@ class ExamRepoImpl extends ExamsRepo {
       final data = model.toMap();
 
       if (filePath != null) {
-        //final fileName = path.basename(filePath);
-        final fileName = exam.url!.replaceFirst('${exam.versionName}/', '');
+        final encryptedName = encrypteName(exam.versionName);
+        final fileName = exam.url!.replaceFirst('$encryptedName/', '');
         final fullPath = await storageService.updateFile(
-          bucketName: exam.versionName,
+          bucketName: encryptedName,
           filePath: filePath,
           fileName: fileName,
         );

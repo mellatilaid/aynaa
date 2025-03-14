@@ -169,10 +169,10 @@ class SubjectsRepoImpl extends SubjectsRepo {
 
       if (filePath != null) {
         //final fileName = path.basename(filePath);
-        final fileName =
-            subject.url.replaceFirst('${subject.versionName}/', '');
+        final encryptedName = encrypteName(subject.versionName);
+        final fileName = subject.url.replaceFirst('$encryptedName/', '');
         final fullPath = await storageService.updateFile(
-          bucketName: subject.versionName,
+          bucketName: encryptedName,
           filePath: filePath,
           fileName: fileName,
         );

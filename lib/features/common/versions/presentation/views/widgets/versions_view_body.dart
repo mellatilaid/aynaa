@@ -10,14 +10,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../core/utils/set_up_service_locator.dart';
 import 'versions_list_view.dart';
 
-class AynaaVersionsViewBody extends StatefulWidget {
-  const AynaaVersionsViewBody({super.key});
+class VersionsViewBody extends StatefulWidget {
+  const VersionsViewBody({super.key});
 
   @override
-  State<AynaaVersionsViewBody> createState() => _AynaaVersionsViewBodyState();
+  State<VersionsViewBody> createState() => _VersionsViewBodyState();
 }
 
-class _AynaaVersionsViewBodyState extends State<AynaaVersionsViewBody> {
+class _VersionsViewBodyState extends State<VersionsViewBody> {
   @override
   void initState() {
     // TODO: implement initState

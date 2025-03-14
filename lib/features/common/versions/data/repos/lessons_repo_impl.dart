@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/helper/name_encrypte.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
@@ -51,14 +52,15 @@ class LessonsRepoImpl extends LessonsRepo {
       final LessonModel lessonModel = LessonModel.fromLessonEntity(lesson);
 
       final data = lessonModel.toMap();
-
+      final encryptedVersionName = encrypteName(lesson.versionName);
+      final encryptedSubjectName = encrypteName(lesson.subjectName);
       if (filePath != null) {
         final fileName = path.basename(filePath);
 
         final fullPath = await storageService.uploadFile(
-          bucketName: lesson.versionName,
+          bucketName: encryptedVersionName,
           filePath: filePath,
-          fileName: '${lesson.subjectName}/$fileName',
+          fileName: '$encryptedSubjectName/$fileName',
         );
         data[kUrl] = fullPath;
       }
@@ -150,9 +152,10 @@ class LessonsRepoImpl extends LessonsRepo {
 
       if (filePath != null) {
         //final fileName = path.basename(filePath);
-        final fileName = lesson.url!.replaceFirst('${lesson.versionName}/', '');
+        final encryptedVersionName = encrypteName(lesson.versionName);
+        final fileName = lesson.url!.replaceFirst('$encryptedVersionName/', '');
         final fullPath = await storageService.updateFile(
-          bucketName: lesson.versionName,
+          bucketName: encryptedVersionName,
           filePath: filePath,
           fileName: fileName,
         );
