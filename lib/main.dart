@@ -1,8 +1,6 @@
-import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
 import 'package:atm_app/core/utils/app_route.dart';
 import 'package:atm_app/core/utils/set_up_service_locator.dart';
-import 'package:atm_app/features/admin/admin_material_app.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:atm_app/features/auth/presentation/manager/sign_out_cubit/sign_out_cubit.dart';
 import 'package:atm_app/features/common/versions/domain/repos/lessons_repo.dart';
@@ -25,9 +23,9 @@ void main() async {
 
   //await initializeCache();
   await setUpCoreServiceLocator();
-  setUpServiceLocator(userRole: UserRole.admin);
+
   //await Firebase.initializeApp();
-  if (0 == 10) {
+  if (0 == 0) {
     runApp(DevicePreview(
       enabled: true, // Set to `true` to enable DevicePreview
       builder: (context) => const MyApp(), // Your app entry point
@@ -100,27 +98,5 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         locale: const Locale('ar', 'DZ'),
       ),
     );
-    return BlocProvider(
-      create: (context) => LessonCubit(getit.get<LessonsRepo>()),
-      child: MaterialApp.router(
-        routerConfig: AppRouter.router,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('ar', 'DZ'),
-          Locale('en', 'US'),
-        ],
-        locale: const Locale('ar', 'DZ'),
-      ),
-    );
-    return const AdminMaterialApp();
   }
 }

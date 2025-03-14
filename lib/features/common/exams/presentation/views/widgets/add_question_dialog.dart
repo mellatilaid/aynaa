@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:atm_app/core/widgets/scaffold_message.dart';
 import 'package:atm_app/features/common/exams/domain/entities/exam_sections_entity.dart';
 import 'package:atm_app/features/common/exams/domain/entities/question_entity.dart';
@@ -136,9 +138,13 @@ class _AddQuestionsDialogState extends State<AddQuestionsDialog> {
   }
 
   _toQuestionEntity() {
-    final List<String> options =
-        _optionsController.text.split(',').map((e) => e.trim()).toList();
-
+    final List<String> options = _optionsController.text
+        .split(RegExp(r'[،,]'))
+        .map((e) => e.trim())
+        .toList();
+    for (var i = 0; i < options.length; i++) {
+      log(options[i]);
+    }
     if (widget.isEditMode) {
       return widget.questionEntity!.copyWith(
         question: _questionController.text,

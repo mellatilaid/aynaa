@@ -40,8 +40,9 @@ class _AddVersionBottomSheetBodyState extends State<AddVersionBottomSheetBody> {
         bottom: MediaQuery.of(context).viewInsets.bottom + 16,
       ),
       child: FractionallySizedBox(
-        heightFactor: 0.45,
+        heightFactor: 0.8,
         child: Stack(
+          clipBehavior: Clip.none,
           children: [
             // Scrollable content
             Padding(

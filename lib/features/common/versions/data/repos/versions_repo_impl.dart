@@ -1,7 +1,12 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/helper/name_encrypte.dart';
 import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
+import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/core/services/storage_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_local_data_source.dart';
@@ -12,37 +17,48 @@ import 'package:dartz/dartz.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../../../core/const/remote_db_const.dart';
-import '../../../../../core/helper/enums.dart';
-import '../../../../../core/services/db_sync_service/db_sync_service.dart';
-import '../../../../common/versions/domain/repos/versions_repo.dart';
+import '../../../../../../core/const/remote_db_const.dart';
+import '../../../../../../core/helper/enums.dart';
+import '../../domain/repos/versions_repo.dart';
 
-class StudentVersionsRepoImpl extends VersionsRepo {
+class VersionsRepoImpl extends VersionsRepo {
   final DataBase dataBase;
   final StorageService storageService;
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
-  final DBSyncService backgroundServices;
-  StudentVersionsRepoImpl({
+  final IDBSyncService dbSyncService;
+  final INetworkStateService networkStateService;
+  VersionsRepoImpl({
     required this.remoteDataSource,
     required this.dataBase,
     required this.storageService,
     required this.versionsLocalDataSource,
-    required this.backgroundServices,
+    required this.dbSyncService,
+    required this.networkStateService,
   });
   @override
   Future<Either<Failures, List<AynaaVersionsEntity>>> fetchVersions() async {
     try {
-      final List<AynaaVersionsEntity> localVersions =
-          await versionsLocalDataSource.fetchVersion();
-      log(localVersions.length.toString());
-      if (localVersions.isNotEmpty) {
-        return right(localVersions);
+      List<AynaaVersionsEntity> versions;
+      versions = await versionsLocalDataSource.fetchVersion();
+
+      if (versions.isNotEmpty) {
+        // Return local versions immediately
+        if (await networkStateService.isOnline()) {
+          // Perform sync in the background without blocking
+          unawaited(remoteDataSource.syncVersions());
+        }
+
+        return right(versions);
+      } else if (versions.isNotEmpty) {
+        return right(versions);
       }
-      final List<AynaaVersionsEntity> remoteVersions =
-          await remoteDataSource.fetchAynaaVersions();
-      log('remote version ${remoteVersions.length}');
-      return right(remoteVersions);
+      if (!await networkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternet));
+      }
+      versions = await remoteDataSource.fetchAynaaVersions();
+      log('remote version ${versions.length}');
+      return right(versions);
     } catch (e) {
       return left(ServerFailure(errMessage: e.toString()));
     }
@@ -52,12 +68,16 @@ class StudentVersionsRepoImpl extends VersionsRepo {
   Future<Either<Failures, String>> setVersion(
       {required AynaaVersionsEntity version, required String filePath}) async {
     try {
-      await storageService.createBucket(version.versionName);
+      if (!await networkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternet));
+      }
+      final encryptedName = encrypteName(version.versionName);
+      await storageService.createBucket(encryptedName);
       final model = AynaaVersionsModel.fromVersionEntity(version);
       final data = model.toMap();
       final fileName = path.basename(filePath);
       final fullPath = await storageService.uploadFile(
-        bucketName: version.versionName,
+        bucketName: encryptedName,
         filePath: filePath,
         fileName: fileName,
       );
@@ -91,13 +111,19 @@ class StudentVersionsRepoImpl extends VersionsRepo {
     try {
       //await storageService.emptyBucket(aynaaVersion.versionName);
       //await storageService.deleteBucket(aynaaVersion.versionName);
-      backgroundServices.deleteItemFile(
-        item: aynaaVersion,
-        deletedItemType: Entities.versions,
+      if (!await networkStateService.isOnline()) {
+        return left(ServerFailure(errMessage: kNoInternet));
+      }
+      dbSyncService.deleteInBauckground(
+        [aynaaVersion],
+        Entities.versions,
       );
-      await dataBase.deleteData(
+      await dataBase.updateData(
         path: DbEnpoints.aynaaVersions,
         uid: aynaaVersion.entityID,
+        data: {
+          kIsDeleted: true,
+        },
       );
       return const Right('');
     } on PostgrestException catch (e) {

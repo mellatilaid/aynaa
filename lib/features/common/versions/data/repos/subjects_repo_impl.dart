@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
+import 'package:atm_app/core/helper/name_encrypte.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
 import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_local_data_source.dart';
@@ -48,10 +49,11 @@ class SubjectsRepoImpl extends SubjectsRepo {
       log(data[kVersionName]);
       if (filePath != null) {
         final fileName = path.basename(filePath);
+        //encyrp bucket and subject names to avoid arabic names in the url
         final fullPath = await storageService.uploadFile(
-          bucketName: subject.versionName,
+          bucketName: encrypteName(subject.versionName),
           filePath: filePath,
-          fileName: '${subject.subjectName}/$fileName',
+          fileName: '${encrypteName(subject.subjectName)}/$fileName',
         );
 
         data[kUrl] = fullPath;

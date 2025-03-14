@@ -40,6 +40,7 @@ import 'package:atm_app/features/common/versions/data/data_source/subjects_data_
 import 'package:atm_app/features/common/versions/data/data_source/subjects_data_source/subjects_remote_data_source.dart';
 import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_remote_data_source.dart';
+import 'package:atm_app/features/common/versions/data/repos/versions_repo_impl.dart';
 import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
 import 'package:atm_app/features/common/versions/domain/entities/deleted_itmes_entity.dart';
 import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
@@ -47,24 +48,14 @@ import 'package:atm_app/features/common/versions/domain/entities/subjects_entity
 import 'package:atm_app/features/common/versions/domain/repos/lessons_repo.dart';
 import 'package:atm_app/features/common/versions/domain/repos/subjects_repo.dart';
 import 'package:atm_app/features/common/versions/domain/repos/versions_repo.dart';
-import 'package:atm_app/features/student/materials/data/data_source/lessons_data_source/lessons_local_data_source.dart';
-import 'package:atm_app/features/student/materials/data/data_source/lessons_data_source/lessons_remote_data_source.dart';
-import 'package:atm_app/features/student/materials/data/data_source/subjects_data_source.dart/subjects_local_data_source.dart';
-import 'package:atm_app/features/student/materials/data/data_source/subjects_data_source.dart/subjects_remote_data_source.dart';
-import 'package:atm_app/features/student/materials/data/data_source/versions_data_source.dart/versions_local_data_source.dart';
-import 'package:atm_app/features/student/materials/data/data_source/versions_data_source.dart/versions_remote_data_sourse.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../features/common/exams/data/repos/exam_sections_repo_impl.dart';
 import '../../features/common/exams/data/repos/question_repo_impl.dart';
-import '../../features/common/versions/data/repos/admin_versions_repo_impl.dart';
 import '../../features/common/versions/data/repos/lessons_repo_impl.dart';
 import '../../features/common/versions/data/repos/subjects_repo_impl.dart';
-import '../../features/student/materials/data/repos/student_lessons_repo_impl.dart';
-import '../../features/student/materials/data/repos/student_subjects_repo_impl.dart';
-import '../../features/student/materials/data/repos/student_versions_repo_impl.dart';
 import '../services/local_db_service/i_local_db_service.dart';
 import '../services/local_storage_service/i_local_storage_service.dart';
 
@@ -77,10 +68,8 @@ setUpCoreServiceLocator() async {
     ..registerSingletonAsync<Isar>(() async {
       try {
         final isar = await _isarInit();
-        print('Isar initialized from GetIt callback'); // Add this line
         return isar;
       } catch (e) {
-        print('Error in GetIt Isar initialization: $e');
         rethrow;
       }
     })
@@ -89,9 +78,9 @@ setUpCoreServiceLocator() async {
         dataBase: SupabaseDb(),
         profileStorage: getit.get<ProfileStorage>()))
     ..registerSingleton<INetworkStateService>(NetworkStateService());
-  print('Waiting for Isar instance...');
+
   await getit.getAsync<Isar>();
-  print('Isar instance retrieved.');
+
   getit
     ..registerFactory<ILocalDbService>(() => LocalDbService(getit()))
     ..registerSingleton<RealtimeSyncService>(RealtimeSyncService())
@@ -109,9 +98,6 @@ setUpCoreServiceLocator() async {
           ),
         ),
     );
-}
-
-setUpServiceLocator({required UserRole userRole}) {
   void registerIfNotExists<T extends Object>(T instance) {
     if (!getit.isRegistered<T>()) {
       getit.registerLazySingleton<T>(() => instance);
@@ -132,220 +118,150 @@ setUpServiceLocator({required UserRole userRole}) {
       dataBase: getit.get<DataBase>(),
     ),
   );
+  registerIfNotExists<VersionsLocalDataSource>(
+    VersionsLocalDataSourceImpl(
+      iLocalDbService: getit.get<ILocalDbService>(),
+      iStorageSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
+  registerIfNotExists<SubjectsLocalDataSource>(
+    SubjectsLocalDataSourceImpl(
+      iLocalDbService: getit.get<ILocalDbService>(),
+      iDBSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
+  registerIfNotExists<LessonsLocalDataSource>(
+    LessonsLocalDataSourceImpl(
+      iLocalDbService: getit.get<ILocalDbService>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
+  registerIfNotExists<ExamsLocalDataSource>(
+    ExamsLocalDataSourceImpl(
+      iLocalDbService: getit.get<ILocalDbService>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
+  registerIfNotExists<ExamSectionsLocalDataSource>(
+    ExamSectionsLocalDataSourceImpl(
+      iLocalDbService: getit.get<ILocalDbService>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
+  registerIfNotExists<QuestionsLocalDataSource>(
+    QuestionsLocalDataSourceImpl(
+      iLocalDbService: getit.get<ILocalDbService>(),
+    ),
+  );
+  registerIfNotExists<AynaaVersionsRemoteDataSource>(
+    VersionsRemoteDataSourceImpl(
+      dataBase: getit.get<DataBase>(),
+      localDB: getit.get<ILocalDbService>(),
+      iLocalSettingsService: getit.get<ILocalSettingsService>(),
+      iStorageSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
+  registerIfNotExists<SubjectsRemoteDataSource>(
+    SubjectsRemoteDataSourceImpl(
+      dataBase: getit.get<DataBase>(),
+      iLocalDbService: getit.get<ILocalDbService>(),
+      storageSyncService: getit.get<IDBSyncService>(),
+      iLocalSettingsService: getit.get<ILocalSettingsService>(),
+    ),
+  );
+  registerIfNotExists<LessonsRemoteDataSource>(
+    LessonsRemoteDataSourceImpl(
+      dataBase: getit.get<DataBase>(),
+      iLocalDbService: getit.get<ILocalDbService>(),
+      storageSyncService: getit.get<IDBSyncService>(),
+      iLocalSettingsService: getit.get<ILocalSettingsService>(),
+    ),
+  );
+  registerIfNotExists<ExamsRemoteDataSource>(
+    ExamsRemoteDataSourceImpl(
+      dataBase: getit.get<DataBase>(),
+      iLocalDbService: getit.get<ILocalDbService>(),
+      iLocalSettingsService: getit.get<ILocalSettingsService>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
+  registerIfNotExists<ExamSectionsRemoteDataSource>(
+    ExamSectionsRemoteDataSourceImpl(
+      dataBase: getit.get<DataBase>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+      iLocalDbService: getit.get<ILocalDbService>(),
+      iLocalSettingsService: getit.get<ILocalSettingsService>(),
+    ),
+  );
+  registerIfNotExists<QuestionsRemoteDataSource>(
+    QuestionsRemoteDataSourceImpl(
+      dataBase: getit.get<DataBase>(),
+      iLocalDbService: getit.get<ILocalDbService>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+      iLocalSettingsService: getit.get<ILocalSettingsService>(),
+    ),
+  );
 
-  switch (userRole) {
-    case UserRole.admin:
-      registerIfNotExists<VersionsLocalDataSource>(
-        VersionsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-          iStorageSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-      registerIfNotExists<SubjectsLocalDataSource>(
-        SubjectsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-          iDBSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-      registerIfNotExists<LessonsLocalDataSource>(
-        LessonsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-      registerIfNotExists<ExamsLocalDataSource>(
-        ExamsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-      registerIfNotExists<ExamSectionsLocalDataSource>(
-        ExamSectionsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-      registerIfNotExists<QuestionsLocalDataSource>(
-        QuestionsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-        ),
-      );
-      registerIfNotExists<AynaaVersionsRemoteDataSource>(
-        VersionsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          localDB: getit.get<ILocalDbService>(),
-          iLocalSettingsService: getit.get<ILocalSettingsService>(),
-          iStorageSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-      registerIfNotExists<SubjectsRemoteDataSource>(
-        SubjectsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          iLocalDbService: getit.get<ILocalDbService>(),
-          storageSyncService: getit.get<IDBSyncService>(),
-          iLocalSettingsService: getit.get<ILocalSettingsService>(),
-        ),
-      );
-      registerIfNotExists<LessonsRemoteDataSource>(
-        LessonsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          iLocalDbService: getit.get<ILocalDbService>(),
-          storageSyncService: getit.get<IDBSyncService>(),
-          iLocalSettingsService: getit.get<ILocalSettingsService>(),
-        ),
-      );
-      registerIfNotExists<ExamsRemoteDataSource>(
-        ExamsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          iLocalDbService: getit.get<ILocalDbService>(),
-          iLocalSettingsService: getit.get<ILocalSettingsService>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-      registerIfNotExists<ExamSectionsRemoteDataSource>(
-        ExamSectionsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-          iLocalDbService: getit.get<ILocalDbService>(),
-          iLocalSettingsService: getit.get<ILocalSettingsService>(),
-        ),
-      );
-      registerIfNotExists<QuestionsRemoteDataSource>(
-        QuestionsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          iLocalDbService: getit.get<ILocalDbService>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-          iLocalSettingsService: getit.get<ILocalSettingsService>(),
-        ),
-      );
+  registerIfNotExists<VersionsRepo>(
+    VersionsRepoImpl(
+      dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
+      remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
+      versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
+      dbSyncService: getit.get<IDBSyncService>(),
+      networkStateService: getit.get<INetworkStateService>(),
+    ),
+  );
+  registerIfNotExists<SubjectsRepo>(
+    SubjectsRepoImpl(
+      dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
+      subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
+      subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
+      iDBSyncService: getit.get<IDBSyncService>(),
+      iNetworkStateService: getit.get<INetworkStateService>(),
+    ),
+  );
+  registerIfNotExists<LessonsRepo>(
+    LessonsRepoImpl(
+        dataBase: getit.get<DataBase>(),
+        iNetworkStateService: getit.get<INetworkStateService>(),
+        storageService: getit.get<StorageService>(),
+        idbSyncService: getit.get<IDBSyncService>(),
+        lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
+        lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
+  );
+  registerIfNotExists<ExamsRepo>(
+    ExamRepoImpl(
+      dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
+      iNetworkStateService: getit.get<INetworkStateService>(),
+      examsRemoteDataSource: getit.get<ExamsRemoteDataSource>(),
+      examsLocalDataSource: getit.get<ExamsLocalDataSource>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+    ),
+  );
 
-      registerIfNotExists<VersionsRepo>(
-        AdminVersionsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
-          versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-          dbSyncService: getit.get<IDBSyncService>(),
-          networkStateService: getit.get<INetworkStateService>(),
-        ),
-      );
-      registerIfNotExists<SubjectsRepo>(
-        SubjectsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
-          subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-          iDBSyncService: getit.get<IDBSyncService>(),
-          iNetworkStateService: getit.get<INetworkStateService>(),
-        ),
-      );
-      registerIfNotExists<LessonsRepo>(
-        LessonsRepoImpl(
-            dataBase: getit.get<DataBase>(),
-            iNetworkStateService: getit.get<INetworkStateService>(),
-            storageService: getit.get<StorageService>(),
-            idbSyncService: getit.get<IDBSyncService>(),
-            lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
-            lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
-      );
-      registerIfNotExists<ExamsRepo>(
-        ExamRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          iNetworkStateService: getit.get<INetworkStateService>(),
-          examsRemoteDataSource: getit.get<ExamsRemoteDataSource>(),
-          examsLocalDataSource: getit.get<ExamsLocalDataSource>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-        ),
-      );
-
-      registerIfNotExists<ExamSectionsRepo>(
-        ExamSectionsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          remoteDataSource: getit.get<ExamSectionsRemoteDataSource>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-          localDataSource: getit.get<ExamSectionsLocalDataSource>(),
-          iNetworkStateService: getit.get<INetworkStateService>(),
-        ),
-      );
-      registerIfNotExists<QuestionRepo>(
-        QuestionRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          remoteDataSource: getit.get<QuestionsRemoteDataSource>(),
-          localDataSource: getit.get<QuestionsLocalDataSource>(),
-          idbSyncService: getit.get<IDBSyncService>(),
-          iNetworkStateService: getit.get<INetworkStateService>(),
-        ),
-      );
-
-      break;
-    case UserRole.student:
-      registerIfNotExists<VersionsLocalDataSource>(
-        StudentVersionsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-        ),
-      );
-      registerIfNotExists<SubjectsLocalDataSource>(
-        StudentSubjectsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-        ),
-      );
-      registerIfNotExists<LessonsLocalDataSource>(
-        StudentLessonsLocalDataSourceImpl(
-          iLocalDbService: getit.get<ILocalDbService>(),
-        ),
-      );
-      registerIfNotExists<AynaaVersionsRemoteDataSource>(
-        StudentVersionsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDbService>(),
-        ),
-      );
-      registerIfNotExists<SubjectsRemoteDataSource>(
-        StudentSubjectsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDbService>(),
-        ),
-      );
-      registerIfNotExists<LessonsRemoteDataSource>(
-        StudentLessonsRemoteDataSourceImpl(
-          dataBase: getit.get<DataBase>(),
-          isarStorageService: getit.get<LocalDbService>(),
-          storageService: getit.get<StorageService>(),
-          fileCacheManager: getit.get<ILocalStorageService>(),
-        ),
-      );
-
-      registerIfNotExists<VersionsRepo>(
-        StudentVersionsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
-          versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-          backgroundServices: getit.get<DBSyncService<AynaaVersionsEntity>>(),
-        ),
-      );
-      registerIfNotExists<SubjectsRepo>(
-        StudentSubjectsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
-          subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-          backgroundDownloadService: getit.get<DBSyncService<SubjectsEntity>>(),
-        ),
-      );
-      registerIfNotExists<LessonsRepo>(
-        StudentLessonsRepoImpl(
-            dataBase: getit.get<DataBase>(),
-            storageService: getit.get<StorageService>(),
-            lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
-            lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
-      );
-      break;
-  }
-
+  registerIfNotExists<ExamSectionsRepo>(
+    ExamSectionsRepoImpl(
+      dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
+      remoteDataSource: getit.get<ExamSectionsRemoteDataSource>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+      localDataSource: getit.get<ExamSectionsLocalDataSource>(),
+      iNetworkStateService: getit.get<INetworkStateService>(),
+    ),
+  );
+  registerIfNotExists<QuestionRepo>(
+    QuestionRepoImpl(
+      dataBase: getit.get<DataBase>(),
+      storageService: getit.get<StorageService>(),
+      remoteDataSource: getit.get<QuestionsRemoteDataSource>(),
+      localDataSource: getit.get<QuestionsLocalDataSource>(),
+      idbSyncService: getit.get<IDBSyncService>(),
+      iNetworkStateService: getit.get<INetworkStateService>(),
+    ),
+  );
   registerIfNotExists<FilePickerHelper>(FilePickerHelper());
 }
 
@@ -375,189 +291,3 @@ Future<Isar> _isarInit() async {
     rethrow;
   }
 }
-
-/*setUpServiceLocator({required UserRole userRole}) {
-  void registerIfNotExists<T extends Object>(T instance) {
-    if (!getit.isRegistered<T>()) {
-      getit.registerSingleton<T>(instance);
-    }
-  }
-
-  /*getit.registerSingleton<LocalCacheService<AynaaVersionsEntity>>(
-      BaseHiveCache());
-  getit.registerSingleton<LocalCacheService<SubjectsEntity>>(BaseHiveCache());
-  getit.registerSingleton<LocalCacheService<LessonEntity>>(BaseHiveCache());*/
-
-  getit.registerSingleton<FileCacheManager>(FileSystemCacheManager());
-  getit.registerSingleton<BackgroundServices<LessonEntity>>(
-    BackgroundServices(
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (LessonEntity entity, PostgressEventType eventType) =>
-              getit.get<LessonsLocalDataSource>().handleUpdate(
-                    lesson: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-  getit.registerSingleton<BackgroundServices<SubjectsEntity>>(
-    BackgroundServices(
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (SubjectsEntity entity, PostgressEventType eventType) =>
-              getit.get<SubjectsLocalDataSource>().handleUpdate(
-                    subject: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-  getit.registerSingleton<BackgroundServices<AynaaVersionsEntity>>(
-    BackgroundServices(
-      fileSystemCacheManager: getit.get<FileCacheManager>(),
-      storageService: getit.get<StorageService>(),
-      updateLocalDataSource:
-          (AynaaVersionsEntity entity, PostgressEventType eventType) =>
-              getit.get<VersionsLocalDataSource>().handleUpdate(
-                    version: entity,
-                    eventType: eventType,
-                  ),
-    ),
-  );
-  switch (userRole) {
-    case UserRole.admin:
-      getit.registerSingleton<VersionsLocalDataSource>(
-        AdminVersionsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
-        ),
-      );
-      getit.registerSingleton<SubjectsLocalDataSource>(
-        AdminSubjectsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
-        ),
-      );
-      getit.registerSingleton<LessonsLocalDataSource>(
-        AdminLessonsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
-        ),
-      );
-      getit.registerSingleton<AynaaVersionsRemoteDataSource>(
-          AdminVersionsRemoteDataSourceImpl(
-        dataBase: getit.get<DataBase>(),
-        isarStorageService: getit.get<IsarStorageService>(),
-      ));
-      getit.registerSingleton<SubjectsRemoteDataSource>(
-          AdminSubjectsRemoteDataSourceImpl(
-        dataBase: getit.get<DataBase>(),
-        isarStorageService: getit.get<IsarStorageService>(),
-      ));
-      getit.registerSingleton<LessonsRemoteDataSource>(
-          LessonsRemoteDataSourceImpl(
-        dataBase: getit.get<DataBase>(),
-        isarStorageService: getit.get<IsarStorageService>(),
-        storageService: getit.get<StorageService>(),
-        fileCacheManager: getit.get<FileCacheManager>(),
-      ));
-      getit.registerSingleton<VersionsRepo>(
-        AdminVersionsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
-          versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-          backgroundServices:
-              getit.get<BackgroundServices<AynaaVersionsEntity>>(),
-        ),
-      );
-      getit.registerSingleton<SubjectsRepo>(
-        AdminSubjectsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
-          subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-          backgroundDownloadService:
-              getit.get<BackgroundServices<SubjectsEntity>>(),
-        ),
-      );
-      getit.registerSingleton<LessonsRepo>(
-        AdminLessonsRepoImpl(
-            dataBase: getit.get<DataBase>(),
-            storageService: getit.get<StorageService>(),
-            lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
-            lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
-      );
-      break;
-    case UserRole.student:
-      getit.registerSingleton<VersionsLocalDataSource>(
-        StudentVersionsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
-        ),
-      );
-      getit.registerSingleton<SubjectsLocalDataSource>(
-        StudentSubjectsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
-        ),
-      );
-      getit.registerSingleton<LessonsLocalDataSource>(
-        StudentLessonsLocalDataSourceImpl(
-          isarStorageService: getit.get<IsarStorageService>(),
-        ),
-      );
-      getit.registerSingleton<AynaaVersionsRemoteDataSource>(
-          StudentVersionsRemoteDataSourceImpl(
-        dataBase: getit.get<DataBase>(),
-        isarStorageService: getit.get<IsarStorageService>(),
-      ));
-      getit.registerSingleton<SubjectsRemoteDataSource>(
-          StudentSubjectsRemoteDataSourceImpl(
-        dataBase: getit.get<DataBase>(),
-        isarStorageService: getit.get<IsarStorageService>(),
-      ));
-      getit.registerSingleton<LessonsRemoteDataSource>(
-          StudentLessonsRemoteDataSourceImpl(
-        dataBase: getit.get<DataBase>(),
-        isarStorageService: getit.get<IsarStorageService>(),
-        storageService: getit.get<StorageService>(),
-        fileCacheManager: getit.get<FileCacheManager>(),
-      ));
-      getit.registerSingleton<VersionsRepo>(
-        StudentVersionsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
-          versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
-          backgroundServices:
-              getit.get<BackgroundServices<AynaaVersionsEntity>>(),
-        ),
-      );
-      getit.registerSingleton<SubjectsRepo>(
-        StudentSubjectsRepoImpl(
-          dataBase: getit.get<DataBase>(),
-          storageService: getit.get<StorageService>(),
-          subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
-          subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
-          backgroundDownloadService:
-              getit.get<BackgroundServices<SubjectsEntity>>(),
-        ),
-      );
-      getit.registerSingleton<LessonsRepo>(
-        StudentLessonsRepoImpl(
-            dataBase: getit.get<DataBase>(),
-            storageService: getit.get<StorageService>(),
-            lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
-            lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
-      );
-  }
-
-  getit.registerSingleton<FilePickerHelper>(FilePickerHelper());
-  getit.registerSingleton<DeleteItemsService>(DeleteItemsServiceImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
-      isarStorageService: getit.get<IsarStorageService>()));
-
-  /*getit
-      .registerSingleton<CachIndexLessonsInBackground>(
-          CachIndexLessonsInBackground(
-              hiveCache: getit.get<LocalCacheService<LessonEntity>>()))
-      .initializeCacheInBackground();*/
-}*/

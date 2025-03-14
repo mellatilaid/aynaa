@@ -1,4 +1,4 @@
-import 'package:atm_app/features/admin/admin_bottom_nav_view.dart';
+import 'package:atm_app/bottom_nav_view.dart';
 import 'package:atm_app/features/auth/presentation/views/sign_in_view.dart';
 import 'package:atm_app/features/common/exams/domain/entities/exam_entity.dart';
 import 'package:atm_app/features/common/exams/domain/entities/exam_sections_entity.dart';
@@ -31,7 +31,7 @@ abstract class AppRouter {
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/',
+        path: 'login',
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
@@ -39,8 +39,8 @@ abstract class AppRouter {
         builder: (context, state) => const SignInView(),
       ),
       GoRoute(
-        path: adminNavBarView,
-        builder: (context, state) => const AdminBottomNavView(),
+        path: '/',
+        builder: (context, state) => const BottomNavView(),
       ),
       GoRoute(
         path: uploadPage,
@@ -96,28 +96,6 @@ abstract class AppRouter {
               examSectionsEntity: data,
             );
           }),
-    ],
-  );
-}
-
-abstract class StudentAppRouter {
-  static const String studentHomeView = '/student';
-  static const String studentBottomNavView = '/studnetNavBarView';
-  static final router = GoRouter(
-    initialLocation: '/',
-    routes: [
-      GoRoute(
-        path: studentHomeView,
-        builder: (context, state) => const SignInView(),
-      ),
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const StudentBottomNavView(),
-      ),
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const AdminBottomNavView(),
-      ),
     ],
   );
 }

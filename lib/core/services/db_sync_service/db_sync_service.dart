@@ -6,6 +6,7 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
 import 'package:atm_app/core/helper/enums.dart';
+import 'package:atm_app/core/helper/name_encrypte.dart';
 import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
@@ -93,10 +94,17 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
   Future<void> _downloadAndUpdateItem(T item, Entities collectionType) async {
     try {
       // Download and cache file
+
       if (item.url == null) return;
-      final fileName = item.url!.replaceFirst('${item.versionName}/', '');
+      //encrypt name before downloading bacuase it is encrypted when uploaded
+      //to get the right name to download
+      final encryptedName = encrypteName(item.versionName);
+      final fileName = item.url!.replaceFirst('$encryptedName/', '');
+
       final file = await storageService.downloadFile(
-          bucketName: item.versionName, filePath: fileName);
+        bucketName: encryptedName,
+        filePath: fileName,
+      );
       if (item.oldUrl != null) {
         // await localStorageService.deleteCachedFile(item.url!, collectionType);
       }
@@ -122,10 +130,13 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
     switch (deletedItemType) {
       case Entities.lessons || Entities.examSections:
         if (item.localFilePath != null && item.url != null) {
-          final fileName = item.url!.replaceFirst('${item.versionName}/', '');
+          //encrypt name before deleting bacuase it is encrypted when uploaded
+          //to get the right url to delete
+          final encryptedName = encrypteName(item.versionName);
+          final fileName = item.url!.replaceFirst('$encryptedName/', '');
           if (ProfileStorageImpl.userRole == kAdminRole) {
             await storageService.deleteFile(
-              bucketName: item.versionName,
+              bucketName: encryptedName,
               fileName: fileName,
             );
           }
@@ -146,7 +157,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         final fileName = parts[1];
         if (ProfileStorageImpl.userRole == kAdminRole) {
           await storageService.deleteFolder(
-            item.versionName,
+            parts[0],
             fileName,
           );
         }
@@ -162,7 +173,7 @@ class DBSyncService<T extends Entity> extends IDBSyncService {
         if (ProfileStorageImpl.userRole == kAdminRole) {
           if (item.isDeleted == false) {
             await storageService.deleteBucket(
-              item.versionName,
+              encrypteName(item.versionName),
             );
           }
         }

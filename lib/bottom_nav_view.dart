@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-class AdminBottomNavView extends StatefulWidget {
-  const AdminBottomNavView({super.key});
+class BottomNavView extends StatefulWidget {
+  const BottomNavView({super.key});
 
   @override
-  State<AdminBottomNavView> createState() => _AdminBottomNavViewState();
+  State<BottomNavView> createState() => _BottomNavViewState();
 }
 
-class _AdminBottomNavViewState extends State<AdminBottomNavView> {
+class _BottomNavViewState extends State<BottomNavView> {
   int pageSelected = 0;
   final _pageController = PageController();
 
