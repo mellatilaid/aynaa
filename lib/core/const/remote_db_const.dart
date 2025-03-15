@@ -1,6 +1,6 @@
 const String kUserEmail = 'email';
 const String kUserName = 'Name';
-const String kUserRole = 'Role';
+const String kUserRole = 'role';
 const String kUuid = 'uuid';
 const String kStudentRole = 'student';
 const String kAdminRole = 'admin';

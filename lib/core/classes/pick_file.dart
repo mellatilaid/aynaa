@@ -43,10 +43,8 @@ class FilePickerHelper {
       return compressedFile != null ? XFile(compressedFile.path) : null;*/
       return XFile(result.files.single.path!);
     } else {
-      print("No file selected.");
       return null;
     }
-    return null;
   }
 
   Future<File?> compressImage(String imagePath) async {
@@ -55,7 +53,6 @@ class FilePickerHelper {
     final originalImage = img.decodeImage(await imageFile.readAsBytes());
 
     if (originalImage == null) {
-      print("Could not decode image.");
       return null;
     }
 

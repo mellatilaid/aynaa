@@ -1,9 +1,10 @@
-import 'package:atm_app/core/materials/data/models/aynaa_versions_model.dart';
-import 'package:atm_app/core/materials/data/models/lesson_model.dart';
-import 'package:atm_app/core/materials/data/models/subjects_model.dart';
-import 'package:atm_app/core/shared_features/exams/data/models/exam_model.dart';
-import 'package:atm_app/core/shared_features/exams/data/models/exam_sections_model.dart';
-import 'package:atm_app/core/shared_features/exams/data/models/question_model.dart';
+import 'package:atm_app/features/common/exams/data/models/exam_model.dart';
+import 'package:atm_app/features/common/exams/data/models/exam_sections_model.dart';
+import 'package:atm_app/features/common/exams/data/models/question_model.dart';
+import 'package:atm_app/features/common/posts/data/models/post_model.dart';
+import 'package:atm_app/features/common/versions/data/models/aynaa_versions_model.dart';
+import 'package:atm_app/features/common/versions/data/models/lesson_model.dart';
+import 'package:atm_app/features/common/versions/data/models/subjects_model.dart';
 
 import '../helper/enums.dart';
 
@@ -39,6 +40,11 @@ List<T> mapToListOfEntity<T>(List<Map<String, dynamic>> data, Entities value) {
     case Entities.questions:
       resault = data.map((item) {
         return QuestionModel.fromMap(item);
+      }).toList() as List<T>;
+      return resault;
+    case Entities.posts:
+      resault = data.map((item) {
+        return PostModel.fromMap(item);
       }).toList() as List<T>;
       return resault;
   }

@@ -44,3 +44,8 @@ app.*.map.json
 var.env
 lib/firebase_options.dart
 epayment_test
+
+
+
+*hive*
+lib/core/services/ *hive*

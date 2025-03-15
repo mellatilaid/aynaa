@@ -16,7 +16,7 @@ class InvisibleTextField extends StatefulWidget {
   final TextStyle? textStyle;
   final bool readOnly;
   final String errMessage;
-
+  String? Function(String?)? validator;
   InvisibleTextField({
     super.key,
     this.hintText,
@@ -29,6 +29,7 @@ class InvisibleTextField extends StatefulWidget {
     this.readOnly = false,
     this.focusNode,
     this.errMessage = 'يرجى إدخال الحقل',
+    this.validator,
   });
 
   @override
@@ -62,12 +63,13 @@ class _InvisibleTextFieldState extends State<InvisibleTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return widget.errMessage;
-        }
-        return null;
-      },
+      validator: widget.validator ??
+          (value) {
+            if (value == null || value.isEmpty) {
+              return widget.errMessage;
+            }
+            return null;
+          },
       textDirection: _textDirection,
       focusNode: widget.focusNode,
       readOnly: widget.readOnly,

@@ -1,4 +1,3 @@
-import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/utils/app_route.dart';
@@ -37,10 +36,10 @@ class _SplashViewBodyState extends State<SplashViewBody> {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        'Hello Aynaa Brothers',
+        'Aynaa App',
         style: TextStyle(
           fontSize: 50,
-          color: Colors.red,
+          color: Colors.blue,
         ),
       ),
     );
@@ -55,13 +54,16 @@ class _SplashViewBodyState extends State<SplashViewBody> {
       if (authService.isLoggedIn()) {
         final userRole = await roleStorage.getCachedRole();
         if (userRole != null) {
-          if (userRole == kAdminRole) {
+          if (!mounted) return;
+          context.pushReplacement(AppRouter.adminNavBarView);
+          return;
+          /* if (userRole == kAdminRole) {
             await setUpServiceLocator(userRole: UserRole.admin);
             return _roleBasedHomeScreen(UserRole.admin);
           } else {
             await setUpServiceLocator(userRole: UserRole.student);
             return _roleBasedHomeScreen(UserRole.student);
-          }
+          }*/
         }
       }
 

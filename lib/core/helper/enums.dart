@@ -4,7 +4,7 @@ enum Entities {
   versions,
   subjects,
   lessons,
-
+  posts,
   exam,
   examSections,
   questions,

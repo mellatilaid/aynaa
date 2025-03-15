@@ -135,9 +135,10 @@ class LocalStorageService implements ILocalStorageService {
           await dir.delete(recursive: true);
         }
         break;
-      case Entities.examSections:
-      case Entities.exam:
+
       case Entities.questions:
+      default:
+        return;
     }
   }
 
