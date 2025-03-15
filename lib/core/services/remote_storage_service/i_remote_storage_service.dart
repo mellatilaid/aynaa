@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-abstract class StorageService<T> {
+abstract class IRemoteStorageService<T> {
   Future<String> uploadFile(
       {required String bucketName,
       required String filePath,

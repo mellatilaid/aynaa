@@ -2,10 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/remote_storage_service/i_remote_storage_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupaBaseStorage extends StorageService<Bucket> {
+class SupaBaseStorage extends IRemoteStorageService<Bucket> {
   final _supabase = Supabase.instance.client;
 
   @override

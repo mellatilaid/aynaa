@@ -18,6 +18,14 @@ class PostModel extends PostEntity {
       timeStamp: post.timeStamp,
     );
   }
+  factory PostModel.fromMap(Map<String, dynamic> post) {
+    return PostModel(
+      postID: post[kPostID],
+      title: post[kPostTitle],
+      content: post[kPostContent],
+      timeStamp: post[kPostTimeStamp],
+    );
+  }
 
   toMap() {
     return {

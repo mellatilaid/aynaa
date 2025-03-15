@@ -8,7 +8,7 @@ import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/helper/name_encrypte.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/remote_storage_service/i_remote_storage_service.dart';
 import 'package:atm_app/features/common/versions/data/data_source/lessons_data_source/lessons_local_data_source.dart';
 import 'package:atm_app/features/common/versions/data/models/lesson_model.dart';
 import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
@@ -21,13 +21,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tus_client_dart/tus_client_dart.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
-import '../../../../../../core/services/data_base.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
+import '../../../../../core/services/remote_db_service/i_remote_d_b_service.dart';
 import '../data_source/lessons_data_source/lessons_remote_data_source.dart';
 
 class LessonsRepoImpl extends LessonsRepo {
-  final DataBase dataBase;
-  final StorageService storageService;
+  final IRemoteDBService dataBase;
+  final IRemoteStorageService storageService;
   final IDBSyncService idbSyncService;
   final LessonsRemoteDataSource lessonsRemoteDataSource;
   final LessonsLocalDataSource lessonsLocalDataSource;

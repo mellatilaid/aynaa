@@ -1,10 +1,10 @@
 import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
 import 'package:atm_app/core/utils/db_filter_types.dart';
 import 'package:atm_app/features/common/versions/domain/entities/aynaa_versions_entity.dart';
 
@@ -16,7 +16,7 @@ abstract class AynaaVersionsRemoteDataSource {
 }
 
 class VersionsRemoteDataSourceImpl implements AynaaVersionsRemoteDataSource {
-  final DataBase dataBase;
+  final IRemoteDBService dataBase;
   final ILocalDbService localDB;
   final ILocalSettingsService iLocalSettingsService;
   final IDBSyncService iStorageSyncService;

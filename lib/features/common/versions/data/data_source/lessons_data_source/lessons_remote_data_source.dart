@@ -4,10 +4,10 @@ import 'package:atm_app/core/const/remote_db_const.dart';
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/core/utils/db_filter_types.dart';
 
@@ -20,7 +20,7 @@ abstract class LessonsRemoteDataSource {
 }
 
 class LessonsRemoteDataSourceImpl implements LessonsRemoteDataSource {
-  final DataBase dataBase;
+  final IRemoteDBService dataBase;
   final ILocalDbService iLocalDbService;
   final ILocalSettingsService iLocalSettingsService;
   final IDBSyncService storageSyncService;

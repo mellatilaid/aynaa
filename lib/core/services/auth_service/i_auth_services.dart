@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-abstract class AuthServices {
+abstract class IAuthServices {
   Future<User> signInWithGoogle();
   Future<User> signInWithEmailAndPassword();
   Future<User> signInWithFacebook();

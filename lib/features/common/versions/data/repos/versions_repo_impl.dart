@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'package:atm_app/core/const/local_db_const.dart';
 import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/helper/name_encrypte.dart';
-import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
+import 'package:atm_app/core/services/remote_storage_service/i_remote_storage_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_local_data_source.dart';
 import 'package:atm_app/features/common/versions/data/data_source/versions_data_source/versions_remote_data_source.dart';
@@ -22,8 +22,8 @@ import '../../../../../../core/helper/enums.dart';
 import '../../domain/repos/versions_repo.dart';
 
 class VersionsRepoImpl extends VersionsRepo {
-  final DataBase dataBase;
-  final StorageService storageService;
+  final IRemoteDBService dataBase;
+  final IRemoteStorageService storageService;
   final AynaaVersionsRemoteDataSource remoteDataSource;
   final VersionsLocalDataSource versionsLocalDataSource;
   final IDBSyncService dbSyncService;
@@ -88,7 +88,7 @@ class VersionsRepoImpl extends VersionsRepo {
       /*final String bucketId = await storageService.createBucket(versionName);
       return Right(bucketId);*/
     } on PostgrestException catch (e) {
-      storageService.deleteBucket(version.versionName);
+      storageService.deleteBucket(encrypteName(version.versionName));
       log(e.toString());
       return Left(ServerFailure.fromSupaDataBase(e: e));
     } on StorageException catch (e) {

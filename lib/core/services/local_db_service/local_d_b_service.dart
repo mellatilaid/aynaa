@@ -162,6 +162,8 @@ class LocalDbService extends ILocalDbService {
             .examIDEqualTo(query[kExamID])
             .findAll();
         return result;
+      default:
+        return;
     }
   }
 
@@ -239,6 +241,8 @@ class LocalDbService extends ILocalDbService {
               .examIDEqualTo(id!)
               .findAll() as List<T>;
         });
+      default:
+        return;
     }
   }
 
@@ -278,6 +282,8 @@ class LocalDbService extends ILocalDbService {
         }
       case Entities.questions:
       case Entities.examSections:
+      default:
+        return;
     }
   }
 }

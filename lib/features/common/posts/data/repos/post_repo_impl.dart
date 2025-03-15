@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:atm_app/core/errors/failures.dart';
-import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/common/posts/domain/entities/post_entity.dart';
 import 'package:atm_app/features/common/posts/domain/repos/posts_repo.dart';
@@ -10,7 +10,7 @@ import 'package:dartz/dartz.dart';
 import '../models/post_model.dart';
 
 class PostRepoImpl extends PostsRepo {
-  final DataBase dataBase;
+  final IRemoteDBService dataBase;
 
   PostRepoImpl({required this.dataBase});
   @override

@@ -1,4 +1,5 @@
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/widgets/floating_optional_speed_dial.dart';
 import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
 import 'package:atm_app/features/common/versions/domain/repos/lessons_repo.dart';
@@ -13,7 +14,6 @@ import 'package:provider/provider.dart';
 import '../../../../../../core/utils/set_up_service_locator.dart';
 import '../../../../../../core/widgets/custom_speed_dial_child.dart';
 import '../../../../../core/const/remote_db_const.dart';
-import '../../../../../core/helper/user_profile.dart';
 import 'widgets/add_file_lesson_bottom_sheet.dart';
 import 'widgets/lessons_view_body.dart';
 
@@ -35,8 +35,7 @@ class LessonsView extends StatelessWidget {
         body: LessonsViewBody(
           subjectsEntity: subjectsEntity,
         ),
-        floatingActionButton: (globalUserRole != null &&
-                globalUserRole == kAdminRole)
+        floatingActionButton: (ProfileStorageImpl.userRole == kAdminRole)
             ? Builder(builder: (fabContext) {
                 fabContext.read<LessonCubit>().resetState();
                 return FloatingAddOptionsSpeedDial(

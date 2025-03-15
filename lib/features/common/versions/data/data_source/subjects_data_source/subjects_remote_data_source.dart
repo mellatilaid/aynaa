@@ -1,9 +1,9 @@
 import 'package:atm_app/core/functions/map_to_list_of_entity.dart';
 import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
-import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/local_db_service/i_local_db_service.dart';
 import 'package:atm_app/core/services/local_settings_service/i_local_settings_service.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
 import 'package:atm_app/core/utils/db_filter_types.dart';
 import 'package:atm_app/features/common/versions/domain/entities/subjects_entity.dart';
 
@@ -17,7 +17,7 @@ abstract class SubjectsRemoteDataSource {
 }
 
 class SubjectsRemoteDataSourceImpl extends SubjectsRemoteDataSource {
-  final DataBase dataBase;
+  final IRemoteDBService dataBase;
   final ILocalDbService iLocalDbService;
   final IDBSyncService storageSyncService;
   final ILocalSettingsService iLocalSettingsService;

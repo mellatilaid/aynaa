@@ -1,4 +1,4 @@
-abstract class DataBase {
+abstract class IRemoteDBService {
   Future<dynamic> getData({
     required String path,
     String? uID,

@@ -17,13 +17,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../../core/const/remote_db_const.dart';
 import '../../../../../../core/helper/enums.dart';
-import '../../../../../../core/services/data_base.dart';
-import '../../../../../../core/services/storage_service.dart';
 import '../../../../../../core/utils/db_enpoints.dart';
+import '../../../../../core/services/remote_db_service/i_remote_d_b_service.dart';
+import '../../../../../core/services/remote_storage_service/i_remote_storage_service.dart';
 
 class SubjectsRepoImpl extends SubjectsRepo {
-  final DataBase dataBase;
-  final StorageService storageService;
+  final IRemoteDBService dataBase;
+  final IRemoteStorageService storageService;
   final SubjectsRemoteDataSource subjectsRemoteDataSource;
   final SubjectsLocalDataSource subjectsLocalDataSource;
   final IDBSyncService iDBSyncService;

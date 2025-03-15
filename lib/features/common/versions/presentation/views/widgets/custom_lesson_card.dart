@@ -1,5 +1,5 @@
 import 'package:atm_app/core/functions/build_preview.dart';
-import 'package:atm_app/core/helper/user_profile.dart';
+import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/widgets/three_dots_menu.dart';
 import 'package:atm_app/features/common/versions/domain/entities/lesson_entity.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class _CustomLessonCardState extends State<CustomLessonCard> {
                   ],
                 ),
               ),
-              (globalUserRole != null && globalUserRole == kAdminRole)
+              (ProfileStorageImpl.userRole == kAdminRole)
                   ? Positioned(
                       top: 9,
                       left: 15,

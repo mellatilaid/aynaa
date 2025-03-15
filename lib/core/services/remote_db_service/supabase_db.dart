@@ -1,10 +1,10 @@
-import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
 import 'package:atm_app/core/utils/db_filter_types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../const/remote_db_const.dart';
+import '../../const/remote_db_const.dart';
 
-class SupabaseDb extends DataBase {
+class SupabaseDb extends IRemoteDBService {
   final _supabase = Supabase.instance.client;
   @override
   Future<bool> checkIfUserExistInDB(

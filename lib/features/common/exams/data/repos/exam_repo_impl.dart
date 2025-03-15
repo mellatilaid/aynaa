@@ -7,10 +7,10 @@ import 'package:atm_app/core/errors/failures.dart';
 import 'package:atm_app/core/functions/update_last_fetched_items_time.dart';
 import 'package:atm_app/core/helper/enums.dart';
 import 'package:atm_app/core/helper/name_encrypte.dart';
-import 'package:atm_app/core/services/data_base.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
+import 'package:atm_app/core/services/remote_storage_service/i_remote_storage_service.dart';
 import 'package:atm_app/core/utils/db_enpoints.dart';
 import 'package:atm_app/features/common/exams/data/data_source/exams_data_source/exams_local_data_source.dart';
 import 'package:atm_app/features/common/exams/data/data_source/exams_data_source/exams_remote_data_source.dart';
@@ -22,8 +22,8 @@ import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExamRepoImpl extends ExamsRepo {
-  final DataBase dataBase;
-  final StorageService storageService;
+  final IRemoteDBService dataBase;
+  final IRemoteStorageService storageService;
   final ExamsLocalDataSource examsLocalDataSource;
   final ExamsRemoteDataSource examsRemoteDataSource;
   final IDBSyncService idbSyncService;

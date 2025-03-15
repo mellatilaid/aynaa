@@ -1,9 +1,9 @@
-import 'package:atm_app/core/services/auth_services.dart';
+import 'package:atm_app/core/services/auth_service/i_auth_services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupabaseAuthService extends AuthServices {
+class SupabaseAuthService extends IAuthServices {
   final _supabase = Supabase.instance.client;
   @override
   Future<User> signInWithEmailAndPassword() {

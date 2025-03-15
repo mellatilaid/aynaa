@@ -4,7 +4,7 @@ import 'package:atm_app/core/classes/pick_file.dart';
 import 'package:atm_app/core/common/entitiy.dart';
 import 'package:atm_app/core/common/settings_entity.dart';
 import 'package:atm_app/core/helper/enums.dart';
-import 'package:atm_app/core/services/data_base.dart';
+import 'package:atm_app/core/services/auth_service/supabase_auth_service.dart';
 import 'package:atm_app/core/services/db_sync_service/I_db_sync_service.dart';
 import 'package:atm_app/core/services/db_sync_service/db_sync_service.dart';
 import 'package:atm_app/core/services/internt_state_service/i_network_state_service.dart';
@@ -15,10 +15,10 @@ import 'package:atm_app/core/services/local_settings_service/local_setting_servi
 import 'package:atm_app/core/services/local_storage_service/local_storage_service.dart';
 import 'package:atm_app/core/services/profile_storage.dart';
 import 'package:atm_app/core/services/realtime_sync_service.dart';
-import 'package:atm_app/core/services/storage_service.dart';
-import 'package:atm_app/core/services/supabase_DB.dart';
-import 'package:atm_app/core/services/supabase_auth_service.dart';
-import 'package:atm_app/core/services/supabase_storage.dart';
+import 'package:atm_app/core/services/remote_db_service/i_remote_d_b_service.dart';
+import 'package:atm_app/core/services/remote_db_service/supabase_db.dart';
+import 'package:atm_app/core/services/remote_storage_service/i_remote_storage_service.dart';
+import 'package:atm_app/core/services/remote_storage_service/supabase_storage.dart';
 import 'package:atm_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:atm_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:atm_app/features/common/exams/data/data_source/exam_sections_data_source/exam_sections_local_data_source.dart';
@@ -62,8 +62,8 @@ import '../services/local_storage_service/i_local_storage_service.dart';
 final getit = GetIt.instance;
 setUpCoreServiceLocator() async {
   getit
-    ..registerSingleton<StorageService>(SupaBaseStorage())
-    ..registerSingleton<DataBase>(SupabaseDb())
+    ..registerSingleton<IRemoteStorageService>(SupaBaseStorage())
+    ..registerSingleton<IRemoteDBService>(SupabaseDb())
     ..registerSingleton<ProfileStorage>(ProfileStorageImpl()).loadUserProfile()
     ..registerSingletonAsync<Isar>(() async {
       try {
@@ -110,12 +110,12 @@ setUpCoreServiceLocator() async {
     DBSyncService(
       iLocalDbService: getit.get<ILocalDbService>(),
       localStorageService: getit.get<ILocalStorageService>(),
-      storageService: getit.get<StorageService>(),
+      storageService: getit.get<IRemoteStorageService>(),
       updateLocalDataSource:
           (Entity entity, PostgressEventType eventType) async {
         return await null;
       },
-      dataBase: getit.get<DataBase>(),
+      dataBase: getit.get<IRemoteDBService>(),
     ),
   );
   registerIfNotExists<VersionsLocalDataSource>(
@@ -155,7 +155,7 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<AynaaVersionsRemoteDataSource>(
     VersionsRemoteDataSourceImpl(
-      dataBase: getit.get<DataBase>(),
+      dataBase: getit.get<IRemoteDBService>(),
       localDB: getit.get<ILocalDbService>(),
       iLocalSettingsService: getit.get<ILocalSettingsService>(),
       iStorageSyncService: getit.get<IDBSyncService>(),
@@ -163,7 +163,7 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<SubjectsRemoteDataSource>(
     SubjectsRemoteDataSourceImpl(
-      dataBase: getit.get<DataBase>(),
+      dataBase: getit.get<IRemoteDBService>(),
       iLocalDbService: getit.get<ILocalDbService>(),
       storageSyncService: getit.get<IDBSyncService>(),
       iLocalSettingsService: getit.get<ILocalSettingsService>(),
@@ -171,7 +171,7 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<LessonsRemoteDataSource>(
     LessonsRemoteDataSourceImpl(
-      dataBase: getit.get<DataBase>(),
+      dataBase: getit.get<IRemoteDBService>(),
       iLocalDbService: getit.get<ILocalDbService>(),
       storageSyncService: getit.get<IDBSyncService>(),
       iLocalSettingsService: getit.get<ILocalSettingsService>(),
@@ -179,7 +179,7 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<ExamsRemoteDataSource>(
     ExamsRemoteDataSourceImpl(
-      dataBase: getit.get<DataBase>(),
+      dataBase: getit.get<IRemoteDBService>(),
       iLocalDbService: getit.get<ILocalDbService>(),
       iLocalSettingsService: getit.get<ILocalSettingsService>(),
       idbSyncService: getit.get<IDBSyncService>(),
@@ -187,7 +187,7 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<ExamSectionsRemoteDataSource>(
     ExamSectionsRemoteDataSourceImpl(
-      dataBase: getit.get<DataBase>(),
+      dataBase: getit.get<IRemoteDBService>(),
       idbSyncService: getit.get<IDBSyncService>(),
       iLocalDbService: getit.get<ILocalDbService>(),
       iLocalSettingsService: getit.get<ILocalSettingsService>(),
@@ -195,7 +195,7 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<QuestionsRemoteDataSource>(
     QuestionsRemoteDataSourceImpl(
-      dataBase: getit.get<DataBase>(),
+      dataBase: getit.get<IRemoteDBService>(),
       iLocalDbService: getit.get<ILocalDbService>(),
       idbSyncService: getit.get<IDBSyncService>(),
       iLocalSettingsService: getit.get<ILocalSettingsService>(),
@@ -204,8 +204,8 @@ setUpCoreServiceLocator() async {
 
   registerIfNotExists<VersionsRepo>(
     VersionsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
+      dataBase: getit.get<IRemoteDBService>(),
+      storageService: getit.get<IRemoteStorageService>(),
       remoteDataSource: getit.get<AynaaVersionsRemoteDataSource>(),
       versionsLocalDataSource: getit.get<VersionsLocalDataSource>(),
       dbSyncService: getit.get<IDBSyncService>(),
@@ -214,8 +214,8 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<SubjectsRepo>(
     SubjectsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
+      dataBase: getit.get<IRemoteDBService>(),
+      storageService: getit.get<IRemoteStorageService>(),
       subjectsRemoteDataSource: getit.get<SubjectsRemoteDataSource>(),
       subjectsLocalDataSource: getit.get<SubjectsLocalDataSource>(),
       iDBSyncService: getit.get<IDBSyncService>(),
@@ -224,17 +224,17 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<LessonsRepo>(
     LessonsRepoImpl(
-        dataBase: getit.get<DataBase>(),
+        dataBase: getit.get<IRemoteDBService>(),
         iNetworkStateService: getit.get<INetworkStateService>(),
-        storageService: getit.get<StorageService>(),
+        storageService: getit.get<IRemoteStorageService>(),
         idbSyncService: getit.get<IDBSyncService>(),
         lessonsRemoteDataSource: getit.get<LessonsRemoteDataSource>(),
         lessonsLocalDataSource: getit.get<LessonsLocalDataSource>()),
   );
   registerIfNotExists<ExamsRepo>(
     ExamRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
+      dataBase: getit.get<IRemoteDBService>(),
+      storageService: getit.get<IRemoteStorageService>(),
       iNetworkStateService: getit.get<INetworkStateService>(),
       examsRemoteDataSource: getit.get<ExamsRemoteDataSource>(),
       examsLocalDataSource: getit.get<ExamsLocalDataSource>(),
@@ -244,8 +244,8 @@ setUpCoreServiceLocator() async {
 
   registerIfNotExists<ExamSectionsRepo>(
     ExamSectionsRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
+      dataBase: getit.get<IRemoteDBService>(),
+      storageService: getit.get<IRemoteStorageService>(),
       remoteDataSource: getit.get<ExamSectionsRemoteDataSource>(),
       idbSyncService: getit.get<IDBSyncService>(),
       localDataSource: getit.get<ExamSectionsLocalDataSource>(),
@@ -254,8 +254,8 @@ setUpCoreServiceLocator() async {
   );
   registerIfNotExists<QuestionRepo>(
     QuestionRepoImpl(
-      dataBase: getit.get<DataBase>(),
-      storageService: getit.get<StorageService>(),
+      dataBase: getit.get<IRemoteDBService>(),
+      storageService: getit.get<IRemoteStorageService>(),
       remoteDataSource: getit.get<QuestionsRemoteDataSource>(),
       localDataSource: getit.get<QuestionsLocalDataSource>(),
       idbSyncService: getit.get<IDBSyncService>(),
@@ -267,9 +267,7 @@ setUpCoreServiceLocator() async {
 
 Future<Isar> _isarInit() async {
   try {
-    print('Getting application documents directory...');
     final dir = await getApplicationDocumentsDirectory();
-    print('Application documents directory: ${dir.path}');
 
     final isar = await Isar.open(
       [
@@ -284,7 +282,7 @@ Future<Isar> _isarInit() async {
       ],
       directory: dir.path,
     );
-    log('Isar instance created.');
+
     return isar;
   } catch (e, stackTrace) {
     log('Error creating Isar instance: $e', stackTrace: stackTrace);
