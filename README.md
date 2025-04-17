@@ -22,12 +22,12 @@ This README is organized following community best practices to help users naviga
 
 The **Features** section highlights the key functionalities of the application to inform users at a glance :contentReference[oaicite:2]{index=2}.
 
-### Multi‑Platform Deployment
-### Role‑Based Navigation
-### Real‑Time Sync
-### Offline Persistence
-### Media Support
-### Localization
+#### Multi‑Platform Deployment
+#### Role‑Based Navigation
+#### Real‑Time Sync
+#### Offline Persistence
+#### Media Support
+#### Localization
 
 ## Architecture
 The **Architecture** section outlines the app’s structural design, showcasing modularity and maintainability
