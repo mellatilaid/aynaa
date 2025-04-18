@@ -31,21 +31,21 @@ The **Features** section highlights the key functionalities of the application t
 
 ## Architecture
 The **Architecture** section outlines the app’s structural design, showcasing modularity and maintainability
-### Clean Architecture (core + features)
-### State Management (flutter_bloc)
-### Routing (go_router)
-### Theming (Material3)
+#### Clean Architecture (core + features)
+#### State Management (flutter_bloc)
+#### Routing (go_router)
+#### Theming (Material3)
 
 ## Getting Started
 The Getting Started section guides users through installation and initial setup to run the app locally
 
-### Clone the repository
+#### Clone the repository
 git clone https://github.com/mellatilaid/aynaa.git
 
-### Install dependencies
+#### Install dependencies
 flutter pub get
 
-### Configure environment
+#### Configure environment
 cp var.env .env  # update with your Supabase credentials
 
 ## Folder Structure
@@ -59,13 +59,12 @@ For questions or feedback, open an issue or reach out via email: laidmellati@gma
 
 ## Acknowledgements
 
-### Flutter
-### Supabase
-### flutter_bloc
-### go_router
-### Hive & Isar
-### SalomonBottomBar
-### Tus protocol
+#### Flutter
+#### Supabase
+#### flutter_bloc
+#### go_router
+#### Hive & Isar
+#### Tus protocol
 
 ## Note: 
 This app is currently incomplete, with additional features and UI/UX improvements planned for future updates.
